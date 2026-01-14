@@ -1,4 +1,4 @@
-# cis4900w26
+# Lozinski CIS*4900, W26
 
 ## Project Overview
 This repository is for my CIS*4900 Project Course in W26, supervised by Prof. Stefan Kremer.  
@@ -12,20 +12,21 @@ This will be updated as development progresses and the tools are finalized.
 
 ## Roadmap
 This project will have four main milestones during the development process:
-Jan 28, 2026
-- M1: Structure work plan and set up device with the chosen systems for modification. 
+
+**Jan 28, 2026**
+- **M1**: Structure work plan and set up device with the chosen systems for modification. 
 Experiment and document what tasks require automation in order for device startup to load as required for project specifications.
 
-Feb 25, 2026
-- M2: Implementation of the GUI and basic start up tasks, including the student user inferface and interface for other permission levels
+**Feb 25, 2026**
+- **M2**: Implementation of the GUI and basic start up tasks, including the student user inferface and interface for other permission levels
 Justification of design choices based on best practices in the childhood education industry
 
-Mar 25, 2026 
-- M3: Integration of the open source coding application, Makecode, into the GUI as an app that runs locally on the machine.
+**Mar 25, 2026 **
+- **M3**: Integration of the open source coding application, Makecode, into the GUI as an app that runs locally on the machine.
 Connect the application to the adinstrator permission structure interface from the previous milestone so that admins are able to enable and limit student access to specific applications.
 
-Apr 8, 2026
-- M4: Completion of M.V.P and live in person demo of the platform, demonstrating the implmented application, its functionality and describing potential future features and areas of improvement.
+**Apr 8, 2026**
+- **M4**: Completion of M.V.P and live in person demo of the platform, demonstrating the implmented application, its functionality and describing potential future features and areas of improvement.
 This will include a detailed written report of the design methodology, development process, and core application features among other topics.
 
 ## Authors and acknowledgment
