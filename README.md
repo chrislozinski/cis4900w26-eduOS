@@ -21,7 +21,7 @@ Experiment and document what tasks require automation in order for device startu
 - **M2**: Implementation of the GUI and basic start up tasks, including the student user inferface and interface for other permission levels
 Justification of design choices based on best practices in the childhood education industry
 
-**Mar 25, 2026 **
+**Mar 25, 2026**
 - **M3**: Integration of the open source coding application, Makecode, into the GUI as an app that runs locally on the machine.
 Connect the application to the adinstrator permission structure interface from the previous milestone so that admins are able to enable and limit student access to specific applications.
 
@@ -29,8 +29,8 @@ Connect the application to the adinstrator permission structure interface from t
 - **M4**: Completion of M.V.P and live in person demo of the platform, demonstrating the implmented application, its functionality and describing potential future features and areas of improvement.
 This will include a detailed written report of the design methodology, development process, and core application features among other topics.
 
-## Authors and acknowledgment
-This project is being developed by Chris Lozinski under the supervision of Prof. Stefan Kremer
-
 ## Project status
 - Development ongoing, working towards Milestone 1
+
+## Authors and acknowledgments
+This project is being developed by Chris Lozinski under the supervision of Prof. Stefan Kremer
