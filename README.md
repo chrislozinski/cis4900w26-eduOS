@@ -29,8 +29,8 @@ Connect the application to the adinstrator permission structure interface from t
 - **M4**: Completion of M.V.P and live in person demo of the platform, demonstrating the implmented application, its functionality and describing potential future features and areas of improvement.
 This will include a detailed written report of the design methodology, development process, and core application features among other topics.
 
-## Project status
-- Development ongoing, working towards Milestone 1
-
 ## Authors and acknowledgments
 This project is being developed by Chris Lozinski under the supervision of Prof. Stefan Kremer
+
+## Project status
+- Development ongoing, working towards Milestone 1
