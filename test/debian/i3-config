@@ -1,0 +1,21 @@
+# i3 config file
+set $mod Mod1
+
+font pango:monospace 8
+
+# bind for terminal
+bindsym $mod+Return exec xterm
+
+# to exit focused window
+bindsym $mod+Shift+q kill
+
+# program launcher
+bindsym $mod+d exec dmenu_run
+
+# exiting i3
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'Exit?' -B 'Yes' 'i3-msg exit'"
+
+bar {
+    status_command i3status
+    position bottom
+}

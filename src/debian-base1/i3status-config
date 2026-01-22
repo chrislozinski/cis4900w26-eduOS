@@ -1,0 +1,27 @@
+general {
+    colors = true
+    interval = 5
+}
+
+order += "disk /"
+order += "load"
+order += "memory"
+order += "tztime local"
+
+disk "/" {
+    format = "disk: %avail"
+}
+
+load {
+    format = "cpu: %1min"
+}
+
+memory {
+    format = "ram: %used"
+    threshold_degraded = "10%"
+    format_degraded = "mem low: %free"
+}
+
+tztime local {
+    format = "%Y-%m-%d %H:%M:%S"
+}

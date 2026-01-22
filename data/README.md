@@ -1,1 +1,0 @@
-This folder will house the theme, icons, etc 
