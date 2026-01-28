@@ -27,29 +27,35 @@ RUN apt-get update && apt-get install -y \
     wget \
     git \     
     vim \
+    vifm \
     nano \
     python3 \ 
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# user setup
-RUN useradd -m testuser -p $(openssl passwd 1234) && \
-    usermod -aG sudo testuser && \
-    echo "exec i3" > /home/testuser/.xsession && \
-    chown testuser:testuser /home/testuser/.xsession
+# Set up default i3 configuration in /etc/skel
+RUN mkdir -p /etc/skel/.config/i3 /etc/skel/.config/i3status
+COPY i3-config /etc/skel/.config/i3/config
+COPY i3status-config /etc/skel/.config/i3status/config
 
-# role based access setup
-COPY usr-roles.sh /usr/local/bin/usr-roles.sh
-RUN chmod +x /usr/local/bin/usr-roles.sh && /usr/local/bin/usr-roles.sh
+# Copy setup scripts
+COPY create-users.sh /usr/local/bin/create-users.sh
+COPY user-roles.sh /usr/local/bin/user-roles.sh
+COPY config-user-i3.sh /usr/local/bin/config-user-i3.sh
+RUN chmod +x /usr/local/bin/create-users.sh \
+             /usr/local/bin/user-roles.sh \
+             /usr/local/bin/config-user-i3.sh
 
-# i3 configuration
-RUN mkdir -p /home/testuser/.config/i3
-COPY i3-config /home/testuser/.config/i3/config
-RUN chown -R testuser:testuser /home/testuser/.config
+# Create role groups 
+RUN groupadd teacher && groupadd student
 
-# i3 status config
-RUN mkdir -p /home/testuser/.config/i3status
-COPY i3status-config /home/testuser/.config/i3status/config
-RUN chown -R testuser:testuser /home/testuser/.config
+# Create all users 
+RUN /usr/local/bin/create-users.sh
+
+# Set up role-based access control 
+RUN /usr/local/bin/user-roles.sh
+
+# Configure i3 for all users 
+RUN /usr/local/bin/config-user-i3.sh
 
 # dbus identity, RDP encryption keys and create the directory xrdp needs to store its process ID
 RUN mkdir -p /run/dbus && dbus-uuidgen > /etc/machine-id
