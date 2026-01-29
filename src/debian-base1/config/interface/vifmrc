@@ -1,0 +1,46 @@
+" Minimal vifm config 
+" This will be deployed as vifmrc by the config script
+
+" === CRITICAL: SINGLE PANE VIEW ===
+only
+
+" === LOCK TO HOME DIRECTORY ===
+" Users cannot navigate above their home folder
+cd ~
+
+" === BASIC SETTINGS ===
+set vicmd=vim
+set trash
+set history=50
+set sortnumbers
+set wildmenu
+set ignorecase
+set smartcase
+
+" === SIMPLE INTERFACE ===
+set number
+set statusline="%t"
+set dotfiles
+
+" === COLORS - SIMPLE AND CLEAN ===
+highlight clear
+highlight Directory cterm=bold ctermfg=cyan
+highlight Executable cterm=bold ctermfg=green  
+highlight Selected cterm=bold ctermfg=magenta
+highlight CurrLine cterm=reverse
+
+" === QUICK NAVIGATION ===
+nnoremap gh :cd ~<cr>
+nnoremap gw :cd ~/work<cr>
+nnoremap gH :cd ~/homework<cr>
+nnoremap gr :cd ~/resources<cr>
+nnoremap gs :cd ~/submissions<cr>
+
+" === MARKS FOR IMPORTANT LOCATIONS ===
+mark h ~/
+mark w ~/work
+mark H ~/homework
+mark r ~/resources
+mark s ~/submissions
+
+" That's it - minimal and functional
