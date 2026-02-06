@@ -33,4 +33,6 @@ This will include a detailed written report of the design methodology, developme
 This project is being developed by Chris Lozinski under the supervision of Prof. Stefan Kremer
 
 ## Project status
-Development ongoing, working towards Milestone 1
+Development ongoing, working towards Milestone 2
+
+Last updated: 2/5/2026
