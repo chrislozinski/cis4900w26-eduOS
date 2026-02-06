@@ -1,0 +1,37 @@
+{
+    "layout": "splith",
+    "percent": 1.0,
+    "type": "con",
+    "nodes": [
+        {
+            "border": "normal",
+            "floating": "auto_off",
+            "percent": 0.11,
+            "type": "con",
+            "swallows": [
+                {
+                    "title": "^Appbar$"
+                }
+            ]
+        },
+        {
+            "border": "normal",
+            "floating": "auto_off",
+            "layout": "tabbed",
+            "percent": 0.89,
+            "type": "con",
+            "marks": ["viewer_tabs"],
+            "nodes": [
+                {
+                    "border": "normal",
+                    "type": "con",
+                    "swallows": [
+                        {
+                            "title": "^AppWindow$"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
