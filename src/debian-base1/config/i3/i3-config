@@ -1,33 +1,44 @@
-# i3 config file - Clean desktop with sandboxed folders
+# i3 config file 
 set $mod Mod1
 font pango:monospace 8
 
-# === STARTUP ===
-# Show desktop icons (pcmanfm in desktop mode)
-exec --no-startup-id xterm -name vifm-sidebar -geometry 50x45+0+0 -e vifm
+# desktop background 
+exec --no-startup-id xsetroot -solid "#292D3E"
 
-# Make vifm sidebar stick to the left
-for_window [instance="vifm-sidebar"] floating enable
-for_window [instance="vifm-sidebar"] sticky enable
-for_window [instance="vifm-sidebar"] move position 0 px 0 px
-for_window [instance="vifm-sidebar"] resize set 400 px 100 ppt
-for_window [instance="vifm-sidebar"] border pixel 2
+# launch the workspace layout 
+exec --no-startup-id "i3-msg 'workspace 1; append_layout ~/.config/i3/layout.json'"
 
-# === KEYBINDINGS ===
-# Terminal
+# Launch sidebar and app window
+exec --no-startup-id python3 ~/.config/launcher/launcher.py
+exec --no-startup-id python3 ~/.config/launcher/app-window.py
+
+# Sidebar layout; left side, no resize resized, killed or focused
+for_window [title="Appbar"] border none
+for_window [title="Appbar"] floating disable
+no_focus [title="Appbar"]
+
+# the app window layout 
+for_window [title="AppWindow"] floating disable
+
+#folder viewer
+for_window [instance="folder_viewer"] floating disable
+
+# keybinds
 bindsym $mod+Return exec xterm
-
-# Close window
 bindsym $mod+Shift+q kill
-
-# Program launcher
 bindsym $mod+d exec dmenu_run
-
-# Exit i3
+bindsym $mod+l exec python3 ~/.config/launcher/launcher.py
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'Exit?' -B 'Yes' 'i3-msg exit'"
 
-# === STATUS BAR ===
+default_orientation horizontal
+workspace_layout default
+
+# i3 status bar 
 bar {
     status_command i3status -c ~/.config/i3status/config
     position bottom
 }
+
+
+
+

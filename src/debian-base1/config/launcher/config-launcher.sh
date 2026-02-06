@@ -1,0 +1,46 @@
+#!/bin/bash
+set -e
+
+# This function is to set up the side bar launcher for whicver user is logging into the machine 
+setup_launcher_for_user() {
+    local username=$1
+    local home_dir="/home/$username"
+    
+    echo "setting up launcher for: $username"
+    
+    # launcher config directory
+    mkdir -p "$home_dir/.config/launcher/icons"
+    
+    cp /etc/skel/.config/launcher/launcher.py "$home_dir/.config/launcher/launcher.py"
+    cp /etc/skel/.config/launcher/folder_viewer.py "$home_dir/.config/launcher/folder_viewer.py"
+    cp /etc/skel/.config/launcher/appbar-config.json "$home_dir/.config/launcher/appbar-config.json"
+    
+    # directory for all the option icons 
+    if [ -d "/etc/skel/.config/launcher/icons" ]; then
+        cp -r /etc/skel/.config/launcher/icons/* "$home_dir/.config/launcher/icons/" 2>/dev/null || true
+    fi
+    
+    # add the username of the person logging in
+    sed -i "s|/home/USER|$home_dir|g" "$home_dir/.config/launcher/appbar-config.json"
+
+    chmod +x "$home_dir/.config/launcher/launcher.py"
+    chmod +x "$home_dir/.config/launcher/folder_viewer.py"
+    
+    #  Documents directory 
+    mkdir -p "$home_dir/Documents"
+    
+    # set directory ownership ? 
+    chown -R "$username:$username" "$home_dir/.config/launcher"
+    chown -R "$username:$username" "$home_dir/Documents"
+    
+    echo "Launcher configured for: $username"
+}
+
+# config launcher for all users
+users=$(awk -F: '$3 >= 1000 && $3 < 65534 {print $1}' /etc/passwd)
+
+for user in $users; do
+    setup_launcher_for_user "$user"
+done
+
+echo "Sidebar configured for all users"

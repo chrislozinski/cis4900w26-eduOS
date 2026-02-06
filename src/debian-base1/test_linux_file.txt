@@ -1,3 +1,8 @@
 # this is me leaving a comment to test dev on linux 
 
+
+#/ home/testuser/submissions not found in config 
+#/ home / testuser/resources -- work  and Documents too 
+
+when i pwd im in /home/testuser/
 # hello jennifer ÏØø

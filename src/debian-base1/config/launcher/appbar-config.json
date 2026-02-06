@@ -1,0 +1,34 @@
+{
+  "items": [
+    {
+      "type": "app",
+      "label": "Terminal",
+      "icon": "light/terminal.svg",
+      "command": "xterm"
+    },
+    {
+      "type": "folder",
+      "label": "Documents",
+      "icon": "light/documents.svg",
+      "path": "/home/USER/Documents"
+    },
+    {
+      "type": "folder",
+      "label": "Work",
+      "icon": "light/pencil.svg",
+      "path": "/home/USER/work"
+    },
+    {
+      "type": "folder",
+      "label": "Resources",
+      "icon": "light/resources.svg",
+      "path": "/home/USER/resources"
+    },
+    {
+      "type": "folder",
+      "label": "Submissions",
+      "icon": "light/submissions.svg",
+      "path": "/home/USER/submissions"
+    }
+  ]
+}
