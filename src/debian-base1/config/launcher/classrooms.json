@@ -1,0 +1,10 @@
+{
+  "classrooms": [
+    {
+      "id": "class001",
+      "name": "Class 001",
+      "students": ["studentuser"],
+      "enabled_apps": []
+    }
+  ]
+}

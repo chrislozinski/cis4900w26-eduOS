@@ -4,6 +4,7 @@ Minimal GTK Launcher
 Displays clickable icons for apps and folders defined in appbar-config.json
 """
 import gi
+import grp
 import json
 import os
 import subprocess
@@ -12,6 +13,65 @@ import getpass
 
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk, GdkPixbuf
+
+CLASSROOMS_FILE = '/shared/classrooms.json'
+
+
+# ── Role detection & config loading ──────────────────────────────────────────
+
+def get_user_role():
+    """Return 'teacher' if the current user is in the teacher group, else 'student'."""
+    username = getpass.getuser()
+    try:
+        if username in grp.getgrnam('teacher').gr_mem:
+            return 'teacher'
+    except KeyError:
+        pass
+    return 'student'
+
+
+def load_config(config_dir, role):
+    """
+    Load the role-specific sidebar config.
+    Falls back to the generic appbar-config.json if no role file exists.
+    For students, classroom-enabled apps are appended at runtime.
+    Resolves /home/USER placeholders for the current user.
+    """
+    role_file = os.path.join(config_dir, f'appbar-config-{role}.json')
+    fallback  = os.path.join(config_dir, 'appbar-config.json')
+    path      = role_file if os.path.exists(role_file) else fallback
+
+    with open(path, 'r') as f:
+        config = json.load(f)
+
+    if role == 'student':
+        config = _append_classroom_apps(config)
+
+    # Resolve /home/USER placeholder for this user
+    home = os.path.expanduser('~')
+    raw  = json.dumps(config).replace('/home/USER', home)
+    return json.loads(raw)
+
+
+def _append_classroom_apps(config):
+    """Append any apps the teacher has enabled for this student's classroom."""
+    username = getpass.getuser()
+    try:
+        with open(CLASSROOMS_FILE, 'r') as f:
+            data = json.load(f)
+        for classroom in data.get('classrooms', []):
+            if username in classroom.get('students', []):
+                existing = {item['label'] for item in config.get('items', [])}
+                for app in classroom.get('enabled_apps', []):
+                    if app['label'] not in existing:
+                        config['items'].append(app)
+                break   # a student belongs to one classroom
+    except Exception:
+        pass  # no classrooms file, or student not enrolled — use base config
+    return config
+
+
+# ── Main window ───────────────────────────────────────────────────────────────
 
 class LauncherWindow(Gtk.Window):
     def __init__(self, config_path):
@@ -23,7 +83,7 @@ class LauncherWindow(Gtk.Window):
         # icon directory
         self.icon_dir = os.path.join(os.path.dirname(config_path), 'icons')
         
-        # idebar dimensions
+        # sidebar dimensions
         self.set_default_size(200, 1080)
         self.set_position(Gtk.WindowPosition.NONE)
         self.move(0, 0)
@@ -76,6 +136,42 @@ class LauncherWindow(Gtk.Window):
         # Connect window close event
         self.connect('delete-event', self.on_delete_event)
         self.connect('destroy', Gtk.main_quit)
+
+    # ── i3 tab-check helpers ──────────────────────────────────────────────────
+
+    def get_open_tabs(self):
+        """Return {window_title: con_id} for every leaf inside viewer_tabs."""
+        try:
+            raw  = subprocess.check_output(
+                ['i3-msg', '-t', 'get_tree'], stderr=subprocess.DEVNULL)
+            tree = json.loads(raw.decode())
+        except Exception:
+            return {}
+        result = {}
+        self._find_marked(tree, 'viewer_tabs', result)
+        return result
+
+    def _find_marked(self, node, mark, result):
+        if mark in node.get('marks', []):
+            self._collect_leaves(node, result)
+            return True
+        for child in node.get('nodes', []) + node.get('floating_nodes', []):
+            if self._find_marked(child, mark, result):
+                return True
+        return False
+
+    def _collect_leaves(self, node, result):
+        children = node.get('nodes', [])
+        if not children:
+            name = node.get('name', '')
+            cid  = node.get('id')
+            if name and cid:
+                result[name] = cid
+        else:
+            for child in children:
+                self._collect_leaves(child, result)
+
+    # ── Button factory ────────────────────────────────────────────────────────
     
     def create_launcher_button(self, item):
         """create button for sidebar option"""
@@ -102,7 +198,8 @@ class LauncherWindow(Gtk.Window):
         # Connect click handler
         item_type = item.get('type')
         if item_type == 'app':
-            button.connect('clicked', self.on_app_click, item.get('command'))
+            # Pass full item dict so on_app_click can read window_title if set
+            button.connect('clicked', self.on_app_click, item)
         elif item_type == 'folder':
             button.connect('clicked', self.on_folder_click, item.get('label'))
         
@@ -147,24 +244,49 @@ class LauncherWindow(Gtk.Window):
             # Kill i3 session to logout
             subprocess.Popen(['i3-msg', 'exit'])
     
-    def on_app_click(self, button, command):
-        """Launch an application"""
-        if command:
-            try:
-                subprocess.Popen(['i3-msg', '[con_mark="viewer_tabs"] focus; focus child; exec ' + command])
+    def on_app_click(self, button, item):
+        """Launch an application, or focus its existing tab if already open.
 
-            except Exception as e:
-                print(f"Error launching app: {e}")
+        Config items may carry an optional 'window_title' field whose value
+        must match the actual title the launched process sets on its window.
+        If omitted, the item's 'label' is used as the expected title.
+        """
+        command = item.get('command')
+        if not command:
+            return
+
+        # Determine which title to look for in the open tabs
+        expected_title = item.get('window_title', item.get('label', ''))
+
+        try:
+            open_tabs = self.get_open_tabs()
+            if expected_title in open_tabs:
+                # Already open — focus that tab
+                subprocess.Popen(['i3-msg', f'[con_id="{open_tabs[expected_title]}"] focus'])
+            else:
+                # Not open yet — launch into viewer_tabs as before
+                subprocess.Popen(['i3-msg', '[con_mark="viewer_tabs"] focus; focus child; exec ' + command])
+        except Exception as e:
+            print(f"Error launching app: {e}")
      
     def on_folder_click(self, button, folder_label):
-        """Open folder viewer """
+        """Open folder viewer, or focus its existing tab if already open.
+
+        folder_viewer.py sets its window title to folder_label, so that is
+        the exact string we look for in the open tabs.
+        """
         try:
-            script_dir = os.path.dirname(os.path.abspath(__file__))
+            script_dir    = os.path.dirname(os.path.abspath(__file__))
             folder_viewer = os.path.join(script_dir, 'folder_viewer.py')
-            
-            #  open the folder viewer with the label from the config launcher
-            subprocess.Popen(['i3-msg', f'[con_mark="viewer_tabs"] focus; focus child; exec python3 {folder_viewer} {folder_label}'])
-            
+
+            open_tabs = self.get_open_tabs()
+            if folder_label in open_tabs:
+                # Already open — focus that tab
+                subprocess.Popen(['i3-msg', f'[con_id="{open_tabs[folder_label]}"] focus'])
+            else:
+                # Not open yet — launch as before
+                subprocess.Popen(['i3-msg', f'[con_mark="viewer_tabs"] focus; focus child; exec python3 {folder_viewer} {folder_label}'])
+
         except Exception as e:
             print(f"Error opening folder: {e}")
         
@@ -230,10 +352,19 @@ class LauncherWindow(Gtk.Window):
         return True  # Returning True prevents the window from closing
 
 def main():
+    role       = get_user_role()
+    config_dir = os.path.expanduser('~/.config/launcher')
+
     if len(sys.argv) > 1:
+        # Explicit config path passed — honour it (original behaviour)
         config_path = sys.argv[1]
     else:
-        config_path = os.path.expanduser('~/.config/launcher/appbar-config.json')
+        # Resolve the role-specific config and write it to a temp file so
+        # LauncherWindow can receive a plain file path as it always has.
+        resolved    = load_config(config_dir, role)
+        config_path = os.path.join(config_dir, f'appbar-config-{role}-resolved.json')
+        with open(config_path, 'w') as f:
+            json.dump(resolved, f)
     
     if not os.path.exists(config_path):
         print(f"Config file not found: {config_path}")

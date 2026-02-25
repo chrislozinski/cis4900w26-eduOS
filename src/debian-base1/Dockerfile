@@ -1,3 +1,25 @@
+# build patched i3 
+FROM debian:stable AS i3-builder
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates git build-essential pkg-config meson ninja-build \
+    libxcb1-dev libxcb-util0-dev libxcb-keysyms1-dev libxcb-icccm4-dev \
+    libxcb-randr0-dev libxcb-xinerama0-dev libxcb-shape0-dev \
+    libxcb-xkb-dev libxcb-xrm-dev libxcb-cursor-dev \
+    libev-dev libyajl-dev libstartup-notification0-dev \
+    libpango1.0-dev libxkbcommon-dev libxkbcommon-x11-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN git clone --depth=1 https://github.com/i3/i3.git /i3
+
+WORKDIR /i3
+
+#  set deco_height to 0 so tab decorations are invisible
+RUN sed -i 's/params\.deco_height = render_deco_height();/params.deco_height = 0;/' src/render.c
+
+RUN meson setup build && ninja -C build
+
+# debootstrap minimal Debian base
 # This is loosely based on the documentation found here:
 # https://github.com/coolmagnet/Debootstrap?tab=readme-ov-file
 # but has been modified to work with docker specifically 
@@ -36,6 +58,10 @@ RUN apt-get update && apt-get install -y \
     vifm \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# Drop in the patched i3 binary with /usr/local/bin takong priority over /usr/bin
+COPY --from=i3-builder /i3/build/i3 /usr/local/bin/i3
+
+
 # Set up default configuration directories in /etc/skel
 RUN mkdir -p /etc/skel/.config/i3 \
              /etc/skel/.config/i3status \
@@ -51,11 +77,20 @@ COPY config/i3/layout.json /etc/skel/.config/i3/layout.json
 # Copy vifm config (kept for potential backend use)
 COPY config/interface/vifmrc /etc/skel/.config/vifm/vifmrc
 
-# Copy launcher files
-COPY config/launcher/launcher.py /etc/skel/.config/launcher/launcher.py
-COPY config/launcher/folder_viewer.py /etc/skel/.config/launcher/folder_viewer.py
-COPY config/launcher/appbar-config.json /etc/skel/.config/launcher/appbar-config.json
-COPY config/launcher/app-window.py /etc/skel/.config/launcher/app-window.py
+# Copy launcher scripts
+COPY config/launcher/launcher.py           /etc/skel/.config/launcher/launcher.py
+COPY config/launcher/folder_viewer.py      /etc/skel/.config/launcher/folder_viewer.py
+COPY config/launcher/app-window.py         /etc/skel/.config/launcher/app-window.py
+COPY config/launcher/classroom_manager.py  /etc/skel/.config/launcher/classroom_manager.py
+
+# Copy sidebar configs — generic fallback + role-specific
+COPY config/launcher/appbar-config.json          /etc/skel/.config/launcher/appbar-config.json
+COPY config/launcher/appbar-config-teacher.json  /etc/skel/.config/launcher/appbar-config-teacher.json
+COPY config/launcher/appbar-config-student.json  /etc/skel/.config/launcher/appbar-config-student.json
+
+# Seed classroom data (written to /shared at runtime by config-launcher.sh)
+COPY config/launcher/classrooms.json     /etc/skel/.config/launcher/classrooms.json
+COPY config/launcher/available-apps.json /etc/skel/.config/launcher/available-apps.json
 
 # Copy launcher icons
 COPY icons/light/*.svg /etc/skel/.config/launcher/icons/light/
@@ -64,7 +99,8 @@ COPY icons/dark/*.svg /etc/skel/.config/launcher/icons/dark/
 # Make launcher scripts executable
 RUN chmod +x /etc/skel/.config/launcher/launcher.py \
              /etc/skel/.config/launcher/folder_viewer.py \
-             /etc/skel/.config/launcher/app-window.py
+             /etc/skel/.config/launcher/app-window.py \
+             /etc/skel/.config/launcher/classroom_manager.py
 
 # Copy setup scripts
 COPY config/users/create-users.sh /usr/local/bin/create-users.sh
@@ -95,6 +131,7 @@ RUN /usr/local/bin/config-user-i3.sh
 RUN /usr/local/bin/config-vifm.sh
 
 # Configure launcher for all users
+# (also bootstraps /shared/classrooms.json with teacher-group write access)
 RUN /usr/local/bin/config-launcher.sh
 
 # dbus identity, RDP encryption keys and create the directory xrdp needs to store its process ID
