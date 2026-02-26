@@ -14,7 +14,9 @@ import getpass
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk, GdkPixbuf
 
-CLASSROOMS_FILE = '/shared/classrooms.json'
+CLASSROOMS_FILE     = '/shared/classrooms.json'
+AVAILABLE_APPS_FILE = os.path.join(
+    os.path.expanduser('~/.config/launcher'), 'available-apps.json')
 
 
 # ── Role detection & config loading ──────────────────────────────────────────
@@ -30,11 +32,41 @@ def get_user_role():
     return 'student'
 
 
+def _load_catalog():
+    """Return {label: item} from available-apps.json — the single source of truth."""
+    try:
+        with open(AVAILABLE_APPS_FILE, 'r') as f:
+            apps = json.load(f).get('available_apps', [])
+        return {app['label']: app for app in apps}
+    except Exception:
+        return {}
+
+
+def _resolve_refs(config):
+    """
+    Expand {"ref": "Label"} shorthand items into their full definitions
+    from available-apps.json. Lets role configs stay thin while
+    available-apps.json is the single place to update icons/commands/paths.
+    """
+    catalog = _load_catalog()
+    resolved = []
+    for item in config.get('items', []):
+        if 'ref' in item:
+            label = item['ref']
+            if label in catalog:
+                resolved.append(catalog[label])
+        else:
+            resolved.append(item)
+    config['items'] = resolved
+    return config
+
+
 def load_config(config_dir, role):
     """
     Load the role-specific sidebar config.
     Falls back to the generic appbar-config.json if no role file exists.
-    For students, classroom-enabled apps are appended at runtime.
+    Resolves {"ref": "Label"} items from available-apps.json.
+    For students the sidebar is entirely set by their classroom enabled_apps.
     Resolves /home/USER placeholders for the current user.
     """
     role_file = os.path.join(config_dir, f'appbar-config-{role}.json')
@@ -44,8 +76,11 @@ def load_config(config_dir, role):
     with open(path, 'r') as f:
         config = json.load(f)
 
+    # Expand any ref shorthand before anything else
+    config = _resolve_refs(config)
+
     if role == 'student':
-        config = _append_classroom_apps(config)
+        config = _set_classroom_apps(config)
 
     # Resolve /home/USER placeholder for this user
     home = os.path.expanduser('~')
@@ -53,21 +88,19 @@ def load_config(config_dir, role):
     return json.loads(raw)
 
 
-def _append_classroom_apps(config):
-    """Append any apps the teacher has enabled for this student's classroom."""
+def _set_classroom_apps(config):
+    """Replace the student item list entirely with classroom enabled_apps.
+    The teacher fully controls what appears — unchecking removes it."""
     username = getpass.getuser()
     try:
         with open(CLASSROOMS_FILE, 'r') as f:
             data = json.load(f)
         for classroom in data.get('classrooms', []):
             if username in classroom.get('students', []):
-                existing = {item['label'] for item in config.get('items', [])}
-                for app in classroom.get('enabled_apps', []):
-                    if app['label'] not in existing:
-                        config['items'].append(app)
-                break   # a student belongs to one classroom
+                config['items'] = list(classroom.get('enabled_apps', []))
+                break
     except Exception:
-        pass  # no classrooms file, or student not enrolled — use base config
+        pass  # no classrooms file or not enrolled — empty sidebar
     return config
 
 
@@ -236,6 +269,19 @@ class LauncherWindow(Gtk.Window):
         
         # Style the dialog
         self.style_dialog(dialog)
+        
+        # Center the dialog on the full screen
+        dialog.show_all()
+        screen = Gdk.Screen.get_default()
+        try:
+            screen_w = screen.get_width()
+            screen_h = screen.get_height()
+        except Exception:
+            screen_w = 800
+            screen_h = 600
+        dialog.resize(360, 160)
+        dlg_w, dlg_h = dialog.get_size()
+        dialog.move((screen_w - dlg_w) // 2, (screen_h - dlg_h) // 2)
         
         response = dialog.run()
         dialog.destroy()

@@ -1,37 +1,16 @@
 {
   "role": "teacher",
   "items": [
-    {
-      "type": "app",
-      "label": "Terminal",
-      "window_title": "Terminal",
-      "icon": "light/terminal.svg",
-      "command": "xterm -title Terminal"
-    },
-    {
-      "type": "folder",
-      "label": "Documents",
-      "icon": "light/documents.svg",
-      "path": "/home/USER/Documents"
-    },
+    { "ref": "Terminal" },
+    { "ref": "Documents" },
     {
       "type": "folder",
       "label": "Work",
       "icon": "light/pencil.svg",
       "path": "/home/USER/work"
     },
-    {
-      "type": "folder",
-      "label": "Resources",
-      "icon": "light/resources.svg",
-      "path": "/home/USER/resources"
-    },
-    {
-      "type": "folder",
-      "label": "Submissions",
-      "icon": "light/submissions.svg",
-      "path": "/home/USER/submissions"
-    },
+    { "ref": "Resources" },
+    { "ref": "Submissions" },
     {
       "type": "app",
       "label": "Classrooms",
