@@ -11,14 +11,30 @@ import getpass
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk, GdkPixbuf
 
-# ── File type handlers ────────────────────────────────────────────────────────
-# Map extensions to a command template. Use {path} as placeholder.
-# Add entries here when apps become available.
+# file type handlers that will map extensions to a command template, using {path} as placeholder atm
+# basically will be used so that specific apps run different file types
+# add those entries here when apps become available.
 FILE_HANDLERS = {
     # '.pdf':  'evince {path}',
     # '.txt':  'xterm -e nano {path}',
     # '.png':  'eog {path}',
 }
+
+# map extensions to icon filenames under ~/.config/launcher/icons/
+# any unlisted extensions just fall back to the default file icon
+FILE_TYPE_ICONS = {
+    '.png':  'stylized/photoFileSTYL.svg',
+    '.jpg':  'stylized/photoFileSTYL.svg',
+    '.jpeg': 'stylized/photoFileSTYL.svg',
+    '.gif':  'stylized/photoFileSTYL.svg',
+    '.bmp':  'stylized/photoFileSTYL.svg',
+    '.svg':  'stylized/photoFileSTYL.svg',
+    '.webp': 'stylized/photoFileSTYL.svg',
+}
+
+# central icon paths relative to ~/.config/launcher/icons/
+FOLDER_ICON = 'dark/folder.svg'
+DEFAULT_FILE_ICON = 'dark/book.svg'
 
 class FolderViewer(Gtk.Window):
     def __init__(self, folder_label):
@@ -27,7 +43,7 @@ class FolderViewer(Gtk.Window):
         self.folder_label = folder_label
         self.set_wmclass("folder_viewer", "FolderViewer")
 
-        # Read the config to get the actual path
+        # read the config to get the actual path
         config_path = os.path.expanduser('~/.config/launcher/appbar-config.json')
         folder_path = None
 
@@ -35,7 +51,7 @@ class FolderViewer(Gtk.Window):
             with open(config_path, 'r') as f:
                 config = json.load(f)
                 
-            # Find the folder with this label
+            # find folder with this label
             for item in config.get('items', []):
                 if item.get('type') == 'folder' and item.get('label').strip() == folder_label.strip():
                     folder_path = item.get('path')
@@ -62,16 +78,16 @@ class FolderViewer(Gtk.Window):
             self.show_error(f"Path is not a directory: {self.root_path}")
             sys.exit(1)
         
-        # Define absolute icon paths
-        icon_dir = os.path.expanduser("~/.config/launcher/icons/dark/")
-        self.folder_icon_path = os.path.join(icon_dir, "folder.svg")
-        self.file_icon_path   = os.path.join(icon_dir, "book.svg")
+        # define absolute icon paths
+        self.icon_base = os.path.expanduser("~/.config/launcher/icons/")
+        self.folder_icon_path = os.path.join(self.icon_base, FOLDER_ICON)
+        self.file_icon_path   = os.path.join(self.icon_base, DEFAULT_FILE_ICON)
         
-        # Main container
+        # main container
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
         self.add(vbox)
         
-        # Navigation bar
+        # nav bar
         nav_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=4)
         nav_box.set_name("nav_bar")
         nav_box.set_margin_top(0)
@@ -113,9 +129,7 @@ class FolderViewer(Gtk.Window):
         self.header.set_valign(Gtk.Align.CENTER)
         inner_box.pack_start(self.header, True, True, 0)
 
-        # NO separate separator widget — the nav_bar background IS the bar
-
-        # Scrolled window
+        # scrolled window
         scrolled = Gtk.ScrolledWindow()
         scrolled.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         scrolled.set_margin_top(8)
@@ -124,10 +138,9 @@ class FolderViewer(Gtk.Window):
         scrolled.set_margin_end(8)
         vbox.pack_start(scrolled, True, True, 0)
         
-        # Grid for files
+        # grid for files
         self.grid = Gtk.FlowBox()
         self.grid.set_valign(Gtk.Align.START)
-        # tighter packing: allow one more item per row and reduced spacing
         self.grid.set_max_children_per_line(6)
         self.grid.set_column_spacing(6)
         self.grid.set_row_spacing(6)
@@ -147,7 +160,7 @@ class FolderViewer(Gtk.Window):
         dialog.destroy()
     
     def navigate_to(self, path):
-        """Navigate to a directory, pushing current onto back stack."""
+        """Navigate to a directory, pushing current onto back stack"""
         if not os.path.isdir(path):
             return
         self.history_back.append(self.current_path)
@@ -170,7 +183,7 @@ class FolderViewer(Gtk.Window):
         self.refresh_view()
     
     def on_reset(self, button):
-        """Reset to root folder, clear all history."""
+        """Reset to root folder and clear all history"""
         if self.current_path != self.root_path:
             self.history_back.append(self.current_path)
         self.history_forward.clear()
@@ -178,7 +191,7 @@ class FolderViewer(Gtk.Window):
         self.refresh_view()
     
     def refresh_view(self):
-        """Clear grid and reload files for current_path. Update nav state."""
+        """Clear grid and reload files for current_path, update nav state"""
         # Update header
         self.header.set_markup(f"<b>{os.path.basename(self.current_path)}</b>")
         
@@ -208,7 +221,7 @@ class FolderViewer(Gtk.Window):
             self.grid.add(Gtk.Label(label=f"Error: {e}"))
     
     def create_file_widget(self, name, is_dir):
-        """Each item: EventBox > Box(icon + label). Hover/press feedback via CSS names."""
+        """Each file item: EventBox > Box(icon + label) with a hover/press feedback via CSS names"""
         event_box = Gtk.EventBox()
         event_box.set_name("file_item")
         item_path = os.path.join(self.current_path, name)
@@ -226,7 +239,17 @@ class FolderViewer(Gtk.Window):
         box.set_halign(Gtk.Align.CENTER)
         box.set_valign(Gtk.Align.CENTER)
         
-        svg_path = self.folder_icon_path if is_dir else self.file_icon_path
+        # Pick icon: folder, file-type-specific, or default file
+        if is_dir:
+            svg_path = self.folder_icon_path
+        else:
+            ext = os.path.splitext(name)[1].lower()
+            type_icon = FILE_TYPE_ICONS.get(ext)
+            if type_icon:
+                svg_path = os.path.join(self.icon_base, type_icon)
+            else:
+                svg_path = self.file_icon_path
+
         if os.path.exists(svg_path):
             try:
                 pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(svg_path, 48, 48, True)
@@ -246,7 +269,6 @@ class FolderViewer(Gtk.Window):
         return event_box
 
     # Item hover / press helpers
-
     def _on_item_enter(self, widget, event, event_box):
         event_box.set_name("file_item_hover")
         return False

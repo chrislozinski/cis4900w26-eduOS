@@ -4,26 +4,33 @@
       "type": "app",
       "label": "Terminal",
       "window_title": "Terminal",
-      "icon": "light/terminal.svg",
+      "icon": "stylized/utilTermSTYL.svg",
       "command": "xterm -title Terminal"
     },
     {
       "type": "folder",
       "label": "Documents",
-      "icon": "light/documents.svg",
+      "icon": "stylized/documentsFldSTYL.svg",
       "path": "/home/USER/Documents"
     },
     {
       "type": "folder",
       "label": "Resources",
-      "icon": "light/resources.svg",
+      "icon": "stylized/resourcesSTYL.png",
       "path": "/home/USER/resources"
     },
     {
       "type": "folder",
       "label": "Submissions",
-      "icon": "light/submissions.svg",
+      "icon": "stylized/markedPaperSTYL.svg",
       "path": "/home/USER/submissions"
+    },
+    {
+      "type": "app",
+      "label": "MakeCode",
+      "window_title": "MakeCode for micro:bit",
+      "icon": "stylized/crayons.png",
+      "command": "python3 ~/.config/launcher/makecode-app.py"
     }
   ]
 }

@@ -15,8 +15,9 @@ setup_launcher_for_user() {
     cp /etc/skel/.config/launcher/folder_viewer.py         "$home_dir/.config/launcher/folder_viewer.py"
     cp /etc/skel/.config/launcher/app-window.py            "$home_dir/.config/launcher/app-window.py"
     cp /etc/skel/.config/launcher/classroom_manager.py     "$home_dir/.config/launcher/classroom_manager.py"
+    cp /etc/skel/.config/launcher/makecode-app.py          "$home_dir/.config/launcher/makecode-app.py"
 
-    # All sidebar configs — role is resolved at runtime by launcher.py
+    # sidebar configs, role resolved at runtime by launcher.py
     cp /etc/skel/.config/launcher/appbar-config.json          "$home_dir/.config/launcher/appbar-config.json"
     cp /etc/skel/.config/launcher/appbar-config-teacher.json  "$home_dir/.config/launcher/appbar-config-teacher.json"
     cp /etc/skel/.config/launcher/appbar-config-student.json  "$home_dir/.config/launcher/appbar-config-student.json"
@@ -29,12 +30,13 @@ setup_launcher_for_user() {
     
     # add the username of the person logging in to the generic fallback config
     sed -i "s|/home/USER|$home_dir|g" "$home_dir/.config/launcher/appbar-config.json"
-
+    
     chmod +x "$home_dir/.config/launcher/launcher.py"
     chmod +x "$home_dir/.config/launcher/folder_viewer.py"
     chmod +x "$home_dir/.config/launcher/app-window.py"
     chmod +x "$home_dir/.config/launcher/classroom_manager.py"
-    
+    chmod +x "$home_dir/.config/launcher/makecode-app.py"
+
     #  Documents directory 
     mkdir -p "$home_dir/Documents"
     
@@ -45,8 +47,8 @@ setup_launcher_for_user() {
     echo "Launcher configured for: $username"
 }
 
-# ── Bootstrap /shared/classrooms.json ─────────────────────────────────────────
-# Created once with the seed file; teachers edit it live via classroom_manager.py
+# /shared/classrooms.json
+# Created once with the seed file, teachers edit it live with the classroom_manager.py app
 if [ ! -f /shared/classrooms.json ]; then
     if [ -f /etc/skel/.config/launcher/classrooms.json ]; then
         cp /etc/skel/.config/launcher/classrooms.json /shared/classrooms.json

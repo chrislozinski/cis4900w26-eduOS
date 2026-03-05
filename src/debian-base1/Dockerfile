@@ -55,12 +55,15 @@ RUN apt-get update && apt-get install -y \
     python3-gi \
     python3-gi-cairo \
     gir1.2-gtk-3.0 \
+    gir1.2-webkit2-4.1 \
     vifm \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Drop in the patched i3 binary with /usr/local/bin takong priority over /usr/bin
-COPY --from=i3-builder /i3/build/i3 /usr/local/bin/i3
+# MakeCode static editor using the pre built HTML/JS/CSS to avoid runtime deps 
+COPY widgets/makecode/makecode-static/ /opt/makecode/static/
 
+# add the patched i3 binary with /usr/local/bin takong priority over /usr/bin
+COPY --from=i3-builder /i3/build/i3 /usr/local/bin/i3
 
 # Set up default configuration directories in /etc/skel
 RUN mkdir -p /etc/skel/.config/i3 \
@@ -82,6 +85,7 @@ COPY config/launcher/launcher.py           /etc/skel/.config/launcher/launcher.p
 COPY config/launcher/folder_viewer.py      /etc/skel/.config/launcher/folder_viewer.py
 COPY config/launcher/app-window.py         /etc/skel/.config/launcher/app-window.py
 COPY config/launcher/classroom_manager.py  /etc/skel/.config/launcher/classroom_manager.py
+COPY widgets/makecode/makecode-app.py      /etc/skel/.config/launcher/makecode-app.py
 
 # Copy sidebar configs — generic fallback + role-specific
 COPY config/launcher/appbar-config.json          /etc/skel/.config/launcher/appbar-config.json
@@ -95,12 +99,14 @@ COPY config/launcher/available-apps.json /etc/skel/.config/launcher/available-ap
 # Copy launcher icons
 COPY icons/light/*.svg /etc/skel/.config/launcher/icons/light/
 COPY icons/dark/*.svg /etc/skel/.config/launcher/icons/dark/
+COPY icons/stylized/ /etc/skel/.config/launcher/icons/stylized/
 
 # Make launcher scripts executable
 RUN chmod +x /etc/skel/.config/launcher/launcher.py \
              /etc/skel/.config/launcher/folder_viewer.py \
              /etc/skel/.config/launcher/app-window.py \
-             /etc/skel/.config/launcher/classroom_manager.py
+             /etc/skel/.config/launcher/classroom_manager.py \
+             /etc/skel/.config/launcher/makecode-app.py
 
 # Copy setup scripts
 COPY config/users/create-users.sh /usr/local/bin/create-users.sh

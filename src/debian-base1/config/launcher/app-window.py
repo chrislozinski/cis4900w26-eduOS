@@ -11,7 +11,7 @@ win.set_default_size(880, 1080)
 win.connect('delete-event', lambda w, e: True) 
 win.connect("destroy", Gtk.main_quit)
 
-label = Gtk.Label(label="Viewer Area - Apps will tab here")
+label = Gtk.Label(label="Viewer Area, apps will appear here")
 win.add(label)
 
 win.show_all()

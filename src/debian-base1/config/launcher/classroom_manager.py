@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """
-Classroom Manager — teacher tool for managing classes, enrolled students,
-and which apps appear in each student's sidebar.
+Classroom Manager:
+a widget for the teacher to manage their classes, add or remove students, 
+and change availablility of specific apps in the students' sidebar for each different class 
 
-Data lives in /shared/classrooms.json (writable by the teacher group).
+Data lives in /shared/classrooms.json which is only writable by those with the teacher role
 """
 import gi
 import json
@@ -15,8 +16,6 @@ from gi.repository import Gtk, Gdk
 CLASSROOMS_FILE    = '/shared/classrooms.json'
 AVAILABLE_APPS_FILE = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), 'available-apps.json')
-
-
  
 # Helpers
 def load_classrooms():
@@ -28,7 +27,6 @@ def load_classrooms():
             pass
     return {"classrooms": []}
 
-
 def save_classrooms(data):
     try:
         with open(CLASSROOMS_FILE, 'w') as f:
@@ -36,21 +34,17 @@ def save_classrooms(data):
     except PermissionError:
         raise RuntimeError(
             f"Cannot write to {CLASSROOMS_FILE}. "
-            "Make sure you are in the 'teacher' group and the file is group-writable.")
-
+            "Make sure you are in the 'teacher' group and the file is group writable.")
 
 def load_available_apps():
-    """Return the master list of apps teachers can grant to students."""
+    """Return the full list of apps teachers can grant to students"""
     try:
         with open(AVAILABLE_APPS_FILE, 'r') as f:
             return json.load(f).get('available_apps', [])
     except Exception:
         return []
 
-
- 
 # Main window
-
 class ClassroomManager(Gtk.Window):
     def __init__(self):
         super().__init__(title="Classroom Manager")
@@ -65,7 +59,7 @@ class ClassroomManager(Gtk.Window):
         paned = Gtk.Paned(orientation=Gtk.Orientation.HORIZONTAL)
         self.add(paned)
 
-        # Left panel — classroom list
+        # left panel has the classroom list
         left = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
         left.set_margin_top(12); left.set_margin_bottom(12)
         left.set_margin_start(12); left.set_margin_end(6)
@@ -98,7 +92,7 @@ class ClassroomManager(Gtk.Window):
         del_btn.connect('clicked', self._on_del_cls)
         btn_row.pack_start(del_btn, False, False, 0)
 
-        # Right panel — detail view
+        # the right panel has the specific view of details for the class
         right_sw = Gtk.ScrolledWindow()
         right_sw.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
         paned.pack2(right_sw, True, False)
@@ -114,7 +108,6 @@ class ClassroomManager(Gtk.Window):
 
         self._refresh_cls_list()
 
-     
     # Classroom list helpers
     def _refresh_cls_list(self):
         for row in self.cls_listbox.get_children():
@@ -150,7 +143,6 @@ class ClassroomManager(Gtk.Window):
 
      
     # Classroom CRUD
-
     def _on_cls_selected(self, _lb, row):
         if row is None:
             return
@@ -225,9 +217,7 @@ class ClassroomManager(Gtk.Window):
         self._refresh_cls_list()
 
      
-    # Detail panel
-     
-
+    # Details panel
     def _clear_right(self):
         for child in self.right_box.get_children():
             self.right_box.remove(child)
@@ -246,7 +236,7 @@ class ClassroomManager(Gtk.Window):
         self.right_box.pack_start(
             Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL), False, False, 4)
 
-        #  Students
+        # Students
         s_hdr = Gtk.Label()
         s_hdr.set_markup("<b>Enrolled Students</b>")
         s_hdr.set_halign(Gtk.Align.START)
@@ -300,9 +290,7 @@ class ClassroomManager(Gtk.Window):
             setattr(row, attr, text)
         return row
 
-     
     # Student management
-
     def _on_add_student(self, _btn, cls):
         dialog = Gtk.Dialog(title="Add Student", transient_for=self, flags=0)
         dialog.add_buttons("Cancel", Gtk.ResponseType.CANCEL,
@@ -341,7 +329,6 @@ class ClassroomManager(Gtk.Window):
             self._error(str(e)); return
         self._show_detail(cls)
 
-     
     # App management
     def _build_app_checklist(self, cls):
         """Checkbox list built from available-apps.json. Toggle = immediate save."""
@@ -395,8 +382,6 @@ class ClassroomManager(Gtk.Window):
         except RuntimeError as e:
             self._error(str(e))
 
-
-     
     # Helpers
     def _error(self, msg):
         d = Gtk.MessageDialog(
@@ -407,7 +392,6 @@ class ClassroomManager(Gtk.Window):
 
 
 # Entry point
- 
 def main():
     css = b"""
         window {

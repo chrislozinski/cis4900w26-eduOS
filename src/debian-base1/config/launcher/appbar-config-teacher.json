@@ -6,16 +6,17 @@
     {
       "type": "folder",
       "label": "Work",
-      "icon": "light/pencil.svg",
+      "icon": "stylized/workSTYL.png",
       "path": "/home/USER/work"
     },
     { "ref": "Resources" },
     { "ref": "Submissions" },
+    { "ref": "MakeCode" },
     {
       "type": "app",
       "label": "Classrooms",
       "window_title": "Classroom Manager",
-      "icon": "light/resources.svg",
+      "icon": "stylized/threepeopleClassSTYL.svg",
       "command": "python3 /home/USER/.config/launcher/classroom_manager.py"
     }
   ]
