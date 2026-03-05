@@ -1,0 +1,19 @@
+CACHE MANIFEST
+
+CACHE:
+/pxtsim.js
+/sim.js
+
+/sounds/giggle.wav
+/sounds/happy.wav
+/sounds/hello.wav
+/sounds/mysterious.wav
+/sounds/sad.wav
+/sounds/slide.wav
+/sounds/soaring.wav
+/sounds/spring.wav
+/sounds/twinkle.wav
+/sounds/yawn.wav
+
+NETWORK:
+*

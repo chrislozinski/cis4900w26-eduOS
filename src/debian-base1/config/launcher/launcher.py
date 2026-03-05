@@ -4,6 +4,7 @@ Minimal GTK Launcher
 Displays clickable icons for apps and folders defined in appbar-config.json
 """
 import gi
+import grp
 import json
 import os
 import subprocess
@@ -13,6 +14,96 @@ import getpass
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk, GdkPixbuf
 
+CLASSROOMS_FILE     = '/shared/classrooms.json'
+AVAILABLE_APPS_FILE = os.path.join(
+    os.path.expanduser('~/.config/launcher'), 'available-apps.json')
+
+# Role detection & config loading
+def get_user_role():
+    """Return 'teacher' if the current user is in the teacher group, else 'student'"""
+    username = getpass.getuser()
+    try:
+        if username in grp.getgrnam('teacher').gr_mem:
+            return 'teacher'
+    except KeyError:
+        pass
+    return 'student'
+
+
+def _load_catalog():
+    """Return {label: item} from available-apps.json so theres only one file for all apps"""
+    try:
+        with open(AVAILABLE_APPS_FILE, 'r') as f:
+            apps = json.load(f).get('available_apps', [])
+        return {app['label']: app for app in apps}
+    except Exception:
+        return {}
+
+
+def _resolve_refs(config):
+    """
+    Expand {"ref": "Label"} shorthand items into their full definitions
+    from available-apps.json. Lets role configs stay thin while
+    available-apps.json is the single place to update icons/commands/paths
+    """
+    catalog = _load_catalog()
+    resolved = []
+    for item in config.get('items', []):
+        if 'ref' in item:
+            label = item['ref']
+            if label in catalog:
+                resolved.append(catalog[label])
+        else:
+            resolved.append(item)
+    config['items'] = resolved
+    return config
+
+
+def load_config(config_dir, role):
+    """
+    Load the role-specific sidebar config
+    this falls back to the generic appbar-config.json if no role file exists
+    Resolves {"ref": "Label"} items from available-apps.json
+    
+    For students the sidebar is entirely set by their classroom enabled_apps
+    Resolves /home/USER placeholders for the current user
+    """
+    role_file = os.path.join(config_dir, f'appbar-config-{role}.json')
+    fallback  = os.path.join(config_dir, 'appbar-config.json')
+    path      = role_file if os.path.exists(role_file) else fallback
+
+    with open(path, 'r') as f:
+        config = json.load(f)
+
+    # Expand any ref shorthand before anything else
+    config = _resolve_refs(config)
+
+    if role == 'student':
+        config = _set_classroom_apps(config)
+
+    # Resolve /home/USER placeholder for this user
+    home = os.path.expanduser('~')
+    raw  = json.dumps(config).replace('/home/USER', home).replace('~/', home + '/')
+    return json.loads(raw)
+
+
+def _set_classroom_apps(config):
+    """Replace the student item list entirely with classroom enabled_apps
+    The teacher fully controls what appears, checking or unchecking add/ removesan app"""
+    username = getpass.getuser()
+    try:
+        with open(CLASSROOMS_FILE, 'r') as f:
+            data = json.load(f)
+        for classroom in data.get('classrooms', []):
+            if username in classroom.get('students', []):
+                config['items'] = list(classroom.get('enabled_apps', []))
+                break
+    except Exception:
+        pass  # no classrooms file or not enrolled, which means theres an empty sidebar
+    return config
+
+
+# Main app window
 class LauncherWindow(Gtk.Window):
     def __init__(self, config_path):
         super().__init__(title="Appbar")
@@ -23,8 +114,12 @@ class LauncherWindow(Gtk.Window):
         # icon directory
         self.icon_dir = os.path.join(os.path.dirname(config_path), 'icons')
         
-        # idebar dimensions
-        self.set_default_size(200, 1080)
+        # sidebar dimensions
+        self.expanded_width = 200
+        self.collapsed_width = 58
+        self.is_collapsed = False
+
+        self.set_default_size(self.expanded_width, 1080)
         self.set_position(Gtk.WindowPosition.NONE)
         self.move(0, 0)
         self.set_decorated(False)  # Remove window decorations
@@ -38,24 +133,41 @@ class LauncherWindow(Gtk.Window):
         self.add(main_box)
         
         # username and logout
-        header_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=5)
-        header_box.set_margin_bottom(15)
+        self.header_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+        self.header_box.set_margin_bottom(15)
+        
+        # Home icon to the left of username
+        home_icon = self.create_icon_widget('stylized/homeSTYL.png', size=24)
+        home_event = Gtk.EventBox()
+        home_event.add(home_icon)
+        home_event.set_tooltip_text("Home")
+        home_event.set_margin_start(11)
+        home_event.connect('button-release-event', self.on_home_clicked)
+        self.header_box.pack_start(home_event, False, False, 0)
         
         # Username label
         username = getpass.getuser()
-        username_label = Gtk.Label()
-        username_label.set_markup(f"<span size='large' weight='bold'>{username}</span>")
-        username_label.set_halign(Gtk.Align.START)
-        header_box.pack_start(username_label, True, True, 0)
+        self.username_label = Gtk.Label()
+        self.username_label.set_markup(f"<span size='large' weight='bold'>{username}</span>")
+        self.username_label.set_halign(Gtk.Align.START)
+        self.header_box.pack_start(self.username_label, True, True, 0)
         
-        # Logout button
-        logout_button = Gtk.Button(label=">")
-        logout_button.set_size_request(30, 30)
-        logout_button.set_tooltip_text("Logout")
-        logout_button.connect('clicked', self.on_logout_clicked)
-        header_box.pack_end(logout_button, False, False, 0)
+        # Logout button with icon instead of ">"
+        self.logout_button = Gtk.Button()
+        self.logout_button.set_size_request(30, 30)
+        self.logout_button.set_tooltip_text("Logout")
+        logout_icon_path = os.path.join(self.icon_dir, 'stylized/logoutSTYL.png')
+        try:
+            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(
+                logout_icon_path, 20, 20, True)
+            self.logout_button.set_image(Gtk.Image.new_from_pixbuf(pixbuf))
+            self.logout_button.set_always_show_image(True)
+        except Exception:
+            self.logout_button.set_label(">")  # fallback
+        self.logout_button.connect('clicked', self.on_logout_clicked)
+        self.header_box.pack_end(self.logout_button, False, False, 0)
         
-        main_box.pack_start(header_box, False, False, 0)
+        main_box.pack_start(self.header_box, False, False, 0)
         
         # Scrolled window for launcher items
         scrolled = Gtk.ScrolledWindow()
@@ -63,20 +175,70 @@ class LauncherWindow(Gtk.Window):
         main_box.pack_start(scrolled, True, True, 0)
         
         # Vertical box for launcher items
-        items_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=5)
-        scrolled.add(items_box)
+        self.items_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=5)
+        scrolled.add(self.items_box)
+        
+        # Track label widgets so we can show/hide them on toggle
+        self.item_labels = []
         
         # Create buttons from config
         items = self.config.get('items', [])
         
         for item in items:
             button = self.create_launcher_button(item)
-            items_box.pack_start(button, False, False, 0)
+            self.items_box.pack_start(button, False, False, 0)
+        
+        # Minimize or expand toggle button at the bottom of bar
+        self.toggle_button = Gtk.Button()
+        self.toggle_button.set_relief(Gtk.ReliefStyle.NONE)
+        self.toggle_hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
+        self.toggle_hbox.set_margin_start(5)
+        self.toggle_arrow = Gtk.Label(label="<")
+        self.toggle_label = Gtk.Label(label="Minimize")
+        self.toggle_hbox.pack_start(self.toggle_arrow, False, False, 0)
+        self.toggle_hbox.pack_start(self.toggle_label, False, False, 0)
+        self.toggle_button.add(self.toggle_hbox)
+        self.toggle_button.connect('clicked', self.on_toggle_sidebar)
+        main_box.pack_end(self.toggle_button, False, False, 0)
         
         # Connect window close event
         self.connect('delete-event', self.on_delete_event)
         self.connect('destroy', Gtk.main_quit)
-    
+
+    # i3 tab checker helper functions
+    def get_open_tabs(self):
+        """Return {window_title: con_id} for every leaf inside viewer_tabs."""
+        try:
+            raw  = subprocess.check_output(
+                ['i3-msg', '-t', 'get_tree'], stderr=subprocess.DEVNULL)
+            tree = json.loads(raw.decode())
+        except Exception:
+            return {}
+        result = {}
+        self._find_marked(tree, 'viewer_tabs', result)
+        return result
+
+    def _find_marked(self, node, mark, result):
+        if mark in node.get('marks', []):
+            self._collect_leaves(node, result)
+            return True
+        for child in node.get('nodes', []) + node.get('floating_nodes', []):
+            if self._find_marked(child, mark, result):
+                return True
+        return False
+
+    def _collect_leaves(self, node, result):
+        children = node.get('nodes', [])
+        if not children:
+            name = node.get('name', '')
+            cid  = node.get('id')
+            if name and cid:
+                result[name] = cid
+        else:
+            for child in children:
+                self._collect_leaves(child, result)
+
+    # functions for the buttons in the sidebar
     def create_launcher_button(self, item):
         """create button for sidebar option"""
         button = Gtk.Button()
@@ -97,25 +259,29 @@ class LauncherWindow(Gtk.Window):
         label.set_halign(Gtk.Align.START)
         hbox.pack_start(label, True, True, 0)
         
+        # Track this label for collapse/expand toggling
+        self.item_labels.append(label)
+        
         button.add(hbox)
         
         # Connect click handler
         item_type = item.get('type')
         if item_type == 'app':
-            button.connect('clicked', self.on_app_click, item.get('command'))
+            # Pass full item dict so on_app_click can read window_title if set
+            button.connect('clicked', self.on_app_click, item)
         elif item_type == 'folder':
             button.connect('clicked', self.on_folder_click, item.get('label'))
         
         return button
     
-    def create_icon_widget(self, icon_name):
-        """Create program widget icon"""
-        if icon_name.endswith('.svg'):
+    def create_icon_widget(self, icon_name, size=24):
+        """Create program widget icon — supports .svg and .png"""
+        if icon_name.endswith('.svg') or icon_name.endswith('.png'):
             icon_path = os.path.join(self.icon_dir, icon_name)
             if os.path.exists(icon_path):
                 try:
                     pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(
-                        icon_path, 24, 24, True
+                        icon_path, size, size, True
                     )
                     image = Gtk.Image.new_from_pixbuf(pixbuf)
                     return image
@@ -126,6 +292,12 @@ class LauncherWindow(Gtk.Window):
         label.set_markup(f"<span size='large'>{icon_name}</span>")
         return label
     
+    def on_home_clicked(self, widget, event):
+        """Focus the AppWindow tab inside viewer_tabs."""
+        open_tabs = self.get_open_tabs()
+        if 'AppWindow' in open_tabs:
+            subprocess.Popen(['i3-msg', f'[con_id="{open_tabs["AppWindow"]}"] focus'])
+
     def on_logout_clicked(self, button):
         """Handle logout"""
         dialog = Gtk.MessageDialog(
@@ -139,6 +311,20 @@ class LauncherWindow(Gtk.Window):
         
         # Style the dialog
         self.style_dialog(dialog)
+
+        # Position before show_all to avoid flash
+        screen = Gdk.Screen.get_default()
+        try:
+            screen_w = screen.get_width()
+            screen_h = screen.get_height()
+        except Exception:
+            screen_w = 800
+            screen_h = 600
+
+        dialog.resize(360, 160)
+        dialog.move((screen_w - 360) // 2, (screen_h - 160) // 2)
+
+        dialog.show_all()
         
         response = dialog.run()
         dialog.destroy()
@@ -147,24 +333,49 @@ class LauncherWindow(Gtk.Window):
             # Kill i3 session to logout
             subprocess.Popen(['i3-msg', 'exit'])
     
-    def on_app_click(self, button, command):
-        """Launch an application"""
-        if command:
-            try:
-                subprocess.Popen(['i3-msg', '[con_mark="viewer_tabs"] focus; focus child; exec ' + command])
+    def on_app_click(self, button, item):
+        """Launch an application, or focus its existing tab if app open
 
-            except Exception as e:
-                print(f"Error launching app: {e}")
+        Config items may carry an optional 'window_title' field whose value
+        must match the actual title the launched process sets on its window
+        If this is omitted the item's 'label' is used as the expected title instead
+        """
+        command = item.get('command')
+        if not command:
+            return
+
+        # determine which title to look for in the open tabs
+        expected_title = item.get('window_title', item.get('label', ''))
+
+        try:
+            open_tabs = self.get_open_tabs()
+            if expected_title in open_tabs:
+                # already open then focus that tab
+                subprocess.Popen(['i3-msg', f'[con_id="{open_tabs[expected_title]}"] focus'])
+            else:
+                # not open yet? then launch it into viewer_tabs like usual
+                subprocess.Popen(['i3-msg', '[con_mark="viewer_tabs"] focus; focus child; exec ' + command])
+        except Exception as e:
+            print(f"Error launching app: {e}")
      
     def on_folder_click(self, button, folder_label):
-        """Open folder viewer """
+        """Open folder viewer, or focus its existing tab if already open.
+
+        folder_viewer.py sets its window title to folder_label, so that is
+        the exact string we look for in the open tabs.
+        """
         try:
-            script_dir = os.path.dirname(os.path.abspath(__file__))
+            script_dir    = os.path.dirname(os.path.abspath(__file__))
             folder_viewer = os.path.join(script_dir, 'folder_viewer.py')
-            
-            #  open the folder viewer with the label from the config launcher
-            subprocess.Popen(['i3-msg', f'[con_mark="viewer_tabs"] focus; focus child; exec python3 {folder_viewer} {folder_label}'])
-            
+
+            open_tabs = self.get_open_tabs()
+            if folder_label in open_tabs:
+                # Already open — focus that tab
+                subprocess.Popen(['i3-msg', f'[con_id="{open_tabs[folder_label]}"] focus'])
+            else:
+                # Not open yet — launch as before
+                subprocess.Popen(['i3-msg', f'[con_mark="viewer_tabs"] focus; focus child; exec python3 {folder_viewer} {folder_label}'])
+
         except Exception as e:
             print(f"Error opening folder: {e}")
         
@@ -229,11 +440,48 @@ class LauncherWindow(Gtk.Window):
         """Prevent Sidebar from being closed"""
         return True  # Returning True prevents the window from closing
 
+    def on_toggle_sidebar(self, button):
+        """Collapse sidebar to icon-only or expand back to full width."""
+        self.is_collapsed = not self.is_collapsed
+        diff = self.expanded_width - self.collapsed_width
+
+        if self.is_collapsed:
+            self.username_label.hide()
+            self.logout_button.hide()
+            self.toggle_label.hide()
+            self.toggle_arrow.set_text(">")
+            for lbl in self.item_labels:
+                lbl.hide()
+            target = self.collapsed_width
+            self.set_size_request(target, -1)
+            self.resize(target, self.get_size()[1])
+            subprocess.Popen(['i3-msg', f'[title="Appbar"] resize shrink width {diff} px'])
+        else:
+            self.username_label.show()
+            self.logout_button.show()
+            self.toggle_label.show()
+            self.toggle_arrow.set_text("<")
+            for lbl in self.item_labels:
+                lbl.show()
+            target = self.expanded_width
+            self.set_size_request(target, -1)
+            self.resize(target, self.get_size()[1])
+            subprocess.Popen(['i3-msg', f'[title="Appbar"] resize grow width {diff} px'])
+
 def main():
+    role       = get_user_role()
+    config_dir = os.path.expanduser('~/.config/launcher')
+
     if len(sys.argv) > 1:
+        # Explicit config path passed — honour it (original behaviour)
         config_path = sys.argv[1]
     else:
-        config_path = os.path.expanduser('~/.config/launcher/appbar-config.json')
+        # Resolve the role-specific config and write it to a temp file so
+        # LauncherWindow can receive a plain file path as it always has.
+        resolved    = load_config(config_dir, role)
+        config_path = os.path.join(config_dir, f'appbar-config-{role}-resolved.json')
+        with open(config_path, 'w') as f:
+            json.dump(resolved, f)
     
     if not os.path.exists(config_path):
         print(f"Config file not found: {config_path}")

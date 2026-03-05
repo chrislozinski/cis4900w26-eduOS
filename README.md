@@ -33,6 +33,6 @@ This will include a detailed written report of the design methodology, developme
 This project is being developed by Chris Lozinski under the supervision of Prof. Stefan Kremer
 
 ## Project status
-Development ongoing, working towards Milestone 2
+Development ongoing, working towards Milestone 3 and Makecode intergration 
 
-Last updated: 2/5/2026
+Last updated: 3/4/2026

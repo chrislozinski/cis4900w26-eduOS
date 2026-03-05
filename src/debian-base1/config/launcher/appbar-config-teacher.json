@@ -1,0 +1,23 @@
+{
+  "role": "teacher",
+  "items": [
+    { "ref": "Terminal" },
+    { "ref": "Documents" },
+    {
+      "type": "folder",
+      "label": "Work",
+      "icon": "stylized/workSTYL.png",
+      "path": "/home/USER/work"
+    },
+    { "ref": "Resources" },
+    { "ref": "Submissions" },
+    { "ref": "MakeCode" },
+    {
+      "type": "app",
+      "label": "Classrooms",
+      "window_title": "Classroom Manager",
+      "icon": "stylized/threepeopleClassSTYL.svg",
+      "command": "python3 /home/USER/.config/launcher/classroom_manager.py"
+    }
+  ]
+}

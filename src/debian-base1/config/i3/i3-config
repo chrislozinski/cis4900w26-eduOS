@@ -5,23 +5,35 @@ font pango:monospace 8
 # desktop background 
 exec --no-startup-id xsetroot -solid "#292D3E"
 
-# launch the workspace layout 
+# launch workspace layout 
 exec --no-startup-id "i3-msg 'workspace 1; append_layout ~/.config/i3/layout.json'"
 
-# Launch sidebar and app window
+# launch sidebar and app window
 exec --no-startup-id python3 ~/.config/launcher/launcher.py
 exec --no-startup-id python3 ~/.config/launcher/app-window.py
 
-# Sidebar layout; left side, no resize resized, killed or focused
+# make sure that the sidebar that cant resize, focus, close
 for_window [title="Appbar"] border none
 for_window [title="Appbar"] floating disable
 no_focus [title="Appbar"]
 
-# the app window layout 
+# place the app window home page, stays in layout slot
 for_window [title="AppWindow"] floating disable
 
-#folder viewer
+# folder viewer
 for_window [instance="folder_viewer"] floating disable
+for_window [instance="folder_viewer"] move container to mark viewer_tabs
+
+# classroom manager, teacher widget for enabling apps
+for_window [title="Classroom Manager"] floating disable
+for_window [title="Classroom Manager"] move container to mark viewer_tabs
+
+# makecode editor
+for_window [title="MakeCode for micro:bit"] floating disable
+for_window [title="MakeCode for micro:bit"] move container to mark viewer_tabs
+
+# xterm
+for_window [class="XTerm"] move container to mark viewer_tabs
 
 # keybinds
 bindsym $mod+Return exec xterm
@@ -38,7 +50,3 @@ bar {
     status_command i3status -c ~/.config/i3status/config
     position bottom
 }
-
-
-
-
