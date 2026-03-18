@@ -57,10 +57,23 @@ RUN apt-get update && apt-get install -y \
     gir1.2-gtk-3.0 \
     gir1.2-webkit2-4.1 \
     vifm \
+    libdbus-glib-1-2 \
+    libxt6 \
+    bzip2 \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # MakeCode static editor using the pre built HTML/JS/CSS to avoid runtime deps 
 COPY widgets/makecode/makecode-static/ /opt/makecode/static/
+
+# Install Waterfox (teacher browser) — fetch latest version from GitHub releases API
+RUN WF_VER=$(curl -sf https://api.github.com/repos/BrowserWorks/Waterfox/releases/latest \
+        | grep -oP '"tag_name":\s*"\K[^"]+') \
+    && : "${WF_VER:=6.6.9}" \
+    && curl -L "https://cdn1.waterfox.net/waterfox/releases/${WF_VER}/Linux_x86_64/waterfox-${WF_VER}.tar.bz2" \
+       -o /tmp/waterfox.tar.bz2 \
+    && tar -xjf /tmp/waterfox.tar.bz2 -C /opt \
+    && ln -sf /opt/waterfox/waterfox /usr/local/bin/waterfox \
+    && rm /tmp/waterfox.tar.bz2
 
 # add the patched i3 binary with /usr/local/bin takong priority over /usr/bin
 COPY --from=i3-builder /i3/build/i3 /usr/local/bin/i3
@@ -86,6 +99,9 @@ COPY config/launcher/folder_viewer.py      /etc/skel/.config/launcher/folder_vie
 COPY config/launcher/app-window.py         /etc/skel/.config/launcher/app-window.py
 COPY config/launcher/classroom_manager.py  /etc/skel/.config/launcher/classroom_manager.py
 COPY widgets/makecode/makecode-app.py      /etc/skel/.config/launcher/makecode-app.py
+COPY widgets/library/library.py            /etc/skel/.config/launcher/library.py
+COPY config/launcher/lesson-config.py      /etc/skel/.config/launcher/lesson-config.py
+COPY config/launcher/waterfox-launcher.sh  /etc/skel/.config/launcher/waterfox-launcher.sh
 
 # Copy sidebar configs — generic fallback + role-specific
 COPY config/launcher/appbar-config.json          /etc/skel/.config/launcher/appbar-config.json
@@ -106,7 +122,10 @@ RUN chmod +x /etc/skel/.config/launcher/launcher.py \
              /etc/skel/.config/launcher/folder_viewer.py \
              /etc/skel/.config/launcher/app-window.py \
              /etc/skel/.config/launcher/classroom_manager.py \
-             /etc/skel/.config/launcher/makecode-app.py
+             /etc/skel/.config/launcher/makecode-app.py \
+             /etc/skel/.config/launcher/library.py \
+             /etc/skel/.config/launcher/lesson-config.py \
+             /etc/skel/.config/launcher/waterfox-launcher.sh
 
 # Copy setup scripts
 COPY config/users/create-users.sh /usr/local/bin/create-users.sh
@@ -114,11 +133,13 @@ COPY config/users/user-roles.sh /usr/local/bin/user-roles.sh
 COPY config/users/config-user-i3.sh /usr/local/bin/config-user-i3.sh
 COPY config/interface/config-vifm.sh /usr/local/bin/config-vifm.sh
 COPY config/launcher/config-launcher.sh /usr/local/bin/config-launcher.sh
+COPY config/launcher/webapp-viewer.py /etc/skel/.config/launcher/webapp-viewer.py
 
 RUN chmod +x /usr/local/bin/create-users.sh \
              /usr/local/bin/user-roles.sh \
              /usr/local/bin/config-user-i3.sh \
              /usr/local/bin/config-vifm.sh \
+             /etc/skel/.config/launcher/webapp-viewer.py \
              /usr/local/bin/config-launcher.sh
 
 # Create role groups 

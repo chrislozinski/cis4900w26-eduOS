@@ -1,5 +1,5 @@
 {
-    "accentColor": "#5C005C",
+    "accentColor": "#6B4F76",
     "logoUrl": "https://microbit.org/",
     "logo": "docs/static/logo.portrait.white.svg",
     "docsLogo": "docs/static/logo.square.white.svg",
@@ -7,10 +7,10 @@
     "footerLogo": "docs/static/logo.portrait.black.svg",
     "cardLogo": "docs/static/icons/apple-touch-icon.png",
     "appLogo": "docs/static/icons/apple-touch-icon.png",
-    "organization": "Microsoft MakeCode",
-    "organizationUrl": "https://makecode.com/",
-    "organizationLogo": "docs/static/Microsoft_logo_rgb_W-white_D-square.png",
-    "organizationWideLogo": "docs/static/Microsoft_logo_rgb_W-white_D.png",
+    "organization": "Classroom MakeCode",
+    "organizationUrl": "",
+    "organizationLogo": "",
+    "organizationWideLogo": "",
     "homeScreenHero": {
         "imageUrl": "docs/static/herogallery/hero-banner.png",
         "name": "Flashing Heart",
@@ -28,8 +28,6 @@
     "boardName": "micro:bit",
     "boardNickname": "micro:bit",
     "driveDisplayName": "MICROBIT",
-    "appStoreID": "1092687276",
-    "mobileSafariDownloadProtocol": "microbithex://?data",
     "crowdinProject": "makecode",
     "extendEditor": true,
     "extendFieldEditors": true,
@@ -59,20 +57,12 @@
     ],
     "docMenu": [
         {
-            "name": "Support",
-            "path": "https://support.microbit.org/"
-        },
-        {
             "name": "Reference",
             "path": "/reference"
         },
         {
             "name": "Hardware",
             "path": "/device"
-        },
-        {
-            "name": "Buy",
-            "path": "https://microbit.org/buy/"
         }
     ],
     "hasReferenceDocs": true,
@@ -83,10 +73,6 @@
     "monacoToolbox": true,
     "hasAudio": true,
     "socialOptions": {
-        "orgTwitterHandle": "MSMakeCode",
-        "hashtags": "MakeCode",
-        "discourse": "https://forum.makecode.com/",
-        "discourseCategory": "micro:bit"
     },
     "blocklyOptions": {
         "grid": {
@@ -97,14 +83,14 @@
         }
     },
     "blockColors": {
-        "logic": "#00A4A6",
-        "loops": "#00AA00",
-        "math": "#9400D3",
-        "variables": "#DC143C",
-        "text": "#B8860B",
-        "advanced": "#00272B",
-        "functions": "#3455DB",
-        "arrays": "#E65722"
+        "logic": "#4CAF50",
+        "loops": "#009688",
+        "math": "#7B1FA2",
+        "variables": "#E91E63",
+        "text": "#F57C00",
+        "advanced": "#263238",
+        "functions": "#1565C0",
+        "arrays": "#E65100"
     },
     "defaultColorTheme": "microbit-light",
     "highContrastColorTheme": "pxt-high-contrast",
@@ -225,7 +211,7 @@
     "matchWebUSBDeviceInSim": true,
     "condenseProfile": true,
     "cloudProfileIcon": "docs/static/profile/microbit-cloud.png",
-    "timeMachine": true,
+    "timeMachine": false,
     "timeMachineDiffInterval": 600000,
     "timeMachineSnapshotInterval": 1800000,
     "TOC": [

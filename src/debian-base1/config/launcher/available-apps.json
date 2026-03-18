@@ -16,7 +16,7 @@
     {
       "type": "folder",
       "label": "Resources",
-      "icon": "stylized/resourcesSTYL.png",
+      "icon": "stylized/documentsFldSTYL.svg",
       "path": "/home/USER/resources"
     },
     {
@@ -24,6 +24,13 @@
       "label": "Submissions",
       "icon": "stylized/markedPaperSTYL.svg",
       "path": "/home/USER/submissions"
+    },
+    {
+      "type": "app",
+      "label": "Library",
+      "window_title": "Library",
+      "icon": "stylized/resourcesSTYL.png",
+      "command": "python3 ~/.config/launcher/library.py"
     },
     {
       "type": "app",

@@ -28,12 +28,23 @@ for_window [instance="folder_viewer"] move container to mark viewer_tabs
 for_window [title="Classroom Manager"] floating disable
 for_window [title="Classroom Manager"] move container to mark viewer_tabs
 
+# lesson config, teacher widget for configuring lesson resources
+for_window [title="Lesson Config"] floating disable
+for_window [title="Lesson Config"] move container to mark viewer_tabs
+
+# library, student-facing research site launcher
+for_window [instance="library"] floating disable
+for_window [instance="library"] move container to mark viewer_tabs
+
 # makecode editor
 for_window [title="MakeCode for micro:bit"] floating disable
 for_window [title="MakeCode for micro:bit"] move container to mark viewer_tabs
 
 # xterm
 for_window [class="XTerm"] move container to mark viewer_tabs
+
+for_window [instance="webapp_viewer"] floating disable
+for_window [instance="webapp_viewer"] move container to mark viewer_tabs
 
 # keybinds
 bindsym $mod+Return exec xterm

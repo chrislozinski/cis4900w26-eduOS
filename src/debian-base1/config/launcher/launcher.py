@@ -266,7 +266,7 @@ class LauncherWindow(Gtk.Window):
         
         # Connect click handler
         item_type = item.get('type')
-        if item_type == 'app':
+        if item_type in ('app', 'webapp'):
             # Pass full item dict so on_app_click can read window_title if set
             button.connect('clicked', self.on_app_click, item)
         elif item_type == 'folder':
