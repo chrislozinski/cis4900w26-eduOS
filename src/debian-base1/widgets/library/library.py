@@ -10,11 +10,37 @@ import os
 import getpass
 import subprocess
 import shlex
+import threading
+import urllib.request
+from urllib.parse import urlparse
 
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk, GdkPixbuf
 
 CLASSROOMS_FILE = '/shared/classrooms.json'
+FAVICON_CACHE   = os.path.expanduser('~/.config/launcher/icons/favicons/')
+
+
+def _favicon_path(url):
+    host = urlparse(url).netloc.lstrip('www.').replace('/', '_')
+    return os.path.join(FAVICON_CACHE, f"{host}.png")
+
+
+def _fetch_favicon(url, dest):
+    if os.path.exists(dest):
+        return
+    os.makedirs(FAVICON_CACHE, exist_ok=True)
+    host = urlparse(url).netloc
+    api  = f"https://www.google.com/s2/favicons?domain={host}&sz=64"
+    try:
+        req = urllib.request.Request(api, headers={'User-Agent': 'Mozilla/5.0'})
+        with urllib.request.urlopen(req, timeout=5) as r:
+            data = r.read()
+        if data:
+            with open(dest, 'wb') as f:
+                f.write(data)
+    except Exception:
+        pass
 
 
 def load_classrooms():
@@ -73,6 +99,10 @@ class LibraryWindow(Gtk.Window):
 
         if sites:
             for site in sites:
+                threading.Thread(
+                    target=_fetch_favicon,
+                    args=(site.get('url', ''), _favicon_path(site.get('url', ''))),
+                    daemon=True).start()
                 self.grid.add(self._make_tile(site))
         else:
             empty = Gtk.Label(label="No sites have been added to your library yet.")
@@ -96,13 +126,17 @@ class LibraryWindow(Gtk.Window):
 
         icon_rel  = site.get('icon', '')
         icon_path = os.path.join(self.icon_base, icon_rel) if icon_rel else ''
+        favicon   = _favicon_path(site.get('url', ''))
 
-        if icon_path and os.path.exists(icon_path):
-            try:
-                pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(icon_path, 72, 72, True)
-                box.pack_start(Gtk.Image.new_from_pixbuf(pixbuf), False, False, 0)
-            except Exception:
-                box.pack_start(Gtk.Label(label="?"), False, False, 0)
+        for candidate in (favicon, icon_path,
+                          os.path.join(self.icon_base, 'stylized/rubikMixed.png')):
+            if candidate and os.path.exists(candidate):
+                try:
+                    pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(candidate, 72, 72, True)
+                    box.pack_start(Gtk.Image.new_from_pixbuf(pixbuf), False, False, 0)
+                    break
+                except Exception:
+                    continue
         else:
             placeholder = Gtk.Label(label="🌐")
             placeholder.set_name("tile_icon_placeholder")
@@ -118,19 +152,42 @@ class LibraryWindow(Gtk.Window):
         event_box.add(box)
         return event_box
 
+    def _get_open_tabs(self):
+        try:
+            raw = subprocess.check_output(['i3-msg', '-t', 'get_tree'], stderr=subprocess.DEVNULL)
+            tree = json.loads(raw.decode())
+            result = {}
+            self._collect_leaves(tree, result)
+            return result
+        except Exception:
+            return {}
+
+    def _collect_leaves(self, node, result):
+        if not node.get('nodes', []):
+            name = node.get('name', '')
+            cid  = node.get('id')
+            if name and cid:
+                result[name] = cid
+        else:
+            for child in node.get('nodes', []):
+                self._collect_leaves(child, result)
+
     def _on_tile_release(self, widget, event, site):
         widget.set_name("tile_hover")
         if event.button != 1:
             return False
-
+        
         label = site.get('label', 'Site')
         url   = site.get('url', '')
         if not url:
             return False
-
-        cmd = f"python3 {self.viewer} {shlex.quote(label)} {shlex.quote(url)}"
-        subprocess.Popen(
-            ['i3-msg', f'[con_mark="viewer_tabs"] focus; focus child; exec {cmd}'])
+        open_tabs = self._get_open_tabs()
+        if label in open_tabs:
+            subprocess.Popen(['i3-msg', f'[con_id="{open_tabs[label]}"] focus'])
+        else:
+            cmd = f"python3 {self.viewer} {shlex.quote(label)} {shlex.quote(url)}"
+            subprocess.Popen(
+                ['i3-msg', f'[con_mark="viewer_tabs"] focus; focus child; exec {cmd}'])
         return False
 
 

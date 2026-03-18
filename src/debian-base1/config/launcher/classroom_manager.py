@@ -64,13 +64,12 @@ def _web_app_to_item(wa):
         "type":         "webapp",
         "label":        wa["label"],
         "window_title": wa["label"],
-        "icon":         wa.get("icon", "stylized/webSTYL.png"),
+        "icon":         wa.get("icon", "stylized/globeInternet.svg"),
         "command":      cmd,
     }
 
 
 #  Main window 
-
 class ClassroomManager(Gtk.Window):
     def __init__(self):
         super().__init__(title="Classroom Manager")
@@ -84,11 +83,11 @@ class ClassroomManager(Gtk.Window):
         self.selected_cls_id = None
         self.selected_wa_idx = None   # index into data["web_apps"]
 
-        #  Top-level layout ─
+        #  Top-level layout 
         paned = Gtk.Paned(orientation=Gtk.Orientation.HORIZONTAL)
         self.add(paned)
 
-        #  LEFT PANEL ─
+        #  LEFT PANEL 
         left = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
         left.set_margin_top(12); left.set_margin_bottom(12)
         left.set_margin_start(12); left.set_margin_end(6)
@@ -235,7 +234,7 @@ class ClassroomManager(Gtk.Window):
         self.right_box.pack_start(lbl, True, True, 0)
         self.right_box.show_all()
 
-    #  Classroom selection & detail ─
+    #  Classroom selection & detail 
 
     def _get_cls(self, cls_id):
         for c in self.data.get('classrooms', []):
@@ -266,7 +265,7 @@ class ClassroomManager(Gtk.Window):
             "Enable this app per-classroom using the checklist\n"
             "in the classroom detail view on the left.")
 
-    #  Classroom CRUD ─
+    #  Classroom CRUD 
 
     def _on_add_cls(self, _btn):
         dialog = Gtk.Dialog(title="New Classroom", transient_for=self, flags=0)
@@ -329,7 +328,7 @@ class ClassroomManager(Gtk.Window):
         self._show_placeholder("Select a classroom on the left to manage it.")
         self._refresh_cls_list()
 
-    #  Web App CRUD ─
+    #  Web App CRUD 
 
     def _on_add_wa(self, _btn):
         dialog = Gtk.Dialog(title="Add Custom Web App", transient_for=self, flags=0)
@@ -424,7 +423,7 @@ class ClassroomManager(Gtk.Window):
         else:
             self._show_placeholder("Select a classroom on the left to manage it.")
 
-    #  Classroom detail panel ─
+    #  Classroom detail panel 
 
     def _show_detail(self, cls):
         self._clear_right()
@@ -480,7 +479,7 @@ class ClassroomManager(Gtk.Window):
         self.right_box.pack_start(self._build_app_checklist(cls), False, False, 0)
         self.right_box.show_all()
 
-    #  App checklist (static apps + custom web apps merged) ─
+    #  App checklist (static apps + custom web apps merged) 
 
     def _build_app_checklist(self, cls):
         """
@@ -529,16 +528,19 @@ class ClassroomManager(Gtk.Window):
             row_box.set_margin_top(6);   row_box.set_margin_bottom(6)
 
             cb = Gtk.CheckButton()
+            handler_id = cb.connect('clicked', self._on_app_toggle, app, cls)
+            cb.handler_block(handler_id)
             cb.set_active(app['label'] in enabled_labels)
+            cb.handler_unblock(handler_id)
             row_box.pack_start(cb, False, False, 0)
 
             desc = Gtk.Label()
             if app['type'] == 'webapp':
-                # Show URL instead of command for web apps — more readable
+                # Show URL instead of command for web apps
                 url = next(
                     (wa['url'] for wa in self.data.get('web_apps', [])
                      if wa['label'] == app['label']), '')
-                desc.set_text(f"{app['label']}  [web]  {url}")
+                desc.set_markup(f"<b>{app['label']}</b>  <small>[web]  {url.replace('&', '&amp;')}</small>")
             else:
                 detail = app.get('command', app.get('path', ''))
                 desc.set_markup(
@@ -547,7 +549,6 @@ class ClassroomManager(Gtk.Window):
             desc.set_halign(Gtk.Align.START)
             row_box.pack_start(desc, True, True, 0)
 
-            cb.connect('toggled', self._on_app_toggle, app, cls)
             vbox.pack_start(row_box, False, False, 0)
 
         return frame
@@ -565,8 +566,7 @@ class ClassroomManager(Gtk.Window):
         except RuntimeError as e:
             self._error(str(e))
 
-    #  Row factory & student management (unchanged) ─
-
+    #  Row factory & student management
     def _make_text_row(self, text, attr=None):
         row = Gtk.ListBoxRow()
         lbl = Gtk.Label(label=text)

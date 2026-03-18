@@ -22,7 +22,7 @@
     {
       "type": "folder",
       "label": "Resources",
-      "icon": "stylized/resourcesSTYL.png",
+      "icon": "stylized/openBookSTYL.svg",
       "path": "/home/USER/resources"
     },
     {

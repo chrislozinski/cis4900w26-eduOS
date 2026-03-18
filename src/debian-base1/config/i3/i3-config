@@ -46,6 +46,9 @@ for_window [class="XTerm"] move container to mark viewer_tabs
 for_window [instance="webapp_viewer"] floating disable
 for_window [instance="webapp_viewer"] move container to mark viewer_tabs
 
+for_window [class="Waterfox"] floating disable
+for_window [class="Waterfox"] move container to mark viewer_tabs
+
 # keybinds
 bindsym $mod+Return exec xterm
 bindsym $mod+Shift+q kill

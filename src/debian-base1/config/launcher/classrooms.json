@@ -6,5 +6,6 @@
       "students": ["studentuser"],
       "enabled_apps": []
     }
-  ]
+  ],
+  "web_apps": []
 }

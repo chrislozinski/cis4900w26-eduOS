@@ -75,6 +75,13 @@ RUN WF_VER=$(curl -sf https://api.github.com/repos/BrowserWorks/Waterfox/release
     && ln -sf /opt/waterfox/waterfox /usr/local/bin/waterfox \
     && rm /tmp/waterfox.tar.bz2
 
+# Install uBlock Origin as a force-installed system extension for Waterfox
+RUN mkdir -p /opt/waterfox/distribution/extensions \
+    && curl -L "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/addon-607454-latest.xpi" \
+       -o /opt/waterfox/distribution/extensions/uBlock0@raymondhill.net.xpi \
+    && echo '{"policies":{"ExtensionSettings":{"uBlock0@raymondhill.net":{"installation_mode":"force_installed","install_url":"file:///opt/waterfox/distribution/extensions/uBlock0@raymondhill.net.xpi"}}}}' \
+       > /opt/waterfox/distribution/policies.json
+
 # add the patched i3 binary with /usr/local/bin takong priority over /usr/bin
 COPY --from=i3-builder /i3/build/i3 /usr/local/bin/i3
 
