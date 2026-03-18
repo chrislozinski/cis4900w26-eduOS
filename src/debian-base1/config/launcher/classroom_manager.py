@@ -125,7 +125,7 @@ class ClassroomManager(Gtk.Window):
         left.pack_start(
             Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL), False, False, 6)
 
-        # — Web Apps section —
+        # Web Apps section
         wa_hdr = Gtk.Label()
         wa_hdr.set_markup("<b>Custom Web Apps</b>")
         wa_hdr.set_halign(Gtk.Align.START)
@@ -174,26 +174,32 @@ class ClassroomManager(Gtk.Window):
         self._refresh_wa_list()
 
     #  Refresh helpers 
-
     def _refresh_cls_list(self):
         for row in self.cls_listbox.get_children():
             self.cls_listbox.remove(row)
+        
         for cls in self.data.get('classrooms', []):
             row = Gtk.ListBoxRow()
+
             box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
             box.set_margin_top(8); box.set_margin_bottom(8)
             box.set_margin_start(10)
+
             name_lbl = Gtk.Label(label=cls['name'])
             name_lbl.set_halign(Gtk.Align.START)
             box.pack_start(name_lbl, False, False, 0)
+            
             id_lbl = Gtk.Label()
             id_lbl.set_markup(f"<small>{cls['id']}</small>")
             id_lbl.set_halign(Gtk.Align.START)
             id_lbl.get_style_context().add_class("dim-label")
+            
             box.pack_start(id_lbl, False, False, 0)
+
             row.add(box)
             row.cls_id = cls['id']
             self.cls_listbox.add(row)
+
         self.cls_listbox.show_all()
 
     def _refresh_wa_list(self):
@@ -212,7 +218,7 @@ class ClassroomManager(Gtk.Window):
             url_lbl = Gtk.Label(label=wa['url'])
             url_lbl.set_halign(Gtk.Align.START)
             url_lbl.get_style_context().add_class("dim-label")
-            url_lbl.set_ellipsize(3)   # PANGO_ELLIPSIZE_END
+            url_lbl.set_ellipsize(3)   
             url_lbl.set_max_width_chars(30)
             box.pack_start(url_lbl, False, False, 0)
 
@@ -222,7 +228,6 @@ class ClassroomManager(Gtk.Window):
         self.wa_listbox.show_all()
 
     #  Right panel helpers 
-
     def _clear_right(self):
         for child in self.right_box.get_children():
             self.right_box.remove(child)
@@ -235,7 +240,6 @@ class ClassroomManager(Gtk.Window):
         self.right_box.show_all()
 
     #  Classroom selection & detail 
-
     def _get_cls(self, cls_id):
         for c in self.data.get('classrooms', []):
             if c['id'] == cls_id:
@@ -266,11 +270,11 @@ class ClassroomManager(Gtk.Window):
             "in the classroom detail view on the left.")
 
     #  Classroom CRUD 
-
     def _on_add_cls(self, _btn):
         dialog = Gtk.Dialog(title="New Classroom", transient_for=self, flags=0)
         dialog.add_buttons("Cancel", Gtk.ResponseType.CANCEL,
                            "Create", Gtk.ResponseType.OK)
+        
         box = dialog.get_content_area()
         box.set_spacing(6)
         box.set_margin_top(12); box.set_margin_bottom(12)
@@ -278,15 +282,18 @@ class ClassroomManager(Gtk.Window):
         box.pack_start(Gtk.Label(label="Classroom name:"), False, False, 0)
         name_entry = Gtk.Entry()
         name_entry.set_placeholder_text("e.g. Math 101")
+
         box.pack_start(name_entry, False, False, 0)
         box.pack_start(Gtk.Label(label="Classroom ID (no spaces):"), False, False, 0)
         id_entry = Gtk.Entry()
         id_entry.set_placeholder_text("e.g. math101")
         box.pack_start(id_entry, False, False, 0)
+        
         dialog.show_all()
         response = dialog.run()
         name   = name_entry.get_text().strip()
         cls_id = id_entry.get_text().strip().replace(' ', '_')
+
         dialog.destroy()
 
         if response != Gtk.ResponseType.OK or not name or not cls_id:
@@ -307,8 +314,10 @@ class ClassroomManager(Gtk.Window):
         if not self.selected_cls_id:
             return
         cls = self._get_cls(self.selected_cls_id)
+        
         if not cls:
             return
+        
         confirm = Gtk.MessageDialog(
             transient_for=self, flags=0,
             message_type=Gtk.MessageType.QUESTION,
@@ -329,7 +338,6 @@ class ClassroomManager(Gtk.Window):
         self._refresh_cls_list()
 
     #  Web App CRUD 
-
     def _on_add_wa(self, _btn):
         dialog = Gtk.Dialog(title="Add Custom Web App", transient_for=self, flags=0)
         dialog.add_buttons("Cancel", Gtk.ResponseType.CANCEL,
@@ -424,7 +432,6 @@ class ClassroomManager(Gtk.Window):
             self._show_placeholder("Select a classroom on the left to manage it.")
 
     #  Classroom detail panel 
-
     def _show_detail(self, cls):
         self._clear_right()
 
@@ -479,8 +486,7 @@ class ClassroomManager(Gtk.Window):
         self.right_box.pack_start(self._build_app_checklist(cls), False, False, 0)
         self.right_box.show_all()
 
-    #  App checklist (static apps + custom web apps merged) 
-
+    #  App checklist (static apps + web apps) 
     def _build_app_checklist(self, cls):
         """
         Checkbox list combining:
@@ -510,7 +516,7 @@ class ClassroomManager(Gtk.Window):
         shown_web_sep = False
 
         for app in all_apps:
-            # Insert a visual divider before the first web app
+            # visual divider before the first web app
             if app['type'] == 'webapp' and not shown_web_sep:
                 shown_web_sep = True
                 sep_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
@@ -554,7 +560,7 @@ class ClassroomManager(Gtk.Window):
         return frame
 
     def _on_app_toggle(self, cb, app, cls):
-        """Called when a checkbox is toggled — updates cls and saves immediately."""
+        """Called when a checkbox is toggled, updates cls and saves immediately."""
         if cb.get_active():
             if not any(a['label'] == app['label'] for a in cls['enabled_apps']):
                 cls['enabled_apps'].append(app)
@@ -566,7 +572,7 @@ class ClassroomManager(Gtk.Window):
         except RuntimeError as e:
             self._error(str(e))
 
-    #  Row factory & student management
+    #  Rows and student management
     def _make_text_row(self, text, attr=None):
         row = Gtk.ListBoxRow()
         lbl = Gtk.Label(label=text)
@@ -624,7 +630,6 @@ class ClassroomManager(Gtk.Window):
 
 
 #  Entry point 
-
 def main():
     css = b"""
         window {

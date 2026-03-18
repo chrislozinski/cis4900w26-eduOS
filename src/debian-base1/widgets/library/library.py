@@ -42,14 +42,12 @@ def _fetch_favicon(url, dest):
     except Exception:
         pass
 
-
 def load_classrooms():
     try:
         with open(CLASSROOMS_FILE, 'r') as f:
             return json.load(f)
     except Exception:
         return {"classrooms": []}
-
 
 def get_student_sites():
     username = getpass.getuser()

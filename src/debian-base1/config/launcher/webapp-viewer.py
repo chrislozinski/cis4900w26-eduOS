@@ -31,7 +31,6 @@ _AD_CSS = """
     ins.adsbygoogle { display: none !important; }
 """
 
-
 def main():
     if len(sys.argv) < 3:
         print("Usage: webapp-viewer.py <title> <url>")
@@ -53,7 +52,7 @@ def main():
 
     webview = WebKit2.WebView()
 
-    # Inject CSS to hide common ad elements
+    # use CSS to hide common ad elements
     cm = webview.get_user_content_manager()
     cm.add_style_sheet(WebKit2.UserStyleSheet(
         _AD_CSS,
@@ -86,14 +85,13 @@ def main():
     settings.set_enable_javascript(True)
     settings.set_enable_developer_extras(False)
     settings.set_allow_file_access_from_file_urls(False)
-    # Allow the JS Clipboard API so web apps (e.g. Google Docs) can
-    # read/write the clipboard; keyboard Ctrl+C/V works regardless
+    # Allow the JS Clipboard API so web apps (e.g. Google Docs) can read/write the clipboard
     try:
         settings.set_javascript_can_access_clipboard(True)
     except AttributeError:
         pass  # older WebKit2 builds don't expose this setting
 
-    # suppress right-click context menu for clean app feel
+    # suppress right click context menu ? 
     webview.connect("context-menu", lambda *a: True)
 
     webview.load_uri(url)
