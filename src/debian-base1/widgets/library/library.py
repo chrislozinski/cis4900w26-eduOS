@@ -15,7 +15,7 @@ import urllib.request
 from urllib.parse import urlparse
 
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, Gdk, GdkPixbuf
+from gi.repository import Gtk, Gdk, GdkPixbuf, GLib
 
 CLASSROOMS_FILE = '/shared/classrooms.json'
 FAVICON_CACHE   = os.path.expanduser('~/.config/launcher/icons/favicons/')
@@ -111,7 +111,7 @@ class LibraryWindow(Gtk.Window):
     def _make_tile(self, site):
         event_box = Gtk.EventBox()
         event_box.set_name("tile")
-
+        
         event_box.connect('enter-notify-event',  lambda w, _: w.set_name("tile_hover"))
         event_box.connect('leave-notify-event',  lambda w, _: w.set_name("tile"))
         event_box.connect('button-press-event',  lambda w, _: w.set_name("tile_active"))
@@ -240,7 +240,10 @@ def main():
         Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
     win = LibraryWindow()
+    win.realize()
+    win.set_opacity(0)
     win.show_all()
+    GLib.timeout_add(150, lambda: win.set_opacity(1) or False)
     Gtk.main()
 
 

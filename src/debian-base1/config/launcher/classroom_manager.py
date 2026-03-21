@@ -17,7 +17,7 @@ import os
 import shlex
 
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, Gdk
+from gi.repository import Gtk, Gdk, GLib
 
 CLASSROOMS_FILE     = '/shared/classrooms.json'
 AVAILABLE_APPS_FILE = os.path.join(
@@ -483,8 +483,12 @@ class ClassroomManager(Gtk.Window):
         note.get_style_context().add_class("dim-label")
         self.right_box.pack_start(note, False, False, 0)
 
+        self._pending_connects = []
         self.right_box.pack_start(self._build_app_checklist(cls), False, False, 0)
         self.right_box.show_all()
+        for cb, app, cls_ref in self._pending_connects:
+            cb.connect('clicked', self._on_app_toggle, app, cls_ref)
+        self._pending_connects = []
 
     #  App checklist (static apps + web apps) 
     def _build_app_checklist(self, cls):
@@ -534,10 +538,8 @@ class ClassroomManager(Gtk.Window):
             row_box.set_margin_top(6);   row_box.set_margin_bottom(6)
 
             cb = Gtk.CheckButton()
-            handler_id = cb.connect('clicked', self._on_app_toggle, app, cls)
-            cb.handler_block(handler_id)
             cb.set_active(app['label'] in enabled_labels)
-            cb.handler_unblock(handler_id)
+            self._pending_connects.append((cb, app, cls))
             row_box.pack_start(cb, False, False, 0)
 
             desc = Gtk.Label()
@@ -688,7 +690,10 @@ def main():
         Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
     win = ClassroomManager()
+    win.realize()
+    win.set_opacity(0)
     win.show_all()
+    GLib.timeout_add(150, lambda: win.set_opacity(1) or False)
     Gtk.main()
 
 

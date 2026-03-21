@@ -52,6 +52,9 @@ def main():
 
     webview = WebKit2.WebView()
 
+    # match window background so blank canvas never shows as a white/light square
+    webview.set_background_color(Gdk.RGBA(0.149, 0.149, 0.149, 1))  # #262626
+
     # use CSS to hide common ad elements
     cm = webview.get_user_content_manager()
     cm.add_style_sheet(WebKit2.UserStyleSheet(

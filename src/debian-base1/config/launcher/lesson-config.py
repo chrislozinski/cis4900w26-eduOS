@@ -11,7 +11,7 @@ import os
 import shlex
 
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, Gdk
+from gi.repository import Gtk, Gdk, GLib
 
 CLASSROOMS_FILE = '/shared/classrooms.json'
 
@@ -327,7 +327,10 @@ def main():
         Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
     win = LessonConfig()
+    win.realize()
+    win.set_opacity(0)
     win.show_all()
+    GLib.timeout_add(150, lambda: win.set_opacity(1) or False)
     Gtk.main()
 
 

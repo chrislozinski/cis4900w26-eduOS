@@ -92,9 +92,11 @@ def main():
     threading.Thread(target=start_server, daemon=True).start()
 
     win = MakeCodeWindow()
+    win.realize()
     win.show_all()
     Gtk.main()
 
 
 if __name__ == "__main__":
     main()
+    
