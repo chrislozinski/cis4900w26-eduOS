@@ -1,10 +1,25 @@
-# Device Serial Number
+# device Serial Number
 
-Derive a unique, consistent serial number of this device from internal data.
+Get the serial number for the @boardname@
 
 ```sig
-control.deviceSerialNumber();
+control.deviceSerialNumber()
 ```
 
-**This is an advanced API.**  For more information, see the
-[@boardname@ runtime messageBus documentation](https://lancaster-university.github.io/microbit-docs/ubit/messageBus/).
+The system software in your board creates a unique number to identify the board. You can use this number in your program if you want to know which board is running your program.
+
+## Returns
+
+* a [number](/types/number) that is created to uniquely identify this board.
+
+## Example #example
+
+Write the board serial number to the serial port.
+
+```blocks
+serial.writeValue("serialnumber", control.deviceSerialNumber());
+```
+
+## See also #seealso
+
+[device dal version](/reference/control/device-dal-version)

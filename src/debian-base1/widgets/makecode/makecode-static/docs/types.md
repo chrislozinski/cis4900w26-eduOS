@@ -17,10 +17,10 @@ The following built-in types are supported:
 
 * **[Function](types/function)**: code you can reuse anywhere in a program 
 
-## Buffer #custom
+## Images and Sprites #custom
 
-* **[Buffer](types/buffer)**: temporary part of memory used to transfer data between your program and devices
-
+* **[Image](/types/image)**: rows and columns of color pixels that make a picture
+* **[Sprite](/types/sprite)**: an operation object to locate and move an image
 
 ## User data
 

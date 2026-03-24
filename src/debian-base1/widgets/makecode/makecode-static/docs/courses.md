@@ -1,153 +1,100 @@
 # Courses
 
-A collection of courses and tutorials built for the @boardname@.
-
-## Intro to Computer Science
-
-MakeCode's course for learning Computer Science with the micro:bit. This is a 14 week computer science course for middle school grades 6-8.
-
-```codecard
-[{
-  "name": "Intro to CS Online",
-  "description": "Online edition of the Intro to Computer Science course",
-  "url":"/courses/csintro",
-  "imageUrl": "/docs/static/courses/csintro.jpg"
-}, {
-  "name": "Intro to CS Classroom",
-  "description": "Educator edition of the Intro to Computer Science course for the classroom, including complete downloadable materials",
-  "url":"/courses/csintro-educator",
-  "imageUrl": "/docs/static/courses/csintro-educator.jpg"
-}]
-```
+A collection of courses and tutorials built for Microsoft MakeCode Arcade. 
 
 ## Classroom
 
-Courses contributed by educators to teach computing, science, and technology in the classroom.
+Structured courses for teaching computer science in the classroom.
 
 ```codecard
-[{
-  "name": "Science Experiments",
-  "description": "Science experiment lessons with measurements and data analysis activities",
-  "url":"/courses/ucp-science",
-  "imageUrl": "/docs/static/courses/ucp-science.jpg"
-}, {
-  "name": "Cyber Arcade: Programming and Making with micro:bit",
-  "description": "A fun and creative introduction to computer science and hands-on making for makers in elementary (ages 9–12) and middle (ages 12–14) grade levels with little to no experience in programming and 3D design.",
-  "url":"https://makered.org/resources/cyber-arcade-programming-and-making-with-microbit/",
-  "imageUrl": "/docs/static/courses/maker-ed-cyber-arcade.png"
-}, {
-  "name": "Learn All About micro:bit",
-  "description": "Projects and integration notes for a student-led workshop from the Beacon Hill School",
-  "url": "https://goo.gl/XTPYpP",
-  "imageUrl": "/docs/static/courses/beaconhill.jpg"
-}, {
-  "name": "Coding and Innovation",
-  "description": "An 8 week \"Coding and Innovation using micro:bits\" computer science course.",
-  "url": "https://sites.google.com/view/utahcodingproject/microbits/coding-innovation",
-  "imageUrl": "/docs/static/courses/coding-innovation.jpg"
-}]
+[
+    {
+        "name": "AP Computer Science Principles",
+        "description": "AP endorsed introductory class for High School students. The course is designed to attract students of all backgrounds, experience levels, and interests",
+        "cardType": "link",
+        "url": "https://makecode.com/csp",
+        "imageUrl": "/docs/static/courses/csp.png",
+        "largeImageUrl": "/docs/static/courses/csp.png",
+        "directOpen": true
+    },
+    {
+        "name": "Introduction to Computer Science with Microsoft MakeCode Arcade",
+        "description": "A full academic year course designed to be taught for introductory programming classes in High School",
+        "cardType": "link",
+        "url": "/courses/introcs",
+        "imageUrl": "/docs/static/courses/teals-introcs.jpg",
+        "largeImageUrl": "/docs/static/courses/teals-introcs.jpg",
+        "directOpen": true
+    },
+    {
+        "name": "Code a Carnival",
+        "description": "A modular and differentiated set of coding activities for students in grades 5-12",
+        "cardType": "link",
+        "url": "/courses/carnival",
+        "imageUrl": "/docs/static/hour-of-code/2022/booth.png",
+        "largeImageUrl": "/docs/static/hour-of-code/2022/booth.png",
+        "directOpen": true,
+        "label": "No Verification Required!",
+        "labelClass": "orange ribbon large"
+    }
+]
 ```
 
-## Mr. Morrison Lessons
+Interested in using AP Computer Science Principles or Introduction to Computer Science with Microsoft MakeCode Arcade? You'll need to create an Educator Verified GitHub account to download them.  Details on that process can be found here:
 
-Lessons aimed at P4-7 (Yr 3-6, aged 7-12) but could be adapted for use with older or younger learners. Regardless of age, if your learners have not used micro:bits before the best place to start is the 'Starter Lessons' followed by the 'Beyond Basics' Lessons.
+[https://makecode.com/github-teacher-verification](https://makecode.com/github-teacher-verification)
+
+
+## TinkerGen GameGo-Game Programming Courses
+
+A collection of game programming tutorials to develop kids’ graphical programming skills with TinkerGen's GameGo.
+The games they make in the course can run on the GameGo device! Courses are free after log in.
 
 ```codecard
-[{
-  "name": "micro:bit Starter Lessons",
-  "description": "Learn to create code, make programs to read inputs and write to outputs.",
-  "url": "https://mrmorrison.co.uk/microbit/starter/",
-  "imageUrl": "/docs/static/courses/mr-morrison/starter-lessons.png"
-}, {
-  "name": "micro:bit Beyond Basics",
-  "description": "Take a step past the basics and learn to use logic with inputs and outputs.",
-  "url": "https://mrmorrison.co.uk/microbit/beyondbasics/",
-  "imageUrl": "/docs/static/courses/mr-morrison/beyond-basics.png"
-}, {
-  "name": "micro:bit Data and Sustainability",
-  "description": "Learn to record and analyse data using the micro:bit, then learn to design and build a smart sustainable home.",
-  "url": "https://mrmorrison.co.uk/microbit/datasustainability/",
-  "imageUrl": "/docs/static/courses/mr-morrison/data-sustainability.png"
-}]
+[
+    {
+        "name": "GameGo Beginner Programming Course",
+        "description": "TinkerGen's Arcade game course is a collection of wizard tutorials teaching kids the basics of game development. Games made in the course can run on the GameGo device! Course is free after log in.",
+        "url": "https://make2learn.tinkergen.com/course/?sku=604182001",
+        "imageUrl": "/docs/static/courses/gamego-beginner.png",
+        "largeImageUrl": "/docs/static/courses/gamego-beginner.png",
+        "cardType": "link",
+        "directOpen": true
+    }, {
+        "name": "GameGo Intermediate Programming Course",
+        "description": "TinkerGen's intermediate game development course covers more topics like animations and multiplayer. Games made in the course can run on the GameGo device! Course is free after log in.",
+        "url": "https://make2learn.tinkergen.com/course/?sku=604182003",
+        "imageUrl": "/docs/static/courses/gamego-intermediate.png",
+        "largeImageUrl": "/docs/static/courses/gamego-intermediate.png",
+        "cardType": "link",
+        "directOpen": true
+    }
+]
 ```
 
-## Computers and programming
+## Short Coding Lessons
 
-Tutorials, lessons, and mini-courses about programming and computing.
+Short lessons to get you started coding games.
 
 ```codecard
-[{
-  "name": "First Steps",
-  "description": "Learn how to get the micro:bit working, program its features and create your first projects.",
-  "url": "https://microbit.org/get-started/first-steps/introduction/",
-  "imageUrl": "/docs/static/courses/first-steps.png"
-}, {
-  "name": "Make it: code it",
-  "description": "Quick projects to suit all ages, searchable by computing topic, level, coding language and micro:bit feature.",
-  "url": "https://microbit.org/projects/make-it-code-it/",
-  "imageUrl": "/docs/static/courses/make-it-code-it.png"
-}, {
-  "name": "Networking with the micro:bit",
-  "description": "A series of activities to teach the basics of computer networks.",
-  "url": "https://www.digitaltechnologieshub.edu.au/search/networking-with-the-micro-bit/",
-  "imageUrl": "/docs/static/courses/networking-book.png"  
-}, {
-  "name": "SparkFun Videos",
-  "description": "YouTube video tutorials produced by the SparkFun team!",
-  "youTubeId": "kaNtg1HGXbY",
-  "youTubePlaylistId": "PLBcrWxTa5CS0mWJrytvii8aG5KUqMXvSk",
-  "imageUrl": "https://i.ytimg.com/vi/kaNtg1HGXbY/hqdefault.jpg"
-}, {
-  "name": "Logic Lab",
-  "description": "Learn the basics of logic and conditional expressions.",
-  "url":"/courses/logic-lab",
-  "imageUrl":"/docs/static/courses/logic-lab.png"
-}, {
-  "name": "CodeJoy Remote Robotics",
-  "description": "Interactive remote robotics and coding classes for students and educators",
-  "url": "https://www.codejoy.org",
-  "imageUrl": "/docs/static/courses/codejoy.png"
-}]
+[
+{
+  "name": "Cherry Pickr",
+  "description": "Learn the basics of creating a game",
+  "url": "/lessons/cherry-pickr",
+  "imageUrl": "/docs/static/lessons/cherry-pickr.png"
+},
+{
+  "name": "Dance Party",
+  "description": "Create a basic dance collision game using sprite overlap events and controller buttons!",
+  "url": "/lessons/dance-party",
+  "imageUrl": "/docs/static/lessons/dance-party.png"
+},
+{
+  "name": "BlockOut",
+  "description": "Create a projectile collision game",
+  "url": "/lessons/block-out",
+  "imageUrl": "/docs/static/lessons/block-out.png"
+}
+]
 ```
-
-## Experimenting
-
-Fun project courses - make and experiment while learning about science and programming.
-
-```codecard
-[{
-  "name": "Blocks to JavaScript",
-  "description": "Learn to code using JavaScript",
-  "url": "/courses/blocks-to-javascript",
-  "imageUrl": "/docs/static/courses/blocks-to-javascript.png"
-}, {
-  "name": "SparkFun Inventor's Kit",
-  "description": "Your map for navigating the waters of beginning embedded electronics, robotics and citizen science using the micro:bit.",
-  "url": "https://learn.sparkfun.com/tutorials/sparkfun-inventors-kit-for-microbit-experiment-guide/introduction-to-the-sparkfun-inventors-kit-for-microbit",
-  "imageUrl": "/docs/static/courses/sparkfun-inventors-kit.png"
-}, {
-  "name": "Kitronik Inventor Kit",
-  "description": "11 experiments based on the Kitronik Inventor Kit",
-  "url": "https://www.kitronik.co.uk/blog/inventors-kit-experiment-1-help",
-  "imageUrl": "/docs/static/courses/kitronik-inventor-kit.png"
-}, {
-  "name": "micro:bit of Things",
-  "description": "A hands-on course about the micro:bit and what you can do with it.",
-  "url":"https://sites.google.com/view/microbitofthings",
-  "imageUrl": "/docs/static/courses/microbit-of-things.jpg"
-}, {
-  "name": "ARM University - micro:course",
-  "description": "Introduce learners to the world of making and programming through a series of real-world challenges that feature the micro:bit.",
-  "url": "https://github.com/arm-university/micro-course",
-  "imageUrl": "/docs/static/courses/armu-micro-course.png"
-}, {
-  "name": "A-Z Robotics",
-  "description": "Absolute beginner's guide to learning coding, electronics and robotics on the micro:bit",
-  "url":"https://tinkerspark.teachable.com/",
-  "imageUrl": "/docs/static/courses/tinkerspark.jpg"
-}]
-```
-
-## See Also
-
-[Intro to CS](/courses/csintro)

@@ -7,13 +7,9 @@ faster or slower by the amount you say.
 music.changeTempoBy(20)
 ```
 
-### ~hint
+## Simulator
 
-#### Simulator
-
-``||music:change tempo by||`` works on the @boardname@. It might not work in the simulator on every browser.
-
-### ~
+This function only works on the @boardname@ and in some browsers.
 
 ## Parameters
 
@@ -21,7 +17,7 @@ music.changeTempoBy(20)
   change the bpm (beats per minute, or number of beats in a minute of
   the music that the @boardname@ is playing).
 
-## Examples
+## Example #example
 
 This program makes the music faster by 12 bpm.
 
@@ -35,7 +31,6 @@ This program makes the music _slower_ by 12 bpm.
 music.changeTempoBy(-12)
 ```
 
-## See also
+## See also #seealso
 
 [play tone](/reference/music/play-tone), [ring tone](/reference/music/ring-tone) 
-

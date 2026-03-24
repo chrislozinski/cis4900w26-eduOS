@@ -1,46 +1,21 @@
 # Reference
 
-## @description List of API categories available in the editors
-
 ```namespaces
-basic.showNumber(0);
-input.onButtonPressed(Button.A, () => {
-    
-});
-music.playTone(0, 0);
-led.plot(0, 0);
-radio.sendNumber(0);
-```
-
-## Advanced
-
-```namespaces
-game.addScore(1);
-images.createImage(`
-. . . . .
-. . . . .
-. . # . .
-. . . . .
-. . . . .
-`);
-pins.digitalReadPin(DigitalPin.P0);
-serial.writeNumber(0);
-control.inBackground(() => {
-    
-});
-```
-
-## Bluetooth
-
-```namespaces
-bluetooth.onBluetoothConnected(() => {});
-```
-  
-```package
-radio
-bluetooth
+sprites.create(null)
+controller.dx(60)
+game.onUpdate(function () {	})
+music.playTone(Note.C, BeatFraction.Half)
+scene.setBackgroundColor(0)
+info.setScore(0)
+image.create(0, 0)
 ```
 
 ## See Also
 
-[basic](/reference/basic), [input](/reference/input), [music](/reference/music), [led](/reference/led), [Math (blocks)](/blocks/math), [String](/types/string), [game](/reference/game), [images](/reference/images), [pins](/reference/pins), [serial](/reference/serial), [control](/reference/control), [radio](/reference/radio), [bluetooth](/reference/bluetooth)
+[sprites](/reference/sprites),
+[controller](/reference/controller),
+[game](/reference/game),
+[music](/reference/music),
+[scene](/reference/scene),
+[info](/reference/info),
+[images](/reference/images)

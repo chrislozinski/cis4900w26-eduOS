@@ -330,7 +330,7 @@
                 role="menuitem"
                 aria-label="Return home"
                 tabindex="0"
-                href="https://makecode.microbit.org/">
+                href="https://arcade.makecode.com/">
                 <i
                     class="icon home"
                     aria-hidden="true"
@@ -399,9 +399,9 @@
 
         createTable();
 
-        addRow("https://makecode.microbit.org/")
+        addRow("https://arcade.makecode.com/")
         addRow("https://makecode.com");
-        addRow("https://trg-microbit.userpxt.io");
+        addRow("https://trg-arcade.userpxt.io");
         addRow("https://cdn.makecode.com");
         addRow("https://api.github.com");
         addRow("https://immersivereaderprod.cognitiveservices.azure.com");
@@ -492,7 +492,7 @@
                     telemetryItem.properties = telemetryItem.properties || {};
                     telemetryItem.properties["cookie"] = isProduction;
                     if (typeof pxtConfig === "undefined" || !pxtConfig || !pxtConfig.targetId) {
-                        telemetryItem.properties["target"] = "microbit";
+                        telemetryItem.properties["target"] = "arcade";
                         return true;
                     }
                     telemetryItem.properties["target"] = pxtConfig.targetId;

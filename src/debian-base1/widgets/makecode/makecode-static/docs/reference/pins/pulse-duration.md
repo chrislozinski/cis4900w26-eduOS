@@ -1,37 +1,41 @@
 # pulse Duration
 
-Get the duration of the last pulse in microseconds.
+Get the length of time for last pulse at any of the digital pins.
 
 ```sig
-pins.pulseDuration();
+pins.pulseDuration()
 ```
 
-A pin pulse is detected in the [onPulsed](/reference/pins/on-pulsed) event. You use **pulseDuration** inside that event to get the duration of the pulse that triggered the event.
+If you have code in an [``||pins:on pulsed||``](/reference/pins/on-pulsed) event and you want to know how long the pulse lasted on that pin, use ``||pins:pulse duration||``. 
 
-### ~ hint
-
-#### Simulator
-
-This function needs real hardware to work with. It's not supported in the simulator.
-
-### ~
+The ``||pins:pulse duration||`` block remembers how many microseconds the last pulse was. This is only for the most
+recent pulse period that happened at any of the pins. So, you use it in an ``||pins:on pulsed||`` event block so that
+you know which pin the pulse was on.
 
 ## Returns
 
-* a [number](/types/number) that is the duration of the last pulse, measured in microseconds.
+* a [number](/types/number) that is length of time (duration) of the last pulse, in microseconds.
 
-## Example
+## Example #example
 
-Wait for pin ``P0`` to be pulsed high. Display the duration of the pulse in microseconds on the LED screen.
+Count every pulse on pin `D4` that is longer than 2 milliseconds in duration. Write the total
+number of pulses to the serial port every time the count adds another thousand pulses.
 
 ```blocks
-pins.onPulsed(DigitalPin.P0, PulseValue.High, () => {
-    basic.showNumber(pins.pulseDuration());
-});
+let pulses = 0
+pins.D4.setPull(PinPullMode.PullUp)
+
+pins.D4.onPulsed(PulseValue.Low, () => {
+    if (pins.pulseDuration() > 2000) {
+        pulses++
+    }
+    if (pulses % 1000 == 0) {
+        serial.writeValue("pulse count", pulses)
+    }
+})
 ```
 
-## See also
+## See also #seealso
 
-[servo set pulse](/reference/pins/servo-set-pulse),
-[on pulsed](/reference/pins/on-pulsed),
-[digital read pin](/reference/pins/digital-read-pin)
+[digital read](/reference/pins/digital-read), [set pull](/reference/pins/set-pull),
+[on pulsed](/reference/pins/on-pulsed)

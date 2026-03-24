@@ -1,6 +1,6 @@
 # Editor Tour
 * title: Editor tour
-* description: This tour shows the user around the micro:bit editor, pointing out the toolbox, workspace, simulator, share button, and download button.
+* description: This tour shows the user around the Arcade editor, pointing out the toolbox, workspace, simulator, share button, and download button.
 
 ## Welcome
 * title: Welcome!
@@ -8,9 +8,9 @@
 * highlight: nothing
 * location: center
 
-## Micro:bit Simulator
-* title: Micro:bit Simulator
-* description: See what your code looks like running on a micro:bit!
+## Game Window
+* title: Game Window
+* description: Play and test your game in the Game Window.
 * highlight: simulator
 * location: right
 
@@ -44,21 +44,9 @@
 * highlight: share
 * location: below
 
-## Sign-In
-* title: Sign-In
-* description: Sign-in with your Microsoft, Google, or Clever account to save your projects to the cloud.
-* highlight: sign in
-* location: above
-
-## User Profile
-* title: User Profile
-* description: Come here to manage your user profile.
-* highlight: avatar
-* location: above
-
 ## Download
 * title: Download
-* description: Download your program onto the micro:bit.
+* description: Download your program onto your Arcade device.
 * highlight: download
 * location: above
 

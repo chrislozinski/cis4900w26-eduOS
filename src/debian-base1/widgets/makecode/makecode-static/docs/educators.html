@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:og="http://ogp.me/ns#"
+	xmlns:fb="http://www.facebook.com/2008/fbml">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Microsoft MakeCode Arcade</title>
+	<meta name="Description" content="Develop your programming skills by quickly creating and modding retro arcade games with Blocks and JavaScript in the MakeCode editor" />
+
+	<!-- ifdef incontexttranslations endif -->
+	
+<!-- include meta.html -->
+<!-- This file is typically overriden by the target, with own Twitter
+     account etc. Most data is taken from the theme file though.  
+  -->
+
+<!-- include robotsmeta.html -->
+
+<!-- end include robotsmeta.html -->
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@msmakecode" />
+<meta name="twitter:title" content="Microsoft MakeCode Arcade" />
+<meta name="twitter:description" content="Develop your programming skills by quickly creating and modding retro arcade games with Blocks and JavaScript in the MakeCode editor" />
+<meta name="twitter:image" content="docs/static/logo.png" />
+
+<meta property="og:title" content="Microsoft MakeCode Arcade" />
+<meta property="og:site_name" content="Microsoft MakeCode" />
+<meta property="og:type" content="website" />
+<meta property="og:description" content="Develop your programming skills by quickly creating and modding retro arcade games with Blocks and JavaScript in the MakeCode editor" />
+<meta property="fb:app_id" content="" />
+<meta property="og:image" content="docs/static/logo.png" />
+
+<meta name="format-detection" content="telephone=no">
+<link rel="apple-touch-icon" href="docs/static/icons/favicon.ico">
+<link rel="icon" type="image/png" href="docs/static/icons/favicon.ico">
+<link rel="shortcut icon" href="docs/static/icons/favicon.ico">
+<meta name="theme-color" content="">
+
+<!-- end include meta.html -->
+
+	
+<!-- include head.html -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width,height=device-height,user-scalable=no,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0">
+
+<link rel="stylesheet" data-rtl="/blb/rtlsemantic.css" href="/semantic.css" />
+<link id="blocklycss"  data-rtl="/blb/rtlblockly.css" rel="stylesheet" href="/blockly.css" />
+<link rel="stylesheet" href="/docfiles/style.css" />
+<link rel="stylesheet" href="/docfiles/vs.css" />
+<link rel="stylesheet" href="/docfiles/target.css" />
+
+<script src="/jquery.js" type="text/javascript"></script>
+<script src="/semantic.js" type="text/javascript"></script>
+<script src="/docfiles/target.js" type="text/javascript"></script>
+<script src="/embed.js" type="text/javascript"></script>
+<script src="/docfiles/docs.js" type="text/javascript"></script>
+
+<style>
+    
+</style>
+
+<!-- end include head.html -->
+
+
+</head>
+
+<body id='root' class='root'>
+	<div id="accessibleMenu" class="ui accessibleMenu borderless fixed menu docs" role="menubar">
+		
+            <a href="#maincontent" class="ui item link" tabindex="0" role="menuitem">Skip to main content</a>
+        
+	</div>
+
+	
+<!-- include tocheader.html -->
+<div class="docs-top-bar inverted" role="banner">
+    <div id="top-bar" class="menu-bar" role="menubar">
+        
+            <a id="togglesidebar" class="launch icon item" tabindex="0" title="Side menu" aria-label="Side menu" role="menuitem" aria-expanded="false">
+                <i class="content icon"></i>
+            </a>
+        
+        <div class="logo-group" role="menuitem">
+            <img class="desktop-only" src="/static/logo/Microsoft_logo_rgb_W-white_D.png" alt="Microsoft">
+            <img class="desktop-hidden" src="/static/logo/Microsoft_logo_rgb_W-white_D-square.png" alt="Microsoft">
+            <div class="header-title desktop-only"><span>MakeCode</span></div>
+        </div>
+    </div>
+    <form id="tocsearch1" class="search" method="get" action="https://www.bing.com/search" role="search">
+        <div class="ui fluid icon input">
+            <input type="hidden" name="q1" value="site:https://arcade.makecode.com/" />
+            
+                <input type="search" name="q" placeholder="Search..." aria-label="Search Documentation">
+                <i onclick="document.getElementById('tocsearch1').submit();" tabindex="0" class="search link icon" aria-label="Search" role="button"></i>
+            
+        </div>
+    </form>
+</div>
+
+<div id="side-menu" class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
+    <!-- TOC Menu (tocheader.html) -->
+    <div class="menuContainer" role="menu">
+        
+    <a class="item " href="/docs/about.html" role="menuitem">About</a>
+
+
+    <a class="item " href="/docs/faq.html" role="menuitem">FAQ</a>
+
+
+    <a class="item " href="/docs/projects.html" role="menuitem">Projects</a>
+
+
+    <a class="item " href="/docs/github.html" role="menuitem">GitHub</a>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="/docs/reference.html">Reference</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/docs/reference/sprites.html" role="menuitem">sprites</a>
+
+
+    <a class="item " href="/docs/reference/controller.html" role="menuitem">controller</a>
+
+
+    <a class="item " href="/docs/reference/game.html" role="menuitem">game</a>
+
+
+    <a class="item " href="/docs/reference/music.html" role="menuitem">music</a>
+
+
+    <a class="item " href="/docs/reference/scene.html" role="menuitem">scene</a>
+
+
+    <a class="item " href="/docs/reference/info.html" role="menuitem">info</a>
+
+
+    <a class="item " href="/docs/reference/images.html" role="menuitem">images</a>
+
+        </div>
+    </div>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="/docs/blocks.html">Blocks</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/docs/blocks/on-start.html" role="menuitem">On Start</a>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="/docs/blocks/loops.html">Loops</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/docs/blocks/loops/repeat.html" role="menuitem">repeat</a>
+
+
+    <a class="item " href="/docs/blocks/loops/for.html" role="menuitem">for</a>
+
+
+    <a class="item " href="/docs/blocks/loops/while.html" role="menuitem">while</a>
+
+
+    <a class="item " href="/docs/blocks/loops/for-of.html" role="menuitem">for of</a>
+
+        </div>
+    </div>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="/docs/blocks/logic.html">Logic</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/docs/blocks/logic/if.html" role="menuitem">if</a>
+
+
+    <a class="item " href="/docs/blocks/logic/boolean.html" role="menuitem">Boolean</a>
+
+        </div>
+    </div>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="/docs/blocks/variables.html">Variables</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/docs/blocks/variables/assign.html" role="menuitem">assign</a>
+
+
+    <a class="item " href="/docs/blocks/variables/change.html" role="menuitem">change var</a>
+
+
+    <a class="item " href="/docs/blocks/variables/var.html" role="menuitem">var</a>
+
+        </div>
+    </div>
+
+
+    <a class="item " href="/docs/blocks/math.html" role="menuitem">Math</a>
+
+
+    <a class="item " href="/docs/blocks/javascript-blocks.html" role="menuitem">JavaScript blocks</a>
+
+
+    <a class="item " href="/docs/blocks/custom.html" role="menuitem">Custom blocks</a>
+
+        </div>
+    </div>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="/docs/python.html">Python</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/docs/python/call.html" role="menuitem">Calling</a>
+
+
+    <a class="item " href="/docs/python/sequence.html" role="menuitem">Sequencing</a>
+
+
+    <a class="item " href="/docs/python/variables.html" role="menuitem">Variables</a>
+
+
+    <a class="item " href="/docs/python/operators.html" role="menuitem">Operators</a>
+
+
+    <a class="item " href="/docs/python/statements.html" role="menuitem">Statements</a>
+
+
+    <a class="item " href="/docs/python/functions.html" role="menuitem">Functions</a>
+
+
+    <a class="item " href="/docs/python/classes.html" role="menuitem">Classes</a>
+
+        </div>
+    </div>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="/docs/javascript.html">JavaScript</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/docs/javascript/call.html" role="menuitem">Calling</a>
+
+
+    <a class="item " href="/docs/javascript/sequence.html" role="menuitem">Sequencing</a>
+
+
+    <a class="item " href="/docs/javascript/variables.html" role="menuitem">Variables</a>
+
+
+    <a class="item " href="/docs/javascript/operators.html" role="menuitem">Operators</a>
+
+
+    <a class="item " href="/docs/javascript/statements.html" role="menuitem">Statements</a>
+
+
+    <a class="item " href="/docs/javascript/functions.html" role="menuitem">Functions</a>
+
+
+    <a class="item " href="/docs/javascript/types.html" role="menuitem">Types</a>
+
+
+    <a class="item " href="/docs/javascript/classes.html" role="menuitem">Classes</a>
+
+
+    <a class="item " href="/docs/javascript/interfaces.html" role="menuitem">Interfaces</a>
+
+
+    <a class="item " href="/docs/javascript/generics.html" role="menuitem">Generics</a>
+
+        </div>
+    </div>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="/docs/types.html">Types</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/docs/types/number.html" role="menuitem">Number</a>
+
+
+    <a class="item " href="/docs/types/string.html" role="menuitem">String</a>
+
+
+    <a class="item " href="/docs/types/boolean.html" role="menuitem">Boolean</a>
+
+
+    <a class="item " href="/docs/types/array.html" role="menuitem">Array</a>
+
+
+    <a class="item " href="/docs/types/function.html" role="menuitem">Function</a>
+
+
+    <a class="item " href="/docs/types/image.html" role="menuitem">Image</a>
+
+
+    <a class="item " href="/docs/types/sprite.html" role="menuitem">Sprite</a>
+
+        </div>
+    </div>
+
+
+    <a class="item " href="/docs/block-gallery.html" role="menuitem">Blocks Gallery</a>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="">Miscellaneous</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/docs/about.html" role="menuitem">About</a>
+
+
+    <a class="item " href="/docs/support.html" role="menuitem">Support</a>
+
+
+    <a class="item " href="/docs/translate.html" role="menuitem">Translate</a>
+
+
+    <a class="item " href="/docs/share.html" role="menuitem">Sharing projects</a>
+
+
+    <a class="item " href="/docs/multiplayer.html" role="menuitem">Multiplayer</a>
+
+
+    <a class="item " href="/docs/offline.html" role="menuitem">Offline support</a>
+
+
+    <a class="item " href="/docs/save.html" role="menuitem">Save</a>
+
+
+    <a class="item " href="/docs/identity/sign-in.html" role="menuitem">Sign In</a>
+
+
+    <a class="item " href="/docs/identity/cloud-sync.html" role="menuitem">Cloud Sync</a>
+
+
+    <a class="item " href="/docs/vscode.html" role="menuitem">VS Code</a>
+
+
+    <a class="item " href="/docs/asset-packs.html" role="menuitem">Asset packs</a>
+
+        </div>
+    </div>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="/docs/hardware.html">Hardware</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/docs/hardware/errors.html" role="menuitem">Errors</a>
+
+
+    <a class="item " href="/docs/hardware/adding.html" role="menuitem">Adding New Board</a>
+
+
+    <a class="item " href="/docs/hardware/raspberry-pi.html" role="menuitem">Raspberry Pi</a>
+
+
+    <a class="item " href="/docs/hardware/makey-makey.html" role="menuitem">Makey Makey</a>
+
+
+    <a class="item " href="/docs/hardware/shoebox-controller.html" role="menuitem">Shoebox Controller</a>
+
+
+    <a class="item " href="/docs/hardware/dev.html" role="menuitem">Dev</a>
+
+
+    <a class="item " href="/docs/hardware/dbg.html" role="menuitem">Debug connector</a>
+
+        </div>
+    </div>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="">Developers</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/docs/cli.html" role="menuitem">Command Line Interface</a>
+
+
+    <a class="item " href="/docs/code.html" role="menuitem">Visual Studio Code support</a>
+
+
+    <a class="item " href="/docs/blocks-embed.html" role="menuitem">Blocks Embed</a>
+
+
+    <a class="item " href="/docs/developer/images.html" role="menuitem">Art, images, colors</a>
+
+
+    <a class="item " href="/docs/developer/sound.html" role="menuitem">Sounds</a>
+
+        </div>
+    </div>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="/docs/lessons.html">Lessons</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/docs/lessons/cherry-pickr.html" role="menuitem">Cherry Pickr</a>
+
+
+    <a class="item " href="/docs/lessons/barrel-dodger.html" role="menuitem">Barrel Dodger</a>
+
+
+    <a class="item " href="/docs/lessons/dance-party.html" role="menuitem">Dance Party</a>
+
+
+    <a class="item " href="/docs/lessons/block-out.html" role="menuitem">BlockOut</a>
+
+        </div>
+    </div>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="/docs/courses.html">Courses</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/docs/courses/csintro1.html" role="menuitem">CS Intro 1</a>
+
+
+    <a class="item " href="/docs/courses/csintro2.html" role="menuitem">CS Intro 2</a>
+
+
+    <a class="item " href="/docs/courses/csintro3.html" role="menuitem">CS Intro 3</a>
+
+        </div>
+    </div>
+
+    </div>
+</div>
+<!-- end include tocheader.html -->
+
+
+	<div id="docs" class="pusher">
+
+		<div class="article" id="maincontent">
+			<div class="article-inner">
+
+				
+<!-- include header.html -->
+<div class="ui one column padded grid hideprint">
+    <div class="column ui container">
+        
+    </div>
+</div>
+<!-- end include header.html -->
+
+
+				<div class="main ui container fluid mainbody" role="main">
+					<button id="printbtn" class="circular ui icon right floated button hideprint hidemobile"
+						title="Print" aria-label="Print">
+						<i class="icon print"></i>
+					</button>
+					
+    <div class="ui text">
+        <p></p>
+<h1>MakeCode Arcade Educator Page</h1><h2>Watch Recordings of Arcade-Con!</h2><pre><code class="lang-codecard">[
+    {
+        "name": "Watch Arcade-Con!",
+        "description": "Catch recordings of our very first Arcade-Con on our Educator YouTube channel!",
+        "url":"https://www.youtube.com/playlist?list=PLUgoavxKsVdW6HuW4SuHrpd4jdug59-OC",
+        "imageUrl": "/docs/static/courses/arcadecon/ac2025card.png"
+    }
+    
+]</code></pre><h2>Educator Resources</h2><p>We have gathered all of our best educator resources in one place for your convenience. </p>
+<pre><code class="lang-codecard">[
+    {
+        "name": "Quick Links",
+        "description": "A table of our most popular activities and their associated URLS and teacher resources.",
+        "url":"/educators#quicklinks",
+        "imageUrl": "static/tutorials/froggy/frog.gif"
+    },{
+        "name": "Educator Training",
+        "description": "Learn more about MakeCode!",
+        "url":"/courses/educator-trainings",
+        "imageUrl": "/docs/static/livestream-games/hamlet.png"
+    },{
+        "name": "Complete Courses",
+        "description": "Full course sets for dedicated STEM or CS classrooms.",
+        "url":"/educators#courses",
+        "imageUrl": "static/courses/teals-introcs.jpg"
+    },{
+        "name": "Friday Fun Day",
+        "description": "Want to run a lesson with very little prep?",
+        "url":"/friday-fun-day",
+        "imageUrl": "/docs/static/skillmap/backgrounds/mole.gif"
+    },{
+        "name": "Junior Tutorials",
+        "description": "These tutorials are perfect for new readers.",
+        "url":"/jr-tutorials",
+        "imageUrl": "/docs/static/tutorials/lyla/card.jpg"
+    },{
+        "name": "Educator Videos",
+        "description": "Visit our educator YouTube channel.",
+        "url":"https://www.youtube.com/@msmakecode",
+        "imageUrl": "static/educator/video_thumb.png"
+    },{
+        "name": "Arcade Blogs",
+        "description": "Read tips and tricks that can elevate your class projects.",
+        "url":"/educators#blogs",
+        "imageUrl": "/docs/static/skillmap/story/story-comp.png"
+    },{
+        "name": "Delightful Additions",
+        "description": "Check out these fun tools that make great additions to the classroom.",
+        "url":"/educators#fun",
+        "imageUrl": "static/hardware/arcade-kiosks/cardboard-kiosk.png"
+    }
+]</code></pre><p><a name="quicklinks"> --- </a></p>
+<h2>Activity Quick Links</h2><p><em>(Scroll right to see more)</em></p>
+<table>
+<thead>
+<tr>
+<th>Suggested Order of Completion</th>
+<th>Tutorial/Skillmap</th>
+<th>Style/Difficulty (Out of 5)</th>
+<th>Description</th>
+<th>Long URL</th>
+<th>Short URL</th>
+<th>Teacher Resources /  Answer Keys</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Jr-1</td>
+<td><a target="_blank" href="https://arcade.makecode.com/#tutorial:/tutorials/sparks-jr">Sparks Flying Junior</a></td>
+<td>Junior  / 1</td>
+<td>A low-text version of our Sparks Flying experience.  It only takes a few blocks to create an exciting clicker game where participants need to start a camp fire before the wind blows it out!</td>
+<td><a target="_blank" href="https://arcade.makecode.com/#tutorial:/tutorials/sparks-jr">https://arcade.makecode.com/#tutorial:/tutorials/sparks-jr</a></td>
+<td><a target="_blank" href="https://aka.ms/sparky">https://aka.ms/sparky</a></td>
+<td><a target="_blank" href="https://makecode.com/_4zbLcLXjFKUf">https://makecode.com/_4zbLcLXjFKUf</a></td>
+</tr>
+<tr>
+<td>Jr-2</td>
+<td><a target="_blank" href="https://arcade.makecode.com/#tutorial:/tutorials/turkey-jr">Turkey Rescue Junior</a></td>
+<td>Junior  / 1</td>
+<td>A low-text version of our TurkeyDay experience.  Participants use low-text blocks to create a vertical platformer game where they direct a turkey out of a warehouse while saving its friends.</td>
+<td><a target="_blank" href="https://arcade.makecode.com/#tutorial:/tutorials/turkey-jr">https://arcade.makecode.com/#tutorial:/tutorials/turkey-jr</a></td>
+<td><a target="_blank" href="https://aka.ms/turkey-jr">https://aka.ms/turkey-jr</a></td>
+<td><a target="_blank" href="https://1drv.ms/f/s!AqsgsTyHBmRBn2mMdQSkzSMTSCJg?e=2LWibA">https://1drv.ms/f/s!AqsgsTyHBmRBn2mMdQSkzSMTSCJg?e=2LWibA</a></td>
+</tr>
+<tr>
+<td>Jr-3</td>
+<td><a target="_blank" href="https://aka.ms/lyla">Snack Chase</a></td>
+<td>Junior / 1</td>
+<td>Code a snack chase with characters from Lyla in the Loop on PBS Kids</td>
+<td><a target="_blank" href="https://arcade.makecode.com/#tutorial:/tutorials/lyla-jr">https://arcade.makecode.com/#tutorial:/tutorials/lyla-jr</a></td>
+<td><a target="_blank" href="https://aka.ms/lyla">https://aka.ms/lyla</a></td>
+<td><a target="_blank" href="https://aka.ms/teachLyla">https://aka.ms/teachLyla</a></td>
+</tr>
+<tr>
+<td>Jr-4</td>
+<td><a target="_blank" href="https://arcade.makecode.com/#tutorial:/tutorials/free-throw-jr">Free Throw Junior</a></td>
+<td>Junior / 1</td>
+<td>A low-text version of our Free-Throw tutorial. Participants use simple blocks to make a game where a basketball player is trying to line up as many shots as possible before the buzzer sounds.</td>
+<td><a target="_blank" href="https://arcade.makecode.com/#tutorial:/tutorials/free-throw-jr">https://arcade.makecode.com/#tutorial:/tutorials/free-throw-jr</a></td>
+<td><a target="_blank" href="https://aka.ms/bball">https://aka.ms/bball</a></td>
+<td><a target="_blank" href="https://makecode.com/_70x8W6VuYeaY">https://makecode.com/_70x8W6VuYeaY</a></td>
+</tr>
+<tr>
+<td>Elem-1</td>
+<td><a target="_blank" href="https://arcade.makecode.com/--skillmap#story">Full of Stories</a></td>
+<td>Super-Beginner / 1.5</td>
+<td>Allow participants to show off their creative side with greeting cards/jokes/short stories.</td>
+<td><a target="_blank" href="https://arcade.makecode.com/--skillmap#story">https://arcade.makecode.com/--skillmap#story</a></td>
+<td><a target="_blank" href="https://aka.ms/new-story">https://aka.ms/new-story</a></td>
+<td><a target="_blank" href="https://arcade.makecode.com/skillmap/educator-info/story-map-info">https://arcade.makecode.com/skillmap/educator-info/story-map-info</a></td>
+</tr>
+<tr>
+<td>Elem-2</td>
+<td><a target="_blank" href="https://arcade.makecode.com/--skillmap#mole">Whack-the-Mole</a></td>
+<td>Super-Beginner / 1.5</td>
+<td>Participants create their own mole-whacking carnival game.</td>
+<td><a target="_blank" href="https://arcade.makecode.com/--skillmap#mole">https://arcade.makecode.com/--skillmap#mole</a></td>
+<td><a target="_blank" href="https://aka.ms/whack-the-mole">https://aka.ms/whack-the-mole</a></td>
+<td><a target="_blank" href="https://arcade.makecode.com/skillmap/educator-info/mole-map-info">https://arcade.makecode.com/skillmap/educator-info/mole-map-info</a></td>
+</tr>
+<tr>
+<td>Elem-3</td>
+<td><a target="_blank" href="https://arcade.makecode.com/--skillmap#star">Talent Show</a></td>
+<td>Super-Beginner / 1.5</td>
+<td>Participants learn to create a clicker game where every click of a button translates to applause for some very talented animals.</td>
+<td><a target="_blank" href="https://arcade.makecode.com/--skillmap#star">https://arcade.makecode.com/--skillmap#star</a></td>
+<td><a target="_blank" href="https://aka.ms/new-star">https://aka.ms/new-star</a></td>
+<td><a target="_blank" href="https://arcade.makecode.com/skillmap/educator-info/star-map-info">https://arcade.makecode.com/skillmap/educator-info/star-map-info</a></td>
+</tr>
+<tr>
+<td>Elem-4</td>
+<td><a target="_blank" href="https://arcade.makecode.com/--skillmap#dino">Save the Baby Dinos</a></td>
+<td>Super-Beginner / 1.5</td>
+<td>Participants can create a collector-style game starring a dinosuar that's determined to save dino babies!</td>
+<td><a target="_blank" href="https://arcade.makecode.com/--skillmap#dino">https://arcade.makecode.com/--skillmap#dino</a></td>
+<td><a target="_blank" href="https://aka.ms/new-dino">https://aka.ms/new-dino</a></td>
+<td><a target="_blank" href="https://arcade.makecode.com/skillmap/educator-info/dino-map-info">https://arcade.makecode.com/skillmap/educator-info/dino-map-info</a></td>
+</tr>
+<tr>
+<td>Elem-5</td>
+<td><a target="_blank" href="https://arcade.makecode.com/--skillmap#turkey">Turkey Day</a></td>
+<td>Beginner / 1.5</td>
+<td>Participants use blocks to build a fast-paced platformer that allows them to help a turkey free all of its friends and climb to freedom.</td>
+<td><a target="_blank" href="https://arcade.makecode.com/--skillmap#turkey">https://arcade.makecode.com/--skillmap#turkey</a></td>
+<td><a target="_blank" href="https://aka.ms/turkeyday">https://aka.ms/turkeyday</a></td>
+<td><a target="_blank" href="https://arcade.makecode.com/skillmap/educator-info/turkey-map-info">https://arcade.makecode.com/skillmap/educator-info/turkey-map-info</a></td>
+</tr>
+<tr>
+<td>S-1</td>
+<td><a target="_blank" href="https://arcade.makecode.com/#tutorial:/tutorials/hundred">100 Days</a></td>
+<td>Beginner / 2</td>
+<td>Celbrate 100 days of school by sending 100 of your favorite things streaming across the screen!</td>
+<td><a target="_blank" href="https://arcade.makecode.com/#tutorial:/tutorials/hundred">https://arcade.makecode.com/#tutorial:/tutorials/hundred</a></td>
+<td><a target="_blank" href="https://aka.ms/100things">https://aka.ms/100things</a></td>
+<td><a target="_blank" href="https://makecode.com/_4jjRxJT4V9pK">https://makecode.com/_4jjRxJT4V9pK</a></td>
+</tr>
+<tr>
+<td>S-2</td>
+<td>Bubble Popping</td>
+<td>Beginner / 2</td>
+<td>Create your own bubble popping game where three-in-a-row scores you points!</td>
+<td><a target="_blank" href="https://arcade.makecode.com/#tutorial:/tutorials/bubbles">https://arcade.makecode.com/#tutorial:/tutorials/bubbles</a></td>
+<td><a target="_blank" href="https://aka.ms/bubbles">https://aka.ms/bubbles</a></td>
+<td><a target="_blank" href="https://makecode.com/_3foKxm6YE4Lv">https://makecode.com/_3foKxm6YE4Lv</a></td>
+</tr>
+<tr>
+<td>S-3</td>
+<td><a target="_blank" href="https://aka.ms/snowglobe">Animated Snow Globe</a></td>
+<td>Beginner / 2</td>
+<td>Create your own  snow globe, complete with animations and music</td>
+<td><a target="_blank" href="https://arcade.makecode.com/#tutorial:/tutorials/snow">https://arcade.makecode.com/#tutorial:/tutorials/snow</a></td>
+<td><a target="_blank" href="https://aka.ms/snowglobe">https://aka.ms/snowglobe</a></td>
+<td><a target="_blank" href="https://makecode.com/_3gq7FEhJk8i7">https://makecode.com/_3gq7FEhJk8i7</a></td>
+</tr>
+<tr>
+<td>S-4</td>
+<td><a target="_blank" href="https://aka.ms/ZunePrototype">Music Player</a></td>
+<td>Begintermediate / 2.5</td>
+<td>Go back in time to be on the development crew for Microsoft's Zune music player</td>
+<td><a target="_blank" href="https://arcade.makecode.com/#tutorial:/tutorials/music">https://arcade.makecode.com/#tutorial:/tutorials/music</a></td>
+<td><a target="_blank" href="https://aka.ms/ZunePrototype">https://aka.ms/ZunePrototype</a></td>
+<td><a target="_blank" href="https://makecode.com/_WW1aiH6hfUkX">https://makecode.com/_WW1aiH6hfUkX</a></td>
+</tr>
+<tr>
+<td>1</td>
+<td><a target="_blank" href="https://arcade.makecode.com/#tutorial:/tutorials/intro">Intro to MakeCode Arcade</a></td>
+<td>Beginner / 1.5</td>
+<td>This is a very simple tutorial that introduces participants to Microsoft MakeCode Arcade as they create a cute clicker activity.</td>
+<td><a target="_blank" href="https://arcade.makecode.com/#tutorial:/tutorials/intro">https://arcade.makecode.com/#tutorial:/tutorials/intro</a></td>
+<td><a target="_blank" href="https://aka.ms/MC-intro">https://aka.ms/MC-intro</a></td>
+<td><a target="_blank" href="https://makecode.com/_brVE2y5bKFdu">https://makecode.com/_brVE2y5bKFdu</a></td>
+</tr>
+<tr>
+<td>2</td>
+<td><a target="_blank" href="https://arcade.makecode.com/#tutorial:/tutorials/collect-the-clovers">Collect the Clovers</a></td>
+<td>Beginner / 2</td>
+<td>Participants code a game that allows a bunny to collect clovers while avoiding bees.</td>
+<td><a target="_blank" href="https://arcade.makecode.com/#tutorial:/tutorials/collect-the-clovers">https://arcade.makecode.com/#tutorial:/tutorials/collect-the-clovers</a></td>
+<td><a target="_blank" href="https://aka.ms/clovers">https://aka.ms/clovers</a></td>
+<td><a target="_blank" href="https://makecode.com/_AKdgLX3KyYrt">https://makecode.com/_AKdgLX3KyYrt</a></td>
+</tr>
+<tr>
+<td>3</td>
+<td><a target="_blank" href="https://arcade.makecode.com/#tutorial:/tutorials/chase-the-pizza">Chase the Pizza</a></td>
+<td>Beginner / 2</td>
+<td>A classic tutorial that has participants coding a happy face that chases a pizza as it pops randomly around the screen.</td>
+<td><a target="_blank" href="https://arcade.makecode.com/#tutorial:/tutorials/chase-the-pizza">https://arcade.makecode.com/#tutorial:/tutorials/chase-the-pizza</a></td>
+<td><a target="_blank" href="https://aka.ms/chase-the-pizza">https://aka.ms/chase-the-pizza</a></td>
+<td><a target="_blank" href="https://makecode.com/_Dgy1y5Lii6XL">https://makecode.com/_Dgy1y5Lii6XL</a></td>
+</tr>
+<tr>
+<td>4</td>
+<td><a target="_blank" href="https://arcade.makecode.com/#tutorial:/tutorials/free-throw">Free-Throw</a></td>
+<td>Beginner / 2.5</td>
+<td>Participants make a game where a basketball player is trying to line up as many shots as possible before the buzzer sounds.</td>
+<td><a target="_blank" href="https://arcade.makecode.com/#tutorial:/tutorials/free-throw">https://arcade.makecode.com/#tutorial:/tutorials/free-throw</a></td>
+<td><a target="_blank" href="https://aka.ms/freethrow">https://aka.ms/freethrow</a></td>
+<td><a target="_blank" href="https://makecode.com/_C3P6qjcfzapc">https://makecode.com/_C3P6qjcfzapc</a></td>
+</tr>
+<tr>
+<td>5</td>
+<td><a target="_blank" href="https://arcade.makecode.com/--skillmap#balloon">Burstin' Balloons</a></td>
+<td>Beginner / 2.5</td>
+<td>Code your own minigame-style activity where two mice compete to see who can pump up their balloon the fastest.</td>
+<td><a target="_blank" href="https://arcade.makecode.com/--skillmap#balloon">https://arcade.makecode.com/--skillmap#balloon</a></td>
+<td><a target="_blank" href="https://aka.ms/balloon">https://aka.ms/balloon</a></td>
+<td><a target="_blank" href="https://arcade.makecode.com/skillmap/educator-info/balloon-map-info">https://arcade.makecode.com/skillmap/educator-info/balloon-map-info</a></td>
+</tr>
+<tr>
+<td>6</td>
+<td><a target="_blank" href="https://arcade.makecode.com/--skillmap#racer">Monster Truck Racer</a></td>
+<td>Begintermediate / 2.5</td>
+<td>Code a themed racer game where participants navigate their monster truck through a dangerous cave.</td>
+<td><a target="_blank" href="https://arcade.makecode.com/--skillmap#racer">https://arcade.makecode.com/--skillmap#racer</a></td>
+<td><a target="_blank" href="https://aka.ms/MonsterRacer">https://aka.ms/MonsterRacer</a></td>
+<td><a target="_blank" href="https://arcade.makecode.com/skillmap/educator-info/racer-map-info">https://arcade.makecode.com/skillmap/educator-info/racer-map-info</a></td>
+</tr>
+<tr>
+<td>7</td>
+<td><a target="_blank" href="https://arcade.makecode.com/--skillmap#galaxy">Save the Galaxy</a></td>
+<td>Begintermediate / 2.5</td>
+<td>This tutorial helps participants code a classic space-shooter style game...but instead of lasers...players are transmitting information to satellites and avoiding asteroids.</td>
+<td><a target="_blank" href="https://arcade.makecode.com/--skillmap#galaxy">https://arcade.makecode.com/--skillmap#galaxy</a></td>
+<td><a target="_blank" href="https://aka.ms/galaxy">https://aka.ms/galaxy</a></td>
+<td><a target="_blank" href="https://arcade.makecode.com/skillmap/educator-info/galaxy-map-info">https://arcade.makecode.com/skillmap/educator-info/galaxy-map-info</a></td>
+</tr>
+<tr>
+<td>8</td>
+<td><a target="_blank" href="https://arcade.makecode.com/--skillmap#forest">Save the Forest</a></td>
+<td>Begintermediate / 2.5</td>
+<td>This skillmap walks students through a coding project that allows them to fly an airtanker full of water to put out forest fires. It also provides a great lesson on the balance of ecosystems.</td>
+<td><a target="_blank" href="https://arcade.makecode.com/--skillmap#forest">https://arcade.makecode.com/--skillmap#forest</a></td>
+<td><a target="_blank" href="https://aka.ms/forestMap">https://aka.ms/forestMap</a></td>
+<td><a target="_blank" href="https://arcade.makecode.com/skillmap/educator-info/forest-map-info">https://arcade.makecode.com/skillmap/educator-info/forest-map-info</a></td>
+</tr>
+<tr>
+<td>9</td>
+<td><a target="_blank" href="https://arcade.makecode.com/--skillmap#rockstar">80's Rockstar Maze</a></td>
+<td>Intermediate / 3</td>
+<td>Help Jerry the Rockstar avoid the crazed fans by coding this maze. Then get Jerry to the exit before time runs out.</td>
+<td><a target="_blank" href="https://arcade.makecode.com/--skillmap#rockstar">https://arcade.makecode.com/--skillmap#rockstar</a></td>
+<td></td>
+<td><a target="_blank" href="https://arcade.makecode.com/skillmap/educator-info/rockstar-map-info">https://arcade.makecode.com/skillmap/educator-info/rockstar-map-info</a></td>
+</tr>
+<tr>
+<td>10</td>
+<td><a target="_blank" href="https://arcade.makecode.com/--skillmap#adventure">Code an Adventure</a></td>
+<td>Intermediate / 3</td>
+<td>Remember those old-school text-based adventures? This skillmap uses functions to help participants code their own interactive stories.</td>
+<td><a target="_blank" href="https://arcade.makecode.com/--skillmap#adventure">https://arcade.makecode.com/--skillmap#adventure</a></td>
+<td><a target="_blank" href="https://aka.ms/codeAdventure">https://aka.ms/codeAdventure</a></td>
+<td><a target="_blank" href="https://arcade.makecode.com/skillmap/educator-info/adventure-info">https://arcade.makecode.com/skillmap/educator-info/adventure-info</a></td>
+</tr>
+<tr>
+<td>11</td>
+<td><a target="_blank" href="https://arcade.makecode.com/--skillmap#jungle">Jungle Jump</a></td>
+<td>Intermediate / 3</td>
+<td>One of our most popular maps! This skillmap allows students to code their own sidescrolling platformer (similar to those timeless games starring the plumbing brothers.)</td>
+<td><a target="_blank" href="https://arcade.makecode.com/--skillmap#jungle">https://arcade.makecode.com/--skillmap#jungle</a></td>
+<td><a target="_blank" href="https://aka.ms/junglejump">https://aka.ms/junglejump</a></td>
+<td><a target="_blank" href="https://arcade.makecode.com/skillmap/educator-info/jungle-map-info">https://arcade.makecode.com/skillmap/educator-info/jungle-map-info</a></td>
+</tr>
+<tr>
+<td>12</td>
+<td><a target="_blank" href="https://arcade.makecode.com/#tutorial:/tutorials/pizza-party">Multiplayer Pizza Party</a></td>
+<td>Intermediate / 3</td>
+<td>Code a game where multiple players can dash for each piece of pizza--bumping each other to steal points along the way.</td>
+<td><a target="_blank" href="https://arcade.makecode.com/#tutorial:/tutorials/pizza-party">https://arcade.makecode.com/#tutorial:/tutorials/pizza-party</a></td>
+<td><a target="_blank" href="https://aka.ms/pizzaparty">https://aka.ms/pizzaparty</a></td>
+<td><a target="_blank" href="https://makecode.com/_8ikJWuHFCE81">https://makecode.com/_8ikJWuHFCE81</a></td>
+</tr>
+<tr>
+<td>13</td>
+<td><a target="_blank" href="https://arcade.makecode.com/#tutorial:/tutorials/horse">Multiplayer Horse Race</a></td>
+<td>Intermediate / 3</td>
+<td>Participants can code a carnival-style racehorse game where multiple players can button mash to be the first to get their horses across the finish line.</td>
+<td><a target="_blank" href="https://arcade.makecode.com/#tutorial:/tutorials/horse">https://arcade.makecode.com/#tutorial:/tutorials/horse</a></td>
+<td><a target="_blank" href="https://aka.ms/horserace">https://aka.ms/horserace</a></td>
+<td><a target="_blank" href="https://makecode.com/_6eq60hdDP5tz">https://makecode.com/_6eq60hdDP5tz</a></td>
+</tr>
+</tbody></table>
+<p><a name="courses"> --- </a></p>
+<h2>Complete Courses</h2><pre><code class="lang-codecard">[
+    {
+        "name": "AP Computer Science Principles",
+        "description": "AP endorsed introductory class for High School students. The course is designed to attract students of all backgrounds, experience levels, and interests",
+        "cardType": "link",
+        "url": "https://makecode.com/csp",
+        "imageUrl": "/docs/static/courses/csp.png",
+        "largeImageUrl": "/docs/static/courses/csp.png",
+        "directOpen": true
+    },
+    {
+        "name": "Introduction to Computer Science with Microsoft MakeCode Arcade",
+        "description": "A full academic year course designed to be taught for introductory programming classes in High School",
+        "cardType": "link",
+        "url": "/courses/introcs",
+        "imageUrl": "/docs/static/courses/teals-introcs.jpg",
+        "largeImageUrl": "/docs/static/courses/teals-introcs.jpg",
+        "directOpen": true
+    },
+    {
+        "name": "Code a Carnival",
+        "description": "A modular and differentiated set of coding activities for students in grades 5-12",
+        "cardType": "link",
+        "url": "/courses/carnival",
+        "imageUrl": "/docs/static/hour-of-code/2022/booth.png",
+        "largeImageUrl": "/docs/static/hour-of-code/2022/booth.png",
+        "directOpen": true
+    }
+]</code></pre><p><a name="fun"> --- </a></p>
+<h2>Delightful Additions</h2><pre><code class="lang-codecard">[
+    {
+        "name": "Arcade Kiosk",
+        "description": "Bring the arcade to your classroom with this kiosk-style interface.",
+        "url":"/hardware/cabinets",
+        "imageUrl": "/docs/static/hardware/kiosk/makecode-arcade-machines.jpg"
+    }, {
+        "name": "Multiplayer",
+        "description": "Encourage students to collaborate and play their final games together",
+        "url":"/multiplayer",
+        "imageUrl": "static/multiplayer/help/hosted-game.png"
+    }, {
+        "name": "Xbox App",
+        "description": "Upload your games to the Xbox",
+        "url":"https://medium.com/kikis-corner/xbox-00d8868e4778",
+        "imageUrl": "static/skillmap/puzzle/puzzle-activity1.png"
+    }
+]</code></pre><p><a name="blogs"> --- </a></p>
+<h2>Concept Blogs</h2><pre><code class="lang-codecard">[
+    {
+        "name": "Kiki's Corner",
+        "description": "A comprehensive Arcade blog for teachers and students",
+        "url":"https://medium.com/kikis-corner",
+        "imageUrl": "/docs/static/hero-gallery/kikis-corner.png"
+    }, {
+        "name": "Richard's Tips",
+        "description": "Visit our forum to read Richard's Arcade Tips. You're bound to learn something new!",
+        "url":"https://forum.makecode.com/search?q=richard%27s%20arcade%20tips%20%23blog%20%40richard%20in%3Atitle",
+        "imageUrl": "/docs/static/livestream-games/bartholomew.png"
+    }
+]</code></pre><h2>See also</h2><ul>
+<li><a href="/docs/courses/summer-training.html">MakeCode Arcade Summer Trainings</a></li>
+<li><a target="_blank" href="https://youtu.be/DE_-0flM324">Getting Started with MakeCode Arcade</a></li>
+<li><a target="_blank" href="https://medium.com/kikis-corner">Kiki's Corner MakeCode Arcade Blog</a></li>
+<li><a target="_blank" href="https://arcade.makecode.com/">Homepage for Microsoft MakeCode Arcade</a></li>
+</ul>
+
+    </div>
+
+					<div class="hideprint"></div>
+				</div>
+
+			</div>
+
+			
+<!-- include footer.html -->
+<footer class="ui vertical footer segment hideprint docs inverted" aria-hidden="false">
+    <div class="ui center aligned container">
+        <div class="ui horizontal link list">
+            <a
+                class="item"
+                href="https://twitter.com/intent/follow?screen_name=MsMakeCode"
+                title="Follow us on Twitter"
+                target="_blank"
+                rel="noopener">
+                <i class="huge icon twitter"></i>
+            </a>
+            <a class="item" href="https://www.youtube.com/channel/UCye7YlvFUUQ1dSy0WZZ1T_Q" title="Subscribe to our YouTube channel"
+                target="_blank" rel="noopened">
+                <i class="huge icon youtube"></i>
+            </a>
+            <a class="item" href="mailto:makecode@microsoft.com" title="Send us an Email"
+                target="_blank" rel="noopened">
+                <i class="huge icon mail"></i>
+            </a>
+        </div>
+        <div class="ui section divider"></div>
+        <div class="ui container horizontal small divided link list">
+            <a id="langpicker" tabindex="0" class="ui item" rel="noopener">
+                <i class="icon xicon globe" aria-hidden="true" role="presentation"></i>Language
+            </a>
+            <a class="item" href="https://makecode.com/privacy" target="_blank" rel="noopener">Privacy &amp; Cookies</a>
+            <a class="item" href="https://makecode.com/termsofuse" target="_blank" rel="noopener">Terms Of Use</a>
+            <a class="item" href="https://makecode.com/trademarks" target="_blank" rel="noopener">Trademarks</a>
+            <span class="item">© 2022 Microsoft</span>
+        </div>
+        <div class="ui container horizontal small link list poweredBy">
+            <span class="item">Powered by</span>
+            <a class="middle aligned" href="https://makecode.com/" title="Microsoft MakeCode"
+                target="_blank" rel="noopener">
+                <img width="100" src="/static/logo/Microsoft-logo_rgb_c-gray.png" alt="Microsoft">
+            </a>
+        </div>
+    </div>
+</footer>
+
+<!-- end include footer.html -->
+
+
+		</div>
+
+	</div>
+
+    
+<!-- include langpicker.html -->
+<div id="langmodal" class="ui modal docs" role="dialog" aria-modal="true" aria-describedby="langmodalheader" tabindex="-1">
+    <h2 id="langmodalheader" class="header">Select Language</h2>
+    <div role="button" class="closeIcon" tabindex="0" aria-label="Close">
+        <i class="icon close remove circle" aria-hidden="true"></i>
+    </div>
+
+	<div class="content">
+	    <div class="group">
+            <div id="availablelocales" class="ui cards centered" role="listbox" aria-label="List of available locales"></div>
+        </div>
+        <div class="ui" id="langmodalfooter">
+            <a class="ui" href="/docs/translate.html" target="_blank" rel="noopener noreferrer">
+                How do I add a new language?
+            </a>
+
+            <a id="translatebtn" class="ui button" role="button" tabindex="0">
+                Translate this page
+            </a>
+        </div>
+    </div>
+</div>
+
+
+<!-- end include langpicker.html -->
+
+	
+<!-- include macros.html -->
+<!-- macro button -->
+
+<!-- macro vimeo -->
+
+<!-- macro youtube -->
+
+<!-- macro section -->
+
+<!-- macro hide -->
+
+<!-- macro avatar -->
+
+<!-- macro hint -->
+
+<!-- macro codecard -->
+
+<!-- macro tutorialhint -->
+
+<!-- macro reminder -->
+
+<!-- macro alert -->
+
+<!-- macro tip -->
+
+<!-- wrapped around ordinary content -->
+<!-- macro main-container -->
+
+<!-- used for 'column' box - they are collected and wrapped in 'column-container' -->
+<!-- macro column -->
+<!-- macro column-container -->
+
+
+<!-- Menu on the top of the page -->
+<!-- macro item -->
+
+<!-- macro divider -->
+
+<!-- TOC in the sidebar -->
+<!-- macro item -->
+
+<!-- macro divider -->
+
+<!-- macro toc-dropdown -->
+
+<!-- macro toc-dropdown-noLink -->
+
+<!-- macro toc-dropdown-noHeading -->
+
+<!-- TODO: duplicates of above for compatability with docsrender.ts;
+    remove with pxtlib/docsrender.ts TOC TODOs after cloud bump. -->
+<!-- macro top-dropdown -->
+
+<!-- macro top-dropdown-noHeading -->
+
+<!-- macro inner-dropdown -->
+
+<!-- macro nested-dropdown -->
+<!-- end include macros.html -->
+
+	
+<!-- include tracking.html -->
+<script type="text/javascript" src="/pxtweb.js"></script>
+<script type="text/javascript">
+    window.loadAppInsights = function (includeCookie) {
+        //Backend will patch / + doccdn + / with CDN url and the check that URL ends with the sha would pass
+        var isProduction = includeCookie && (/[0-9a-f]{40}\/ai\.2\.min\.js$/.test("/ai.2.min.js"));
+        !function(T,l,y){var S=T.location,k="script",D="connectionString",C="ingestionendpoint",I="disableExceptionTracking",E="ai.device.",b="toLowerCase",w="crossOrigin",N="POST",e="appInsightsSDK",t=y.name||"appInsights";(y.name||T[e])&&(T[e]=t);var n=T[t]||function(d){var g=!1,f=!1,m={initialize:!0,queue:[],sv:"5",version:2,config:d};function v(e,t){var n={},a="Browser";return n[E+"id"]=a[b](),n[E+"type"]=a,n["ai.operation.name"]=S&&S.pathname||"_unknown_",n["ai.internal.sdkVersion"]="javascript:snippet_"+(m.sv||m.version),{time:function(){var e=new Date;function t(e){var t=""+e;return 1===t.length&&(t="0"+t),t}return e.getUTCFullYear()+"-"+t(1+e.getUTCMonth())+"-"+t(e.getUTCDate())+"T"+t(e.getUTCHours())+":"+t(e.getUTCMinutes())+":"+t(e.getUTCSeconds())+"."+((e.getUTCMilliseconds()/1e3).toFixed(3)+"").slice(2,5)+"Z"}(),iKey:e,name:"Microsoft.ApplicationInsights."+e.replace(/-/g,"")+"."+t,sampleRate:100,tags:n,data:{baseData:{ver:2}}}}var h=d.url||y.src;if(h){function a(e){var t,n,a,i,r,o,s,c,u,p,l;g=!0,m.queue=[],f||(f=!0,t=h,s=function(){var e={},t=d.connectionString;if(t)for(var n=t.split(";"),a=0;a<n.length;a++){var i=n[a].split("=");2===i.length&&(e[i[0][b]()]=i[1])}if(!e[C]){var r=e.endpointsuffix,o=r?e.location:null;e[C]="https://"+(o?o+".":"")+"dc."+(r||"services.visualstudio.com")}return e}(),c=s[D]||d[D]||"",u=s[C],p=u?u+"/v2/track":d.endpointUrl,(l=[]).push((n="SDK LOAD Failure: Failed to load Application Insights SDK script (See stack for details)",a=t,i=p,(o=(r=v(c,"Exception")).data).baseType="ExceptionData",o.baseData.exceptions=[{typeName:"SDKLoadFailed",message:n.replace(/\./g,"-"),hasFullStack:!1,stack:n+"\nSnippet failed to load ["+a+"] -- Telemetry is disabled\nHelp Link: https://go.microsoft.com/fwlink/?linkid=2128109\nHost: "+(S&&S.pathname||"_unknown_")+"\nEndpoint: "+i,parsedStack:[]}],r)),l.push(function(e,t,n,a){var i=v(c,"Message"),r=i.data;r.baseType="MessageData";var o=r.baseData;return o.message='AI (Internal): 99 message:"'+("SDK LOAD Failure: Failed to load Application Insights SDK script (See stack for details) ("+n+")").replace(/\"/g,"")+'"',o.properties={endpoint:a},i}(0,0,t,p)),function(e,t){if(JSON){var n=T.fetch;if(n&&!y.useXhr)n(t,{method:N,body:JSON.stringify(e),mode:"cors"});else if(XMLHttpRequest){var a=new XMLHttpRequest;a.open(N,t),a.setRequestHeader("Content-type","application/json"),a.send(JSON.stringify(e))}}}(l,p))}function i(e,t){f||setTimeout(function(){!t&&m.core||a()},500)}var e=function(){var n=l.createElement(k);n.src=h;var e=y[w];return!e&&""!==e||"undefined"==n[w]||(n[w]=e),n.onload=i,n.onerror=a,n.onreadystatechange=function(e,t){"loaded"!==n.readyState&&"complete"!==n.readyState||i(0,t)},n}();y.ld<0?l.getElementsByTagName("head")[0].appendChild(e):setTimeout(function(){l.getElementsByTagName(k)[0].parentNode.appendChild(e)},y.ld||0)}try{m.cookie=l.cookie}catch(p){}function t(e){for(;e.length;)!function(t){m[t]=function(){var e=arguments;g||m.queue.push(function(){m[t].apply(m,e)})}}(e.pop())}var n="track",r="TrackPage",o="TrackEvent";t([n+"Event",n+"PageView",n+"Exception",n+"Trace",n+"DependencyData",n+"Metric",n+"PageViewPerformance","start"+r,"stop"+r,"start"+o,"stop"+o,"addTelemetryInitializer","setAuthenticatedUserContext","clearAuthenticatedUserContext","flush"]),m.SeverityLevel={Verbose:0,Information:1,Warning:2,Error:3,Critical:4};var s=(d.extensionConfig||{}).ApplicationInsightsAnalytics||{};if(!0!==d[I]&&!0!==s[I]){var c="onerror";t(["_"+c]);var u=T[c];T[c]=function(e,t,n,a,i){var r=u&&u(e,t,n,a,i);return!0!==r&&m["_"+c]({message:e,url:t,lineNumber:n,columnNumber:a,error:i}),r},d.autoExceptionInstrumented=!0}return m}(y.cfg);function a(){y.onInit&&y.onInit(n)}(T[t]=n).queue&&0===n.queue.length?(n.queue.push(a),n.trackPageView({})):a()}(window,document,{
+            src: "https://js.monitor.azure.com/scripts/b/ai.2.min.js", // The SDK URL Source
+            onInit: function (sdk) {
+                sdk.addTelemetryInitializer(function (envelope) {
+                    // App Insights automatically sends a page view event on setup, but we send our own later with additional properties.
+                    // This stops the automatic event from firing, so we don't end up with duplicate page view events.
+                    if (envelope.baseType == "PageviewData" && !envelope.baseData.properties) {
+                        return false;
+                    }
+
+                    if (envelope.baseType == "PageviewPerformanceData") {
+                        var pageName = envelope.baseData.name;
+                        envelope.baseData.name = window.location.origin;
+                        if (!envelope.baseData.properties) {
+                            envelope.baseData.properties = {};
+                        }
+                        envelope.baseData.properties.pageName = pageName;
+                        var scrubbedUrl = scrubUrl(envelope.baseData.uri);
+                        envelope.baseData.uri = scrubbedUrl;
+                        var toUrl = new URL(scrubbedUrl);
+                        envelope.baseData.properties.pathName = toUrl ? toUrl.pathname : "";
+                        if (envelope.ext && envelope.ext.trace) {
+                            envelope.ext.trace.name = toUrl ? toUrl.pathname : "";
+                        }
+                    }
+
+                    var telemetryItem = envelope.baseData;
+                    telemetryItem.properties = telemetryItem.properties || {};
+                    telemetryItem.properties["cookie"] = isProduction;
+                    if (typeof pxtConfig === "undefined" || !pxtConfig || !pxtConfig.targetId) {
+                        telemetryItem.properties["target"] = "arcade";
+                        return true;
+                    }
+                    telemetryItem.properties["target"] = pxtConfig.targetId;
+                    telemetryItem.properties["stage"] = (pxtConfig.relprefix || "/--").replace(/[^a-z]/ig, '')
+                    telemetryItem.properties["targetVersion"] = pxtConfig.targetVersion;
+                    telemetryItem.properties["pxtVersion"] = pxtConfig.pxtVersion;
+                    if (typeof Windows !== "undefined")
+                        telemetryItem.properties["WindowsApp"] = 1;
+                    var userAgent = navigator.userAgent.toLowerCase();
+                    var electronRegexResult = /\belectron\/(\d+\.\d+\.\d+.*?)(?: |$)/i.exec(userAgent); // Example navigator.userAgent: "Mozilla/5.0 Chrome/61.0.3163.100 Electron/2.0.0 Safari/537.36"
+                    if (electronRegexResult) {
+                        telemetryItem.properties["Electron"] = 1;
+                        telemetryItem.properties["ElectronVersion"] = electronRegexResult[1];
+                    }
+                    if (typeof pxtElectron !== "undefined") {
+                        telemetryItem.properties["PxtElectron"] = 1;
+                        telemetryItem.properties["ElectronVersion"] = pxtElectron.versions.electronVersion;
+                        telemetryItem.properties["ChromiumVersion"] = pxtElectron.versions.chromiumVersion;
+                        telemetryItem.properties["NodeVersion"] = pxtElectron.versions.nodeVersion;
+                        telemetryItem.properties["PxtElectronVersion"] = pxtElectron.versions.pxtElectronVersion;
+                        telemetryItem.properties["PxtCoreVersion"] = pxtElectron.versions.pxtCoreVersion;
+                        telemetryItem.properties["PxtTargetVersion"] = pxtElectron.versions.pxtTargetVersion;
+                        telemetryItem.properties["PxtElectronIsProd"] = pxtElectron.versions.isProd;
+                    }
+                    // Kiosk UWP info is appended to the user agent by the makecode-dotnet-apps/arcade-kiosk UWP app
+                    var kioskUwpRegexResult = /\((MakeCode Arcade Kiosk UWP)\/([\S]+)\/([\S]+)\)/i.exec(userAgent); // Example navigator.userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36 Edg/117.0.2045.60 (MakeCode Arcade Kiosk UWP/0.1.41.0/Windows.Xbox)"
+                    if (kioskUwpRegexResult) {
+                        telemetryItem.properties["KioskUwp"] = 1;
+                        telemetryItem.properties["KioskUwpVersion"] = kioskUwpRegexResult[2];
+                        telemetryItem.properties["KioskUwpPlatform"] = kioskUwpRegexResult[3];
+                    }
+                    return true;
+                });
+            },
+            cfg: {
+                instrumentationKey:"9801ed01-c40f-46ec-aa40-2a1742a9e71c",
+                disableAjaxTracking: true,
+                overridePageViewDuration: false,
+                disableExceptionTracking: true,
+                disableCorrelationHeaders: true,
+                disableCookiesUsage: !isProduction,
+                isStorageUseDisabled: !isProduction,
+                url: "/ai.2.min.js"
+            }
+        });
+        window.appInsights=appInsights;
+        var location = window.location.toString();
+        appInsights.trackPageView({
+            name: window.location.hostname,
+            uri: window.location.origin,
+            properties: {
+                url: scrubUrl(location),
+                urlReferrer: scrubUrl(document.referrer.toString())
+            }
+        });
+
+        // Scrub potential PII from the URL.
+        function scrubUrl(url) {
+            if (!url) return url;
+
+            var scriptIdRegex = /(?:S?\d{5}-\d{5}-\d{5}-\d{5})|(?:_[0-9a-zA-Z]{12})/g;
+            var scrubbedUrl = new URL(url.toLocaleLowerCase().replace(scriptIdRegex, "xxxxx-xxxxx-xxxxx-xxxxx"));
+
+            // Just as a precaution, strip any suspicious query parameters.
+            var blockedParamKeywords = ["username", "password", "token", "pwd"];
+            var searchParams = Array.from(scrubbedUrl.searchParams.keys());
+            for (var param of searchParams) {
+                if (blockedParamKeywords.some(k => param.indexOf(k) != -1)) {
+                    scrubbedUrl.searchParams.delete(param);
+                }
+            }
+
+            return scrubbedUrl.toString();
+        }
+
+        return isProduction;
+    }
+    pxt.initAnalyticsAsync();
+</script>
+
+<!-- end include tracking.html -->
+
+
+</body>
+
+</html>

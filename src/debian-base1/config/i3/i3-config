@@ -28,12 +28,26 @@ for_window [instance="folder_viewer"] move container to mark viewer_tabs
 for_window [title="Classroom Manager"] floating disable
 for_window [title="Classroom Manager"] move container to mark viewer_tabs
 
+# lesson config, teacher widget for configuring lesson resources
+for_window [title="Lesson Config"] floating disable
+for_window [title="Lesson Config"] move container to mark viewer_tabs
+
+# library, student-facing research site launcher
+for_window [instance="library"] floating disable
+for_window [instance="library"] move container to mark viewer_tabs
+
 # makecode editor
-for_window [title="MakeCode for micro:bit"] floating disable
-for_window [title="MakeCode for micro:bit"] move container to mark viewer_tabs
+for_window [title="MakeCode"] floating disable
+for_window [title="MakeCode"] move container to mark viewer_tabs
 
 # xterm
 for_window [class="XTerm"] move container to mark viewer_tabs
+
+for_window [instance="webapp_viewer"] floating disable
+for_window [instance="webapp_viewer"] move container to mark viewer_tabs
+
+for_window [class="Waterfox"] floating disable
+for_window [class="Waterfox"] move container to mark viewer_tabs
 
 # keybinds
 bindsym $mod+Return exec xterm
@@ -44,6 +58,7 @@ bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'Exit?' -B 'Yes' 'i3-msg exit
 
 default_orientation horizontal
 workspace_layout default
+tiling_drag off
 
 # i3 status bar 
 bar {

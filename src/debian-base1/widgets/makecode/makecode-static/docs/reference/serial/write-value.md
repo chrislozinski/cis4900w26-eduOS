@@ -1,56 +1,43 @@
 # write Value
 
-Write a **name:value** pair and a newline character (`\r\n`) to the [serial](/device/serial) port.
+Write a **name:value** pair as a line of text to the serial port.
 
 ```sig
-serial.writeValue("x", 0)
+serial.writeValue("x", 0);
 ```
 
-It is common when reporting or recording data to use a _Name Value Pair_ (NVP). They appear as a text output string in the form of a _name_ and a _value_ together. The name and the value are separated in the string with a _colon_, `:`. A name value pair reporting a temperature of `-15` degrees could look like:
+A **name:value** pair is a string that has both a name for a value and the value
+itself. If you want to send a temperature value of 32 degrees as a _name:value_ pair,
+it would go to the serial port as this: "temperature:32". This is a good way to
+connect a number value to it's meaning.
 
-``temperature:-15``
-
-Associating a name with a value helps to identify related data when different data sources are recorded. For example, if you're reporting both temperature and light intensity, the _name:value_ format helps spreadsheets or other data analysis programs distinguish between them and group the same types of values together properly. Reporting two data sources might look like this in the output:
-
-```
-temperature:-15
-temperature:-12
-light:154
-temperature:-11
-light:152
-```
+So, ``||serial:write value||`` does this but you give the name and the value as two parts and it
+sends it as a pair.
 
 ## Parameters
 
-* `name` is the [string](/types/string) to write to the serial port
-* `value` is the [number](/types/number) to write to the serial port
+* **name**: a [string](/types/string) that is the name part of the _name:value_ pair
+* **value**: a [number](/types/number) that is the value part of the _name:value_ pair 
 
-## Example: streaming data
+## Example #example
 
-Every 10 seconds, the example below sends the temperature and light level
-to the serial port.
+Send _name:value_ pairs for odd and even numbers to the serial port.
 
 ```blocks
-basic.forever(function() {
-    serial.writeValue("temp", input.temperature())
-    serial.writeValue("light", input.lightLevel())
-    basic.pause(10000)
-})
+for (let i = 0; i < 10; i++) {
+    if (i % 2 > 0) {
+        serial.writeValue("odd", i)
+    } else {
+        serial.writeValue("even", i)
+    }
+}
 ```
 
-### ~hint
+## See also #seealso
 
-#### Radio-Serial gateway
-
-The [send value](/reference/radio/send-value) function broadcasts
-string/number pairs. You can use a second @boardname@ to receive them,
-and then send them directly to the serial port with ``write value``.
-
-### ~
-
-## See also
-
-[serial](/device/serial),
 [write line](/reference/serial/write-line),
-[write number](/reference/serial/write-number),
-[send value](/reference/radio/send-value)
+[write number](/reference/serial/write-number)
+
+```package
+serial
+```

@@ -3,165 +3,136 @@
 ```codecard
 [
     {
+        "name": "Beginner Skillmaps",
+        "url": "/beginner-maps",
+        "imageUrl": "/docs/static/skillmap/backgrounds/story-map.png"
+    },
+    {
+        "name": "Next Level Skillmaps",
+        "url": "/inter-maps",
+        "imageUrl": "/docs/static/skillmap/backgrounds/galaxy-map.png"
+    },
+    {
         "name": "Tutorials",
         "url": "/tutorials",
-        "imageUrl": "/docs/static/mb/projects/a1-display.png",
-        "largeImageUrl": "/docs/static/mb/projects/flashing-heart/sim.gif"
+        "imageUrl": "/docs/static/tutorials/interface/info.png",
+        "largeImageUrl": "/docs/static/tutorials/interface/info.png",
+        "videoUrl": "/docs/static/tutorials/chase-the-pizza.mp4"
     },
     {
-        "name": "Tutorials for the new micro:bit (V2)",
-        "url": "/tutorials-v2",
-        "imageUrl": "/docs/static/mb/projects/pet-hamster.png"
+        "name": "Multiplayer Tutorials",
+        "url": "/multiplayer-tutorials",
+        "imageUrl": "/docs/static/tutorials/pizza-party/playtime.png",
+        "largeImageUrl": "/docs/static/tutorials/pizza-party/playtime.png"
     },
     {
-        "name": "Games",
-        "url": "/projects/games",
-        "imageUrl": "/docs/static/mb/projects/a4-motion.png"
-    },
-    {
-        "name": "Make it: code it Examples",
-        "url": "/microbit-org/make-it-code-it",
-        "imageUrl": "/docs/static/microbit-org/make-it-code-it/dance-steps.png"
-    },
-    {
-        "name": "Radio Games",
-        "url": "/projects/radio-games",
-        "imageUrl": "/docs/static/multi.png"
-    },
-    {
-        "name": "Data Logging Examples",
-        "url": "/microbit-org/data-logging",
-        "imageUrl": "/docs/static/microbit-org/data-logging/traffic-survey.png"
+        "name": "Multiplayer Games",
+        "url": "/multiplayer-games",
+        "imageUrl": "/docs/static/multiplayer/perfect-fit.png",
+        "largeImageUrl": "/docs/static/multiplayer/perfect-fit.gif"
     },
     {
         "name": "Live Coding",
         "url": "/live-coding",
-        "imageUrl": "/docs/static/live-coding/NvEOKZ8wh9s.jpg"
+        "imageUrl": "/docs/static/live-coding/7pBGS_tKfmU.jpg"
     },
     {
-        "name": "Fashion",
-        "url": "/projects/fashion",
-        "imageUrl": "/docs/static/mb/projects/wallet.png"
+        "name": "Blocks Games",
+        "url": "/blocks-games",
+        "imageUrl": "/docs/static/blocks-games/duck.png",
+        "largeImageUrl": "/docs/static/blocks-games/duck.gif",
+        "videoUrl": "/docs/static/blocks-games/duck.mp4"
     },
     {
-        "name": "Music",
-        "url": "/projects/music",
-        "imageUrl": "/docs/static/mb/projects/a6-music.png"
+        "name": "JavaScript Games",
+        "url": "/javascript-games",
+        "imageUrl": "/docs/static/javascript-games/planet-putt-putt.png",
+        "largeImageUrl": "/docs/static/javascript-games/planet-putt-putt.gif",
+        "videoUrl": "/docs/static/javascript-games/planet-putt-putt.mp4"
     },
     {
-        "name": "Toys",
-        "url": "/projects/toys",
-        "imageUrl": "/docs/static/mb/projects/inchworm.jpg"
+        "name": "Game Jam",
+        "url": "/game-jam",
+        "imageUrl": "https://cdn.makecode.com/api/50932-20209-20218-60886/thumb"
     },
     {
-        "name": "Science",
-        "url": "/projects/science",
-        "imageUrl": "/docs/static/mb/projects/timegate.jpg"
+        "name": "Advanced Livestream",
+        "url": "/advanced-stream",
+        "imageUrl": "/docs/static/livestream-games/boss-rush.png"
     },
     {
-        "name": "Tools",
-        "url": "/projects/tools",
-        "imageUrl": "/docs/static/mb/projects/stopwatch.png"
+        "name": "Community Games",
+        "url": "/community",
+        "imageUrl": "/docs/static/discourse/76895-38185-68305-99984.png",
+        "largeImageUrl": "/docs/static/community/blocky-boss-battle/blocky-boss-battle.gif",
+        "videoUrl": "/docs/static/community/blocky-boss-battle/blocky-boss-battle.mp4"
     },
     {
-        "name": "Turtle",
-        "url": "/projects/turtle",
-        "imageUrl": "/docs/static/mb/projects/turtle-square.png"
+        "name": "Game Design Concepts",
+        "url": "/concepts",
+        "imageUrl": "/docs/static/concepts/walking-hero.png",
+        "largeImageUrl": "/docs/static/concepts/walking-hero.gif"
     },
     {
-        "name": "Blocks to JavaScript",
-        "url": "/courses/blocks-to-javascript",
-        "imageUrl": "/docs/static/courses/blocks-to-javascript/hello-javascript.png"
+        "name": "Graphics and Math",
+        "url": "/graphics-math",
+        "imageUrl": "/docs/static/graphics-math/fireworks.png",
+        "largeImageUrl": "/docs/static/graphics-math/fireworks.gif",
+        "videoUrl": "/docs/static/graphics-math/fireworks.mp4"
     },
     {
-        "name": "First Lessons with MakeCode and the micro:bit",
-        "url": "/microbit-org/first-lessons",
-        "imageUrl": "/docs/static/microbit-org/first-lessons/overview.png"
-    },
-    {
-        "name": "CreateAI",
-        "url": "/microbit-org/createai",
-        "imageUrl": "/docs/static/microbit-org/createai/storytelling-friend.png"
+        "name": "Arts and Crafts",
+        "url": "/arts-and-crafts",
+        "imageUrl": "/docs/static/arts-and-crafts/tshirt.png"
     },
     {
         "name": "Courses",
         "url": "/courses",
-        "imageUrl": "/docs/static/courses/csintro.jpg"
+        "imageUrl": "/docs/static/courses/csp.png",
+        "largeImageUrl": "/docs/static/courses/csp.png"
     },
     {
-        "name": "Jacdac",
-        "url": "/jacdac",
-        "imageUrl": "/docs/static/jacdac/getting-started.jpg"
+        "name": "Arcade Compatible Devices",
+        "url": "/arcade-devices",
+        "imageUrl": "/docs/static/hardware/meowbit.png"
     },
     {
-        "name": "MicroCode for the new micro:bit (V2)",
-        "url": "/microcode",
-        "imageUrl": "/docs/static/microcode/home.png"
+        "name": "DIY Hardware",
+        "url": "/diy-hardware",
+        "imageUrl": "/docs/static/hardware/raspberry-pi/wooden-cabinet/gallery.jpg"
     },
     {
-        "name": "Introductory micro:bit Feature Videos",
-        "url": "/microbit-org/feature-videos",
-        "imageUrl": "/docs/static/microbit-org/feature-videos/introduction.png"
+        "name": "How to Make a Game Videos",
+        "url": "/how-to-make-a-game",
+        "imageUrl": "/docs/static/how-to-make-a-game/bunny-hop-thumb.jpg"
     },
     {
-        "name": "Behind the MakeCode Hardware",
-        "url": "/behind-the-makecode-hardware",
-        "imageUrl": "/docs/static/mb/behindhardware/leds.jpg"
-    },
-    {
-        "name": "Science Experiments",
-        "url": "/science-experiments",
-        "imageUrl": "/docs/static/mb/science-experiments/data-collection.jpg"
-    },
-    {
-        "name": "Educator Professional Development",
-        "url": "/microbit-org/professional-development",
-        "imageUrl": "/docs/static/microbit-org/professional-development/first-lessons.png"
-    },
-    {
-        "name": "Coding for Teachers",
-        "url": "/coding-for-teachers",
-        "imageUrl": "/docs/static/coding-for-teachers/hr8O_pslp8Q.jpg"
-    },
-    {
-        "name": "Coding Cards",
-        "url": "/coding-cards",
-        "imageUrl": "/docs/static/coding-cards/balance-card.jpg"
-    },
-    {
-        "name": "Deep Dive",
-        "url": "/deep-dive",
-        "imageUrl": "/docs/static/deep-dive/RpK4Cg42eNk.jpg"
+        "name": "John Park's Workshop",
+        "url": "/john-parks-workshop",
+        "imageUrl": "/docs/static/john-parks-workshop/trash-panda.png"
     }
 ]
 ```
 
 ## See Also
 
+[Beginner Skillmaps](/beginner-maps),
+[Next Level Skillmaps](/inter-maps),
 [Tutorials](/tutorials),
-[Tutorials for the new micro:bit (V2)](/tutorials-v2),
-[Games](/projects/games),
-[Make it: code it Examples](/microbit-org/make-it-code-it),
-[Radio Games](/projects/radio-games),
-[Data Logging Examples](/microbit-org/data-logging),
+[Multiplayer Tutorials](/multiplayer-tutorials),
+[Multiplayer Games](/multiplayer-games),
 [Live Coding](/live-coding),
-[Fashion](/projects/fashion),
-[Music](/projects/music),
-[Toys](/projects/toys),
-[Science](/projects/science),
-[Tools](/projects/tools),
-[Turtle](/projects/turtle),
-[Blocks to JavaScript](/courses/blocks-to-javascript),
-[First Lessons with MakeCode and the micro:bit](/microbit-org/first-lessons),
-[CreateAI](/microbit-org/createai),
+[Blocks Games](/blocks-games),
+[JavaScript Games](/javascript-games),
+[Game Jam](/game-jam),
+[Advanced Livestream](/advanced-stream),
+[Community Games](/community),
+[Game Design Concepts](/concepts),
+[Graphics and Math](/graphics-math),
+[Arts and Crafts](/arts-and-crafts),
 [Courses](/courses),
-[Jacdac](/jacdac),
-[MicroCode for the new micro:bit (V2)](/microcode),
-[Introductory micro:bit Feature Videos](/microbit-org/feature-videos),
-[Behind the MakeCode Hardware](/behind-the-makecode-hardware),
-[Science Experiments](/science-experiments),
-[Educator Professional Development](/microbit-org/professional-development),
-[Coding for Teachers](/coding-for-teachers),
-[Coding Cards](/coding-cards),
-[Deep Dive](/deep-dive)
+[Arcade Compatible Devices](/arcade-devices),
+[DIY Hardware](/diy-hardware),
+[How to Make a Game Videos](/how-to-make-a-game),
+[John Park's Workshop](/john-parks-workshop)
 

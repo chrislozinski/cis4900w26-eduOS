@@ -12,50 +12,264 @@
 
     <link rel="alternate" type="application/json+oembed" href="@oembedurl@&format=json" />
     <link rel="alternate" type="text/xml+oembed" href="@oembedurl@&format=xml" />
+
+    <style>
+        @media only screen and (max-width: 767px) {
+            #page-header-wrapper .ui.mini.button {
+                padding: 0;
+                height: 2.5rem;
+                width: 2.5rem;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            #page-header-wrapper .ui.mini.button i.fas {
+                margin: 0;
+            }
+        }
+
+        @media only screen and (max-width: 767.99999px) {
+            .mobile-only {
+                display: block !important;
+            }
+            .mobile-hidden {
+                display: none !important;
+            }
+        }
+
+        .ui.item.logo img {
+            object-fit: contain;
+        }
+
+        .header {
+            align-items: center;
+            background-color: var(--pxt-header-background);
+            color: var(--pxt-header-foreground);
+            display: flex;
+            flex-grow: 0;
+            flex-shrink: 0;
+            height: 4rem;
+            max-height: 4rem;
+            z-index: 50;
+        }
+
+        .header-left, .header-right {
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+        .header-logo {
+            display: flex;
+        }
+        .header-logo img {
+            height: 1.4rem;
+            margin: 0 1rem;
+        }
+        header {
+            --pxt-header-background: #f76820;
+            --pxt-header-foreground: #ffffff;
+            --pxt-neutral-background1: #ffffff;
+            --pxt-neutral-foreground1: #000000;
+
+            margin-bottom: 1rem;
+        }
+
+        .header .brand:before {
+            border-left: 2px solid var(--pxt-header-foreground);
+            content: " ";
+            height: 1.5rem;
+            position: relative;
+        }
+
+        .header .brand {
+            flex-shrink: 0;
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .title-text {
+            color: var(--pxt-header-foreground);
+            font-family: Segoe UI, Tahoma, Geneva, Verdana, Helvetica Neue, Helvetica, Arial, sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 1px;
+            margin-left: 1rem;
+            display: inline-block;
+        }
+
+        .header-left {
+            margin-right: 1rem;
+        }
+
+        .header-title {
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .common-button.menu-button {
+            transition: none;
+        }
+
+        .common-button.menu-button:hover, .common-button.common-menu-dropdown-item:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .common-button.common-menu-dropdown-item:focus-visible {
+            outline: 1px solid var(--pxt-neutral-foreground1);
+            outline-offset: -4px;
+        }
+
+        a.common-button.common-menu-dropdown-item:hover {
+            text-decoration: none;
+            color: var(--pxt-neutral-foreground1);
+        }
+
+        .abuse.content {
+            text-align: center;
+            font-size: 13px;
+        }
+
+        #description-modal {
+            z-index: 1001;
+        }
+
+        #description-modal-dimmer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(127, 140, 141, .85);
+            z-index: 1000;
+            display: none;
+        }
+
+        #description-modal-content {
+            font-family: Segoe UI, "Segoe UI Web (West European)", -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, sans-serif;
+            font-size: 1rem;
+            background-color: unset;
+        }
+    </style>
 </head>
 
 <body id='root' class='root expandIt share-page'>
-
-    <div class="showDesktop page-header">
-        <div class="ui container">
-            <div id="page-header-wrapper">
-                <div class="page-header-item no-grow">
-                    <a href="https://makecode.com/" title="Go to Microsoft MakeCode"
-                        aria-label="Microsoft MakeCode Logo" role="menuitem" target="blank" rel="noopener"
-                        class="ui item logo organization">
-                        <img class="ui logo" src="./static/Microsoft-logo_rgb_c-gray.png"
-                            alt="Microsoft MakeCode Logo">
-                    </a>
-                    <div class="page-header-product">MakeCode</div>
+    <header>
+        <div class="common-menubar header" role="menubar" aria-label="Header">
+            <div class="header-left">
+                <div class="header-logo">
+                    <img class="mobile-hidden" src="/static/Micorsoft_logo_rgb_W-white_D.png" alt="Microsoft MakeCode Logo" />
+                    <img class="mobile-only" src="/static/Micorsoft_logo_rgb_W-white_D-square.png" alt="Microsoft MakeCode Logo" />
                 </div>
-                <div class="page-header-item page-header-spacer"></div>
-                <div class="page-header-item page-header-content no-grow">
-                    <h2 class="ui item header">@title@</h2>
-                    <a id="eval-button" href="/--eval#project=@id@" class="ui tiny button">Evaluate</a>
-                    <a href="/@versionsuff@#pub:@id@" class="ui tiny button">Edit Code</a>
+                <div class="ui item logo brand noclick mobile-hidden">
+                    <span class="title-text tablet-hidden">MakeCode Arcade</span>
+                    <span class="title-text tablet-only">MakeCode</span>
+                </div>
+            </div>
+            <div class="title-text header-title">
+                @name@
+            </div>
+            <div class="header-right">
+                <button id="show-code-button" class="common-button menu-button mobile-hidden" title="Show Code" role="menuitem">
+                    <span class="common-button-flex">
+                        <i class="fas fa-code" aria-hidden="true"></i>
+                    </span>
+                </button>
+                <a id="editCodeButton" href="/@versionsuff@#pub:@id@" class="common-button menu-button mobile-hidden"
+                    title="Edit Code" role="menuitem">
+                    <span class="common-button-flex">
+                        <i class="fas fa-edit" aria-hidden="true"></i>
+                    </span>
+                </a>
+                <button id="show-description-button" class="common-button menu-button" title="Show Description" role="menuitem">
+                    <span class="common-button-flex">
+                        <i class="fas fa-info-circle" aria-hidden="true"></i>
+                    </span>
+                </button>
+                <a id="share-eval-button" href="/--eval#project=@id@" class="common-button menu-button mobile-hidden" title="Evaluate" role="menuitem">
+                    <span class="common-button-flex">
+                        <i class="fas fa-clipboard-list" aria-hidden="true"></i>
+                    </span>
+                </a>
+                <a id="multiplayer-share-button" class="common-button menu-button mobile-hidden" title="Host Multiplayer Game" role="menuitem" style="display: none;">
+                    <span class="common-button-flex">
+                        <i class="fas fa-users" aria-hidden="true"></i>
+                    </span>
+                </a>
+                <div class="common-menu-dropdown mobile-only">
+                    <button id="overflow-menu" class="common-button menu-button" title="More..." role="menuitem" aria-expanded="false" aria-haspopup="true" aria-controls="overflow-menu-content">
+                        <span class="common-button-flex">
+                            <i class="fas fa-bars" aria-hidden="true"></i>
+                        </span>
+                    </button>
+                    <div id="overflow-menu-content" class="common-menu-dropdown-pane" role="menu" aria-labelledby="overflow-menu" style="display: none;">
+                        <ul role="presentation">
+                            <li role="presentation">
+                                <button id="show-code-button-overflow" class="common-button common-menu-dropdown-item" title="Show Code" role="menuitem" aria-posinset="1" aria-setsize="3">
+                                    <span class="common-button-flex">
+                                        <span class="common-button-label">Show Code</span>
+                                    </span>
+                                </button>
+                            </li>
+                            <li role="presentation">
+                                <a id="editCodeButton-overflow" href="/@versionsuff@#pub:@id@" class="common-button common-menu-dropdown-item" title="Edit Code" role="menuitem" aria-posinset="2" aria-setsize="3">
+                                    <span class="common-button-flex">
+                                        <span class="common-button-label">Edit Code</span>
+                                    </span>
+                                </a>
+                            </li>
+                            <li role="presentation">
+                                <a id="share-eval-button-overflow" href="/--eval#project=@id@" class="common-button common-menu-dropdown-item" title="Evaluate" role="menuitem" aria-posinset="3" aria-setsize="3">
+                                    <span class="common-button-flex">
+                                        <span class="common-button-label">Evaluate</span>
+                                    </span>
+                                </a>
+                            </li>
+                            <li role="presentation">
+                                <a id="multiplayer-share-button-overflow" class="common-button common-menu-dropdown-item" title="Host Game" role="menuitem" aria-posinset="4" aria-setsize="4" style="display: none;">
+                                    <span class="common-button-flex">
+                                        <span class="common-button-label">Host Game</span>
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </header>
+
     <!-- @include macros.html -->
     <aside id=main-container class=box>
         @BODY@
     </aside>
 
-    <div class="ui main container mainbody script-content">
-        <iframe id="embed-frame" class="script-embed" src="/@versionsuff@#sandbox:@id@"
-            sandbox="allow-popups allow-forms allow-scripts allow-same-origin allow-downloads" frameborder="0"></iframe>
+    <div class="ui main mainbody script-content">
+        <div id="embed-frame">
+            <div id="loader" style="text-align:center;margin:20% auto;font-family:monospace;font-size:25px;">loading...
+            </div>
+        </div>
+        <div id="presence-bar" class="ui item grid centered portrait multiplayer-presence"
+            style="margin-bottom: 0.5rem; display: none;">
+            <div class="sim-presence-bar">
+                <button class="common-button sim-presence-bar-player player-1" title="Player 1" role="button"
+                    tabindex="0"></button>
+                <button class="common-button sim-presence-bar-player player-2" title="Player 2" role="button"
+                    tabindex="0"></button>
+                <button class="common-button sim-presence-bar-player player-3" title="Player 3" role="button"
+                    tabindex="0"></button>
+                <button class="common-button sim-presence-bar-player player-4" title="Player 4" role="button"
+                    tabindex="0"></button>
+            </div>
+        </div>
         <div class="script-bookend">
-            <div id="abuse-message" class="ui tiny blue message">
-                <div class="ui grid padded">
-                    <div class="abuse content">
-                        <p>
-                            The content above is provided by a user, and is not endorsed by Microsoft.
-                            <a style='text-decoration:underline' id="abuse" href="#">Report abuse</a> if you think it's
-                            not appropriate.
-                        </p>
-                    </div>
-                </div>
+            <div class="abuse content">
+                <p>
+                    The content above is provided by a user, and is not endorsed by Microsoft.
+                    <a style='text-decoration:underline' id="abuse" href="#">Report abuse</a> if you think it's
+                    not appropriate.
+                </p>
             </div>
 
             <div class="ui small modal" id='abusemodal'>
@@ -64,7 +278,7 @@
                     <div class="ui form">
                         <div class="field">
                             <label>Why do you find it offensive?</label>
-                            <textarea id='abusetext' rows="2" maxlength="1000"></textarea>
+                            <textarea id='abusetext' rows="2"></textarea>
                         </div>
                     </div>
                 </div>
@@ -92,6 +306,20 @@
                 </div>
             </div>
 
+            <div id="description-modal-dimmer"></div>
+            <div class="ui modal" id="description-modal" style="transform: translate(-50%, -50%)">
+                <div class="header">Project Description</div>
+                <div class="content" style="max-height: 50vh; overflow-y: auto;">
+                    <pre id="description-modal-content" style="white-space: pre-wrap">
+                        @description@
+                    </pre>
+                </div>
+                <div class="actions">
+                    <div id="description-modal-ok" class="ui ok green button" tabindex="0">
+                        OK
+                    </div>
+                </div>
+            </div>
 
             <script>
                 $(function () {
@@ -123,53 +351,6 @@
                             .modal("show");
                     })
                 })
-
-                var shareLinkIsApproved = false;
-
-                window.pxtTargetConfigPromise
-                    .then(function(targetConfig) {
-                        var approvedShareLinks = targetConfig && targetConfig.shareLinks && targetConfig.shareLinks.approved;
-                        if (approvedShareLinks && approvedShareLinks.indexOf("@id@") >= 0) {
-                            // This share link has been allow listed; remove cookie banner and allow sending of tick events
-                            shareLinkIsApproved = true;
-                            var abuseMessage = document.querySelector("#abuse-message");
-                            if (abuseMessage)
-                                abuseMessage.remove();
-
-                            window.pxtTickEvent(
-                                'approved.shareurl.loaded',
-                                { shareurl: "@id@" },
-                            );
-                        }
-
-                        var evalEnabled = targetConfig && targetConfig.teachertool.showSharePageEvalButton;
-                        if (!evalEnabled) {
-                            var evalButton = document.querySelector("#eval-button");
-                            if (evalButton) {
-                                evalButton.remove();
-                            }
-                        }
-                    });
-
-                window.addEventListener('message', function (ev) {
-                    if (!shareLinkIsApproved)
-                        return;
-                    var d = ev.data;
-                    if (d.type == "messagepacket" && d.channel == "tick-event" && d.data) {
-                        var unpackedData = "";
-                        for (var i = 0; i < d.data.length; ++i)
-                            unpackedData += String.fromCharCode(d.data[i]);
-
-                        try {
-                            const data = JSON.parse(unpackedData);
-                            data["shareurl"] = "@id@";
-                            window.pxtTickEvent(
-                                'simulator.user.tick',
-                                data,
-                            );
-                        } catch (e) { /** failed to parse tick from game **/ }
-                    }
-                });
             </script>
         </div>
         <div class="script-bookend">
@@ -177,19 +358,42 @@
 
                 <div class="ui container horizontal mini link list">
                     <!-- <a class="ui item " href="https://makecode.com/contact " target="_blank " rel="noopener ">Contact Us</a> -->
-                    <a class="ui item " href="https://makecode.com/privacy " target="_blank " rel="noopener ">Privacy
-                        &amp; Cookies</a>
-                    <a class="ui item " href="https://makecode.com/termsofuse " target="_blank " rel="noopener "> Terms
-                        Of Use</a>
-                    <a class="ui item " href="https://makecode.com/trademarks " target="_blank "
+                    <a class="ui item no-select" href="https://makecode.com/privacy " target="_blank "
+                        rel="noopener ">Privacy &amp; Cookies</a>
+                    <a class="ui item no-select" href="https://makecode.com/termsofuse " target="_blank "
+                        rel="noopener "> Terms Of Use</a>
+                    <a class="ui item no-select" href="https://makecode.com/trademarks " target="_blank "
                         rel="noopener ">Trademarks</a>
-                    <div class="ui item ">© 2022 Microsoft</div>
+                    <div class="ui item no-select">© 2023 Microsoft</div>
                 </div>
             </div>
         </div>
 
         @body@
     </div>
+
+    <script type="text/javascript" src="/@versionsuff@---embed"></script>
+    <!-- <script type="text/javascript" src="/embed.js"></script> -->
+    <script>
+        window.ksRunnerReady(() => {
+            const config = window.pxtConfig || window.pxtWebConfig || (window.pxt && window.pxt.webConfig);
+            const scriptPageSrc = config ? config.blobCdnUrl + "scriptPage.js" : "/blb/scriptPage.js";
+            const scriptEl = document.createElement("script");
+            scriptEl.type = "text/javascript";
+            scriptEl.src = scriptPageSrc;
+
+            scriptEl.onload = () => {
+                const pubInfo = {
+                    projectId: "@id@",
+                    versionSuffix: "@versionsuff@",
+                    description: document.getElementById("description-modal-content").innerText
+                }
+                window.initScriptPage(pubInfo);
+            };
+
+            document.head.appendChild(scriptEl);
+        });
+    </script>
 
     <!-- @include tracking.html -->
 </body>

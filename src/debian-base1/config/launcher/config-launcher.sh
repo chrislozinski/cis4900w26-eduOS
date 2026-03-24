@@ -16,12 +16,16 @@ setup_launcher_for_user() {
     cp /etc/skel/.config/launcher/app-window.py            "$home_dir/.config/launcher/app-window.py"
     cp /etc/skel/.config/launcher/classroom_manager.py     "$home_dir/.config/launcher/classroom_manager.py"
     cp /etc/skel/.config/launcher/makecode-app.py          "$home_dir/.config/launcher/makecode-app.py"
+    cp /etc/skel/.config/launcher/library.py               "$home_dir/.config/launcher/library.py"
+    cp /etc/skel/.config/launcher/lesson-config.py         "$home_dir/.config/launcher/lesson-config.py"
+    cp /etc/skel/.config/launcher/waterfox-launcher.sh     "$home_dir/.config/launcher/waterfox-launcher.sh"
 
     # sidebar configs, role resolved at runtime by launcher.py
     cp /etc/skel/.config/launcher/appbar-config.json          "$home_dir/.config/launcher/appbar-config.json"
     cp /etc/skel/.config/launcher/appbar-config-teacher.json  "$home_dir/.config/launcher/appbar-config-teacher.json"
     cp /etc/skel/.config/launcher/appbar-config-student.json  "$home_dir/.config/launcher/appbar-config-student.json"
     cp /etc/skel/.config/launcher/available-apps.json         "$home_dir/.config/launcher/available-apps.json"
+    cp /etc/skel/.config/launcher/webapp-viewer.py            "$home_dir/.config/launcher/webapp-viewer.py"
     
     # directory for all the option icons 
     if [ -d "/etc/skel/.config/launcher/icons" ]; then
@@ -36,7 +40,11 @@ setup_launcher_for_user() {
     chmod +x "$home_dir/.config/launcher/app-window.py"
     chmod +x "$home_dir/.config/launcher/classroom_manager.py"
     chmod +x "$home_dir/.config/launcher/makecode-app.py"
-
+    chmod +x "$home_dir/.config/launcher/webapp-viewer.py"
+    chmod +x "$home_dir/.config/launcher/library.py"
+    chmod +x "$home_dir/.config/launcher/lesson-config.py"
+    chmod +x "$home_dir/.config/launcher/waterfox-launcher.sh"
+    
     #  Documents directory 
     mkdir -p "$home_dir/Documents"
     

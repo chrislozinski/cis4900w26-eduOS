@@ -15,7 +15,7 @@ music.tonePlayable(262, music.beat(BeatFraction.Whole))
 
 * a [playable](/types/playable) object that contains the tone.
 
-## Example
+## Example #example
 
 Store the musical note 'C' in the variable `note` and play that note for 1000 milliseconds (one second).
 
@@ -24,6 +24,7 @@ let note = music.noteFrequency(Note.C);
 music.play(music.tonePlayable(note, music.beat(BeatFraction.Whole)), music.PlaybackMode.UntilDone)
 ```
 
-## See also
+## See also #seealso
 
+[melody playable](/reference/music/melody-playable),
 [string playable](/reference/music/string-playable)

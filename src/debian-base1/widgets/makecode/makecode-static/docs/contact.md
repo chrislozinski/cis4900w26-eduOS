@@ -1,5 +1,12 @@
-# Contact Us
+# Hello, we're excited to hear from you!
 
-* Have a question, or running into an issue? Check out the [micro:bit Support Forums](https://support.microbit.org/).
-* Want to get involved with the micro:bit developer community? [Get involved here](https://tech.microbit.org/get-involved/where-to-find/).
-* Think you've found a bug on MakeCode for micro:bit? File it [here](https://github.com/Microsoft/pxt-microbit/issues/new?template=bug_report.md).
+We have [a forum](https://forum.makecode.com) which is good for sharing games and asking questions.
+
+You can also try [stack overflow](https://stackoverflow.com/), we monitor the ``makecode`` tag.
+
+You can file issues in [MakeCode Arcade GitHub repo](https://github.com/microsoft/pxt-arcade/issues/new).
+
+
+# Contact the MakeCode team
+
+For all other enquiries, please send us an email at ``makecode at microsoft dot com``.

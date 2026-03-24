@@ -9,7 +9,7 @@ import json
 import getpass
 
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, Gdk, GdkPixbuf
+from gi.repository import Gtk, Gdk, GdkPixbuf, GLib
 
 # file type handlers that will map extensions to a command template, using {path} as placeholder atm
 # basically will be used so that specific apps run different file types
@@ -398,7 +398,10 @@ def main():
     )
     
     win = FolderViewer(folder_label)
+    win.realize()
+    win.set_opacity(0)
     win.show_all()
+    GLib.timeout_add(150, lambda: win.set_opacity(1) or False)
     Gtk.main()
 
 if __name__ == '__main__':

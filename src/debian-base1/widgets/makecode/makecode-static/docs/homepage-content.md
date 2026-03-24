@@ -4,7 +4,7 @@ The Editor home page contains galleries of card links to projects, tutorials, le
 
 Much of content available on the home page is developed or selected by the MakeCode Team. Content from other contributors is welcomed though and can be featured in the home page galleries.
 
-![Home page content example](/static/mb/homepage-content-example.jpg)
+## #target-homescreen
 
 ## Content requirements
 
@@ -22,14 +22,7 @@ To list a content item on the home page, you need to provide:
 3. A thumbnail image that represents your content. Size the image to approximately **300 x 200** pixels.
 4. A full URL for the item. For a tutorial, a complete tutorial URL is needed (see https://makecode.com/writing-docs/user-tutorials for more details).
 
-Here is the content link information mapped to a home page card example:
-
-![Home page link example](/static/mb/homepage-link-example.jpg)
-
-1. Name or Title
-2. Description
-3. Thumbnail image (JPG or PNG)
-4. Content link URL (not shown on the home page card)
+## #target-link-example
 
 ## Submission process
 
@@ -57,9 +50,7 @@ https://arcade.makecode.com/#tutorial:https://makecode.com/_rewr9iop
 ![image](https://github.com/microsoft/pxt/assets/27789908/f5c21294-1145-4010-8de0-560b8afbfeec)
 ```
 
-## Approval #target-approval
-
-For approval to add items to the home page, please follow the **[instructions](https://support.microbit.org/support/solutions/articles/19000054952-makecode-extension-and-tutorial-approval)** for submitting content to the Micro:bit Foundation.
+## #target-approval
 
 ## Featured content
 

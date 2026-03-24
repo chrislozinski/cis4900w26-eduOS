@@ -11,34 +11,15 @@ radio.onReceivedValue(function (name, value) {})
 * **name**: a [string](/types/string) that is a name for the value received.
 * **value**: a [number](/types/number) that is the value received.
 
-### ~ hint
-
-#### @boardname@ radio
+## ~ hint
 
 Watch this video to see how the radio hardware works on the @boardname@:
 
 https://www.youtube.com/watch?v=Re3H2ISfQE8
 
-### ~
+## ~
 
-## Example
-
-This program keeps sending numbers that say how fast the @boardname@ is
-slowing down or speeding up. When it receives numbers for the same
-thing from nearby @boardname@s, show the numbers as a
-[bar graph](/reference/led/plot-bar-graph).
-
-```blocks
-radio.setGroup(1)
-basic.forever(() => {
-    radio.sendValue("accel-x", input.acceleration(Dimension.X))
-})
-radio.onReceivedValue(function (name, value) {
-    if (name == "accel-x") {
-        led.plotBarGraph(value, 1023);
-    }
-})
-```
+## #example
 
 ## Troubleshooting
 
@@ -48,6 +29,7 @@ The radio set group might need to be set, synchronized , before the radio events
 
 ## See also
 
+[Bit Radio](/reference/radio)
 [on received number](/reference/radio/on-received-number),
 [received packet](/reference/radio/received-packet),
 [send number](/reference/radio/send-number),

@@ -16,7 +16,7 @@
     {
       "type": "folder",
       "label": "Resources",
-      "icon": "stylized/resourcesSTYL.png",
+      "icon": "stylized/openBookSTYL.svg",
       "path": "/home/USER/resources"
     },
     {
@@ -27,8 +27,15 @@
     },
     {
       "type": "app",
+      "label": "Library",
+      "window_title": "Library",
+      "icon": "stylized/resourcesSTYL.png",
+      "command": "python3 ~/.config/launcher/library.py"
+    },
+    {
+      "type": "app",
       "label": "MakeCode",
-      "window_title": "MakeCode for micro:bit",
+      "window_title": "MakeCode",
       "icon": "stylized/crayons.png",
       "command": "python3 ~/.config/launcher/makecode-app.py"
     }

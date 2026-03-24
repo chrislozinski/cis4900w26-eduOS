@@ -1,32 +1,26 @@
-# WaitMicros
+# wait Micros
 
-Blocks the current fiber for the given amount of micro-seconds.
+Make the part of the program running right now wait for some number of microseconds.
 
 ```sig
-control.waitMicros(4)
+control.waitMicros(10)
 ```
+The code inside the current block, such as a ``||on start||``, ``||control:run in parallel||``, and 
+``||control:on event||`` , waits for some amount of time. The time number is in microseconds (one-millionth of a second).
 
-## Example
+## Parameters
 
-This program sends a 10 micro-second HIGH pulse through pin ``P0``. 
+* **micros**: the [number](/types/number) of microseconds for this block of code to wait for.
+
+## Example #example
+
+Turn on an a sensor that has a control signal connected to pin `D4`. Wait `20` microseconds
+for the sensor to detect something, then read the sensor value on pin `A4`.
 
 ```blocks
-// ensure pin is low to send a clean pulse
-pins.digitalWritePin(DigitalPin.P0, 0)
-control.waitMicros(2)
-// set pin to 1 and wait 10 micros
-pins.digitalWritePin(DigitalPin.P0, 1)
-control.waitMicros(10)
-// finish pulse
-pins.digitalWritePin(DigitalPin.P0, 0)
+pins.D4.digitalWrite(true)
+control.waitMicros(20)
+let temperature = pins.A4.analogRead()
 ```
 
-### ~hint
-
-This function is not supported in the simulator.
-
-### ~
-
-## See Also
-
-[pause](/reference/basic/pause)
+## #seealso

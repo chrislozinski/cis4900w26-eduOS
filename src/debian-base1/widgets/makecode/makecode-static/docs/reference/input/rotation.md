@@ -1,6 +1,6 @@
 # Rotation
 
-Find how much the @boardname@ is tilted in different directions.
+Find how much the @boardname@ is tilted in one direction.
 
 ```sig
 input.rotation(Rotation.Roll);
@@ -8,53 +8,48 @@ input.rotation(Rotation.Roll);
 
 ## ~hint
 
-The @boardname@ has a part called the **accelerometer** that can
-check how the @boardname@ is moving. Watch this video to learn how the accelerometer works:
-
-https://www.youtube.com/watch?v=byngcwjO51U
+The @boardname@ has a part on it called the **accelerometer** that can
+check the ways that the @boardname@ is moving.
 
 ## ~
 
 ## Parameters
 
-* ``kind`` means which direction you are checking: `Rotation.Pitch` (up and down) or `Rotation.Roll` (left and right)
+* ``kind`` the direction you are checking:
+> * `Pitch`: up or down
+> * `Roll`: left or right
 
 ## Returns
 
-* a [number](/types/number) that means how much the @boardname@ is tilted in the direction you ask for. This is a value in degrees between `-180` to `180` in either the `Rotation.Pitch` or the `Rotation.Roll` direction of rotation.
+* a [number](/types/number) that tells how much the @boardname@ is tilted in the direction you say, from `0` to `360` degrees
 
-## Example: @boardname@ leveler
+## Example: @boardname@ leveler #example
 
-This program helps you move the @boardname@ until it is level. When it is level, the @boardname@ shows a smiley.
-
-If you are running this program in a browser, you can tilt the @boardname@ with your mouse.
+This program helps you move the @boardname@ until it is level. When
+it is leveled, the message "LEVELED" appears at the console.
 
 ```blocks
-let pitch = 0;
-basic.forever(() => {
-    pitch = input.rotation(Rotation.Pitch);
-    let roll = input.rotation(Rotation.Roll);
+let roll = 0
+let pitch = 0
+forever(() => {
+    pitch = input.rotation(Rotation.Pitch)
+    roll = input.rotation(Rotation.Roll)
     if (Math.abs(pitch) < 10 && Math.abs(roll) < 10) {
-        basic.showLeds(`
-            . # . # .
-            . . . . .
-            . . . . .
-            # . . . #
-            . # # # .
-            `);
-    } else {
-        basic.showLeds(`
-            # . . . #
-            . # . # .
-            . . # . .
-            . # . # .
-            # . . . #
-            `);
-        }
-	});
+        console.log("LEVELED")
+    }
+})
 ```
 
-## See also
+### ~hint
+**Simulator**
 
-[acceleration](/reference/input/acceleration), [compass-heading](/reference/input/compass-heading)
+If you are running this program in a browser, you can tilt the @boardname@ with your mouse.
+### ~
 
+## See also #seealso
+
+[acceleration](/reference/input/acceleration)
+
+```package
+accelerometer
+```

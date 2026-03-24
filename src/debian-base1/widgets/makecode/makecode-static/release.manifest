@@ -22,7 +22,7 @@ CACHE:
 
 
 /editor.js
-/fieldeditors.js
+
 
 # blockly
 /blockly/media/sprites.png
@@ -59,30 +59,31 @@ CACHE:
 /worker.js
 /monacoworker.js
 
-# ver Thu Mar 05 2026 18:52:50 GMT+0000 (Coordinated Universal Time)
+# ver Mon Mar 23 2026 19:41:59 GMT+0000 (Coordinated Universal Time)
 
 # target
 /docs/static/providers/github-mark.png
 /docs/static/providers/microsoft-logo.svg
 /docs/static/providers/google-logo.svg
 /docs/static/providers/clever-logo.png
-/docs/static/logo.portrait.white.svg
-/docs/static/logo.square.white.svg
-/docs/static/logo.portrait.black.svg
-/docs/static/icons/apple-touch-icon.png
-/docs/static/Microsoft_logo_rgb_W-white_D-square.png
-/docs/static/Microsoft_logo_rgb_W-white_D.png
-/docs/static/herogallery/hero-banner.png
-/docs/static/download/transfer.png
-/docs/static/download/connect-microbit.gif
-/docs/static/download/full-reset.gif
-/docs/static/download/selecting-microbit.gif
-/docs/static/download/successfully-paired.png
-/docs/static/download/incompatible.png
-/docs/static/download/device-forgotten.gif
-/docs/static/download/browser-unpair-image.gif
-/docs/static/winapp.PNG
-/docs/static/profile/microbit-cloud.png
+/docs/static/logo.svg
+/docs/static/logo.png
+/docs/static/icons/favicon.ico
+/docs/static/Micorsoft_logo_rgb_W-white_D-square.png
+/docs/static/Micorsoft_logo_rgb_W-white_D.png
+/docs/static/hero-gallery/skillmap.png
+/docs/static/badges/badge-forest.png
+/docs/static/badges/badge-forest-locked.png
+/docs/static/badges/badge-zoo.png
+/docs/static/badges/badge-zoo-locked.png
+/docs/static/badges/badge-rockstar.png
+/docs/static/badges/badge-rockstar-locked.png
+/docs/static/badges/badge-jungle.png
+/docs/static/badges/badge-jungle-locked.png
+/docs/static/badges/badge-space.png
+/docs/static/badges/badge-space-locked.png
+/docs/static/badges/badge-shark.png
+/docs/static/badges/badge-shark-locked.png
 
 /target.js
 

@@ -3,25 +3,17 @@
 Read the buffered serial data as a string.
 
 ```sig
-serial.readString()
+serial.readString();
 ```
 
 ## Returns
 
 * a [string](/types/string) containing input from the serial port. The string is empty if no data is available.
 
-## Example
+## See also #seealso
 
-The following program scrolls text on the screen as it arrives from serial.
+[write string](/reference/serial/write-string)
 
-```blocks
-basic.forever(function() {
-    basic.showString(serial.readString())
-})
+```package
+serial
 ```
-
-## See also
-
-[serial](/device/serial),
-[write line](/reference/serial/write-line),
-[write value](/reference/serial/write-value)
