@@ -1,45 +1,40 @@
 # redirect
 
-Configure the serial port to use the pins instead of USB.
+Redirect serial data to go through the pins instead of using the USB connection.
 
 ```sig
-serial.redirect(SerialPin.P0, SerialPin.P0, BaudRate.BaudRate115200)
+serial.redirect(pins.A0, pins.A0, BaudRate.BaudRate115200)
 ```
-The default connection for the serial port is over a USB cable. You can have the serial data go across wires connected to pins on the @boardname@ instead. To set the input and output for the serial connection to be on the pins, you redirect it to the pins. Also, you decide how fast you want to send and receive the data on the pins by choosing a _baud_ rate.
+
+By default, the serial data is sent and received over a USB connection to your board. If you want to change it to transmit and receive through the pins, you can redirect the connection to them instead. You choose which two pins to use for the transmit and recieve lines. Also, you set the data rate (baud rate) for the redirected connection.
+
+## ~ hint
+
+The data rate of the serial connection is set as the number of data signals that the connection makes each second. Usually this is the number of data _bits_ sent each second. For simple 8 bit data, like text characters, this means that for a data rate of `9600`, 1200 characters can be sent or received every second. Sometimes an addtional data signal or two are needed to transmit those 8 bits of a character, so fewer charaters are sent each second. This doesn't make the actual data rate change but the bits per second (bps) of data that your program sees will be reduced some. Historically the serial data rate has been called the connection _baud rate_.
+
+## ~
 
 ## Parameters
 
-* **tx**: the transmit [pin](/device/pins) to send serial data on.
-* **rx**: the receive [pin](/device/pins) to receive serial data on.
-* **rate**: the baud rate for transmitting and receiving data. Baud rates you can choose from are:
->`300`, `1200`, `2400`, `4800`, `9600`, `14400`, `19200,`, `28800`, `31250`, `38400`, `57600`, or `115200`
+* **tx**: the pin set to transmit serial data. This is one of the digital pins on the board.
+* **rx**: the pin set to receive serial data. This is one of the digital pins on the board.
+* **rate**: the data rate (baud rate) to send and receive data at. This value is set from the list on the block and is one of the values in the ``BaudRate`` enumeration.
 
-### ~hint
+## Example #example
 
-#### Baud rate
-
-Serial communication transmits data by sending one bit of a [digital number](/types/buffer/number-format) (usually a byte sized number), at a time. So, the data bytes are sent as a series of their bits. Serial communication uses just one wire to send these bits so only one bit can travel across the wire at a time.
-
-When pins on your @boardname@ are configured for serial communication, they make a serial port for data. The port switches the voltage on the pins to represent a new bit to send on the wire. A series of these voltage changes eventually sends a complete byte of data. The speed at which the voltage changes create a signal to communicate the bits is called the _baud_ rate.
-
-You will typically use `9600` or `115200` for your baud rate. Sometimes the device you connect to can figure out what your baud rate is. Most of the time though, you need to make sure the device you connect to is set to match your baud rate.
-
-### ~
-
-## Example
-
-Change where serial data is sent to and received from. When button **A** is pressed, reconfigure the
-serial port to use the pins. The new configuration uses pin ``P1`` to transmit and
-``P2`` to receive. The baud rate is set to `9600`.
+Set the transmit and receive buffer sizes. Redirect the serial connecton to pins **A0** and **A1**.
 
 ```blocks
-input.onButtonPressed(Button.A, function() {
-    serial.redirect(SerialPin.P1, SerialPin.P2, BaudRate.BaudRate9600)
-})
+serial.setTxBufferSize(64)
+serial.setRxBufferSize(64)
+serial.redirect(pins.A0, pins.A1, BaudRate.BaudRate115200)
 ```
 
-## See also
+## See also #seealso
 
-[serial](/device/serial),
-[redirectToUSB](/reference/serial/redirect-to-usb)
+[attach to console](/reference/serial/attach-to-console),
+[set baud rate](/reference/serial/set-baud-rate)
 
+```package
+serial
+```

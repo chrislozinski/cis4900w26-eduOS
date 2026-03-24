@@ -34,7 +34,7 @@
     {
       "type": "app",
       "label": "MakeCode",
-      "window_title": "MakeCode for micro:bit",
+      "window_title": "MakeCode",
       "icon": "stylized/crayons.png",
       "command": "python3 ~/.config/launcher/makecode-app.py"
     }

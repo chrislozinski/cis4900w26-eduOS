@@ -1,4 +1,4 @@
-# Acceleration
+# acceleration
 
 Get the acceleration value (milli g-force) in one of three dimensions, or the combined force in all directions (x, y, and z).
 
@@ -14,10 +14,6 @@ You measure acceleration with the **milli-g**, which is 1/1000 of a **g**.
 A **g** is as much acceleration as you get from Earth's gravity.
 
 ## ~
-
-Watch this video to learn how the accelerometer on the @boardname@ works:
-
-https://www.youtube.com/watch?v=byngcwjO51U
 
 ## Parameters
 
@@ -49,29 +45,22 @@ This calculation is called the [Euclidean norm](https://en.wikipedia.org/wiki/Eu
 
 * a [number](/types/number) that means the amount of acceleration. When the @boardname@ is lying flat on a surface with the screen pointing up, `x` is `0`, `y` is `0`, `z` is `-1023`, and `strength` is `1023`.
 
-## Example: bar chart
+## Example: bar chart #example
 
-This example shows the acceleration of the @boardname@ with a bar graph.
-
-```blocks
-basic.forever(() => {
-    led.plotBarGraph(input.acceleration(Dimension.X), 1023)
-})
-```
-### Example: quake meter
-
-Every 5 seconds, with the @boardname@ facing upward on a flat surface, show how much the earth is shaking (if at all).
+Write the acceleration of the @boardname@ to the console.
 
 ```blocks
-basic.forever(() => {
-    basic.showNumber(input.acceleration(Dimension.Strength))
-    basic.pause(5000)
+forever(() => {
+    console.logValue("accel", input.acceleration(Dimension.X))
+    pause(500)
 })
 ```
 
-## See also
+## See also #seealso
 
 [set accelerometer range](/reference/input/set-accelerometer-range),
-[compass heading](/reference/input/compass-heading),
 [light level](/reference/input/light-level)
 
+```package
+accelerometer
+```

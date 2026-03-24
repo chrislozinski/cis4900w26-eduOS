@@ -1803,29 +1803,6 @@ var pxsim;
 })(pxsim || (pxsim = {}));
 var pxsim;
 (function (pxsim) {
-    var configStorage;
-    (function (configStorage) {
-        function setBuffer(key, value) {
-            // TODO
-        }
-        configStorage.setBuffer = setBuffer;
-        function getBuffer(key) {
-            // TODO
-            return undefined;
-        }
-        configStorage.getBuffer = getBuffer;
-        function removeItem(key) {
-            // TODO
-        }
-        configStorage.removeItem = removeItem;
-        function clear() {
-            // TODO
-        }
-        configStorage.clear = clear;
-    })(configStorage = pxsim.configStorage || (pxsim.configStorage = {}));
-})(pxsim || (pxsim = {}));
-var pxsim;
-(function (pxsim) {
     var visuals;
     (function (visuals) {
         const LED_PART_XOFF = -8;

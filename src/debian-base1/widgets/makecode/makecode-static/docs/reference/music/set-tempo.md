@@ -1,25 +1,34 @@
-# Set Tempo 
+# set Tempo 
 
-Makes the tempo (speed of a piece of music) as fast or slow as you say.
+Make the tempo (speed) of the music playing go faster or slower.
 
 ```sig
 music.setTempo(60)
 ```
 
+## #simnote
 ### ~hint
 
 #### Simulator
 
 ``||music:set tempo||`` works on the @boardname@. It might not work in the simulator on every browser.
-
 ### ~
-
 
 ## Parameters
 
-* ``bpm`` is a [number](/types/number) that means the beats per minute you want (the number of beats in a minute of the music that the @boardname@ is playing).
+* ``bpm`` is a [number](/types/number) that means the amount _beats per minute_ you want. This is how fast
+you want @boardname@ to play music.
 
-## See also
+## Example #example
 
-[play tone](/reference/music/play-tone), [ring tone](/reference/music/ring-tone) , [rest](/reference/music/rest), [tempo](/reference/music/tempo), [change tempo by](/reference/music/change-tempo-by)
+Set the music tempo to 240 beats per minute.
 
+```blocks
+music.setTempo(240)
+```
+
+## See also #seealso
+
+[play tone](/reference/music/play-tone), [ring tone](/reference/music/ring-tone),
+[rest](/reference/music/rest), [tempo](/reference/music/tempo),
+[change tempo by](/reference/music/change-tempo-by)

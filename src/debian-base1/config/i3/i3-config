@@ -37,8 +37,8 @@ for_window [instance="library"] floating disable
 for_window [instance="library"] move container to mark viewer_tabs
 
 # makecode editor
-for_window [title="MakeCode for micro:bit"] floating disable
-for_window [title="MakeCode for micro:bit"] move container to mark viewer_tabs
+for_window [title="MakeCode"] floating disable
+for_window [title="MakeCode"] move container to mark viewer_tabs
 
 # xterm
 for_window [class="XTerm"] move container to mark viewer_tabs

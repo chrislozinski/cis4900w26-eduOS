@@ -27,7 +27,7 @@ The melodies are most often created in the Melody Editor from the block so that 
 
 * a [playable](/types/playable) object that contains the **melody** and **tempo**.
 
-## Example
+## Example #example
 
 Play the ``Mystery`` melody continuously.
 
@@ -35,6 +35,7 @@ Play the ``Mystery`` melody continuously.
 music.play(music.stringPlayable("E F G F E G B C5 ", 120), music.PlaybackMode.LoopingInBackground)
 ```
 
-## See also
+## See also #seealso
 
-[tone playable](/reference/music/tone-playable)
+[tone playable](/reference/music/tone-playable),
+[melody playable](/reference/music/melody-playable)

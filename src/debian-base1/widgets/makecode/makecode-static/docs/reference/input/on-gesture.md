@@ -1,8 +1,6 @@
-# On Gesture
+# on Gesture
 
-Start an [event handler](/reference/event-handler) (part of the
-program that will run when something happens) This handler works when
-you do a **gesture** (like shaking the @boardname@).
+Run some code when you perform a **gesture**, like shaking the @boardname@.
 
 ```sig
 input.onGesture(Gesture.Shake,() => {
@@ -11,19 +9,32 @@ input.onGesture(Gesture.Shake,() => {
 
 ## Parameters
 
-* ``gesture`` means the way you hold or move the @boardname@. This can be `shake`, `logo up`, `logo down`, `screen up`, `screen down`, `tilt left`, `tilt right`, `free fall`, `3g`, or `6g`.
+* ``gesture``: the gesture to detect. A gesture is the way you hold or move the @boardname@. Gestures are:
+> * `shake`: shake the board
+> * `logo up`: the logo is facing up
+> * `logo down`: the logo is facing down
+> * `screen up`: the screen side is up
+> * `screen down`: the screen side is down
+> * `tilt left`: the board is tilted to the left
+> * `tilt right`: the board is tilted to the right
+> * `free fall`: the board is falling for a distance
+> * `2g`: acceleration force of 2 g (works well for step detection)
+> * `3g`: acceleration force of 3 g
+> * `6g`: acceleration force of 6 g
+* ``body``: code to run when the gesture event occurs
 
-## Example: random number
+## Example: random number #example
 
-This program shows a number from `2` to `9` when you shake the @boardname@.
+Log a message when you shake the @boardname@.
 
 ```blocks
-input.onGesture(Gesture.Shake,() => {
-    let x = randint(2, 9)
-    basic.showNumber(x)
+input.onGesture(Gesture.Shake, function() {}
+    console.log("I'm shaking!")
 })
 ```
 
-## See Also
+## #seealso
 
-[is gesture](/reference/input/is-gesture)
+```package
+accelerometer
+```

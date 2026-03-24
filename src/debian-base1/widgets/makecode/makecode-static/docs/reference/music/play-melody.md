@@ -28,11 +28,11 @@ The melodies are most often created in the Melody Editor from the block so that 
 Play the ``Mystery`` melody continuously.
 
 ```blocks
-basic.forever(function () {
+forever(function () {
     music.playMelody("E F G F E G B C5 ", 120)
 })
 ```
 
 ## See also #seealso
 
-[set tempo](/reference/music/set-tempo), [play](/reference/music/play), [play until done](/reference/music/play-until-done)
+[set tempo](/reference/music/set-tempo), [play](/reference/music/melody/play), [play until done](/reference/music/melody/play-until-done)

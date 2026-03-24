@@ -19,31 +19,11 @@ https://www.youtube.com/watch?v=Re3H2ISfQE8
 
 ## ~
 
-## Example: Two-way radio
-
-If you load this program onto two or more @boardname@s, you can send a
-code word from one of them to the others by pressing button `A`.  The
-other @boardname@s will receive the code word and then show it.
-
-```blocks
-radio.setGroup(1)
-input.onButtonPressed(Button.A, () => {
-    radio.sendString("Codeword: TRIMARAN")
-    basic.showString("SENT");
-})
-radio.onReceivedString(function (receivedString) {
-    basic.showString(receivedString);
-})
-```
-
-## ~hint
-
-A radio that can both transmit and receive is called a _transceiver_.
-
-## ~
+## #example
 
 ## See also
 
+[Bit Radio](/reference/radio)
 [on received string](/reference/radio/on-received-string)
 
 ```package

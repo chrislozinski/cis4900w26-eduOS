@@ -21,17 +21,17 @@
     },
     {
       "type": "app",
-      "label": "Lesson Config",
-      "window_title": "Lesson Config",
-      "icon": "stylized/resourcesSTYL.png",
-      "command": "python3 /home/USER/.config/launcher/lesson-config.py"
-    },
-    {
-      "type": "app",
       "label": "Classrooms",
       "window_title": "Classroom Manager",
       "icon": "stylized/threepeopleClassSTYL.svg",
       "command": "python3 /home/USER/.config/launcher/classroom_manager.py"
+    },
+    {
+      "type": "app",
+      "label": "Lesson Config",
+      "window_title": "Lesson Config",
+      "icon": "stylized/resourcesSTYL.png",
+      "command": "python3 /home/USER/.config/launcher/lesson-config.py"
     }
   ]
 }

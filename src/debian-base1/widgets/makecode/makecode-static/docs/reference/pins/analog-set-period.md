@@ -1,33 +1,33 @@
-# Analog Set Period
+# analog Set Period
 
-Configure the period of pulse-width modulation (PWM) on the specified 
-analog [pin](/device/pins).
-Before you call this function, you should set the specified pin as analog.
+Use this time period for servo commands and other PWM signals.
 
 ```sig
-pins.analogSetPeriod(AnalogPin.P0, 20000)
+pins.A1.analogSetPeriod(20000)
 ```
+
+With _Pulse Width Modulation (PWM)_, a pulse signal is sent regularly, many times a second.
+How many times a pulse is sent in each second decides what period it has. If a _pwm_ signal is sent 50
+times a second, then its period is 1/20th of a second which is 20 milliseconds.
+
+You use microseconds for the amount of time you set your _pwm_ signal period. One second is a million
+microseconds and 1 millisecond is 1000 microseconds.
 
 ## Parameters
 
-* **name**: a [string](/types/string) that specifies the pin to configure (`P0` through `P4`, or `P10`)
-* **micros**: a [number](/types/number) that specifies the analog period in microseconds.
+* **period**: a [number](types/number) that is the period for the pulse signal sent at the pin.
 
-## Example
+## Example #example
 
-The following code first sets `P0` to analog with **analog write
-pin**, and then sets the PWM period of `P0` to 20,000 microseconds.
+Set the period for a PWM signal to 20 milliseconds.
 
 ```blocks
-pins.analogWritePin(AnalogPin.P0, 512)
-pins.analogSetPeriod(AnalogPin.P0, 20000)
+pins.A1.analogSetPeriod(20000)
 ```
 
-## See also
+## See also #seealso
 
-[@boardname@ pins](/device/pins),
-[on pin pressed](/reference/input/on-pin-pressed),
-[analog read pin](/reference/pins/analog-read-pin),
-[analog write pin](/reference/pins/analog-write-pin),
-[digital read pin](/reference/pins/digital-read-pin),
-[digital write pin](/reference/pins/digital-write-pin)
+[servo write](/reference/pins/servo-write),
+[servo set pulse](/reference/pins/servo-set-pulse)
+
+[What is PWM?](/reference/pins/what-is-pwm)

@@ -1,49 +1,51 @@
-# Ring Tone
+# ring Tone
 
-Play a musical tone on the speaker or at a sound pin of the @boardname@ with the pitch as high or low as you say. The tone will keep playing until you tell it not to.
+Play a musical tone on the speaker. The tone has a pitch (frequency) as high or low as you say.
+The tone will keep playing until tell it to stop.
 
 ```sig
-music.ringTone(440)
+music.ringTone(0);
 ```
 
+## #simnote
 ### ~hint
 
 #### Simulator
 
-The ``||music:ring tone||`` block works on the @boardname@ board. It might not work in the simulator on every browser.
+``||music:ring tone||`` works on the @boardname@. It might not work in the simulator on every browser.
 
 ### ~
+
+The tone will keep playing until you stop it with [``||music:stop all sounds||``](/reference/music/stop-all-sounds).
 
 ## Parameters
 
 * ``frequency`` is a [number](/types/number) that says
-how high-pitched or low-pitched the tone is. This
-number is in **Hz** (**Hertz**), which is a measurement of frequency
-or pitch.
+how high-pitched or low-pitched the tone is.  This
+number is in **Hz** (**Hertz**), which is a measurement of frequency (_pitch_).
 
-## Example
+## Example #example
 
-This program checks the **accelerometer** for the @boardname@'s
-**acceleration** (how much the @boardname@ is speeding up or slowing
-down). Then it uses that acceleration to make a tone.  If the @boardname@
-speeds up, the tone's pitch gets higher, and if it slows down, the
-tone's pitch gets lower.  It's fun -- try it!
+Play a tone with a base frequency of ``440`` but change it by ``20`` Hertz steps both up and down.
 
 ```blocks
-basic.forever(() => {
-    music.ringTone(input.acceleration(Dimension.X))
-})
+let offset = 0
+offset = -100
+while (true) {
+    while (offset < 100) {
+        offset += 20
+        music.ringTone(440 + offset)
+        pause(300)
+    }
+    while (offset > -100) {
+        offset += -20
+        music.ringTone(440 + offset)
+        pause(300)
+    }
+}
 ```
 
-## Using other pins
-
-Use [analogSetPitchPin](/reference/pins/analog-set-pitch-pin) to change that pin used to generate music.
-
-```blocks
-pins.analogSetPitchPin(AnalogPin.P1);
-```
-
-## See also
+## See also #seealso
 
 [rest](/reference/music/rest), [play tone](/reference/music/play-tone),
 [tempo](/reference/music/tempo), [set tempo](/reference/music/set-tempo),

@@ -6,7 +6,7 @@ Create a sound expression string for a sound effect.
 music.createSoundEffect(WaveShape.Sine, 2000, 0, 1023, 0, 500, SoundExpressionEffect.None, InterpolationCurve.Linear)
 ```
 
-A sound expression is set of parameters that describe a **[Sound](/types/sound)** that will last for some amount of time. These parameters specify a base waveform, frequency range, sound volume, and effects. Sound data is created as a [Sound](/types/sound) object and can then be [played](/reference/music/play-sound-effect) to the speaker, headphones, or at an output pin.
+A sound expression is set of parameters that describe a **[sound effect](/types/sound-effect)** that will last for some amount of time. These parameters specify a base waveform, frequency range, sound volume, and effects. Sound data is created as a [sound effect](/types/sound-effect) object and can then be [played](/reference/music/play) to the speaker, headphones, or at an output pin.
 
 ## Parameters
 
@@ -32,7 +32,7 @@ A sound expression is set of parameters that describe a **[Sound](/types/sound)*
 
 ## Returns
 
-* a [sound](/types/sound) expression [string](/types/string) with the the desired sound effect parameters.
+* a [soundEffect](/types/sound-effect) object with the the desired sound effect parameters.
 
 ## Examples
 
@@ -65,4 +65,4 @@ music.playSoundEffect(mySound, SoundExpressionPlayMode.UntilDone)
 
 ## See also
 
-[play sound effect](/reference/music/play-sound-effect), [built-in sound effect](/reference/music/builtin-sound-effect)
+[play](/reference/music/play)

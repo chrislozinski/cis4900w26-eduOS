@@ -30,10 +30,10 @@ def save_classrooms(data):
     try:
         with open(CLASSROOMS_FILE, 'w') as f:
             json.dump(data, f, indent=2)
-    except PermissionError:
-        raise RuntimeError(
-            f"Cannot write to {CLASSROOMS_FILE}. "
-            "Make sure you are in the 'teacher' group and the file is group-writable.")
+            f.flush()
+            os.fsync(f.fileno())
+    except Exception as e:
+        raise RuntimeError(f"Failed to save {CLASSROOMS_FILE}: {e}")
 
 
 class LessonConfig(Gtk.Window):
@@ -82,6 +82,7 @@ class LessonConfig(Gtk.Window):
         self._refresh_cls_list()
 
     def _refresh_cls_list(self):
+        self.data = load_classrooms()
         for row in self.cls_listbox.get_children():
             self.cls_listbox.remove(row)
         for cls in self.data.get('classrooms', []):

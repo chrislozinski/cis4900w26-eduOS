@@ -1,246 +1,333 @@
-# MakeCode for micro:bit live
+# Arcade Beginner Live
 
-Live coding of tutorials for MakeCode for micro:bit on https://mixer.com/MakeCode
+Live coding of tutorials for MakeCode Arcade on https://twitch.tv/msmakecode
 
 ## Videos
 
-```codecard
-[
-    {
-        "name": "Flashing Heart",
-        "description": "In this video, we'll be going through the Flashing Heart Tutorial - https://makecode.microbit.org/#tutorial:/projects/flashing-heart.",
-        "youTubeId": "NvEOKZ8wh9s",
-        "youTubePlaylistId": "PLMMBk9hE-SepocOwueEtTDyOPI_TBE9yC",
-        "imageUrl": "/docs/static/live-coding/NvEOKZ8wh9s.jpg"
-    },
-    {
-        "name": "Name Tag",
-        "description": "In this video, we'll be going through the Name Tag tutorial - https://makecode.microbit.org/#tutorial:/projects/name-tag",
-        "youTubeId": "xpRI5jjQ31E",
-        "youTubePlaylistId": "PLMMBk9hE-SepocOwueEtTDyOPI_TBE9yC",
-        "imageUrl": "/docs/static/live-coding/xpRI5jjQ31E.jpg"
-    },
-    {
-        "name": "Dice",
-        "description": "In this video, we'll be going through the Dice tutorial - https://makecode.microbit.org/#tutorial:/projects/dice",
-        "youTubeId": "OmrmjtOm_sQ",
-        "youTubePlaylistId": "PLMMBk9hE-SepocOwueEtTDyOPI_TBE9yC",
-        "imageUrl": "/docs/static/live-coding/OmrmjtOm_sQ.jpg"
-    },
-    {
-        "name": "Smiley Buttons",
-        "description": "In this video, we'll be going through the Smiley Buttons tutorial - https://makecode.microbit.org/#tutorial:/projects/smiley-buttons",
-        "youTubeId": "BgDxz3M7JIM",
-        "youTubePlaylistId": "PLMMBk9hE-SepocOwueEtTDyOPI_TBE9yC",
-        "imageUrl": "/docs/static/live-coding/BgDxz3M7JIM.jpg"
-    },
-    {
-        "name": "Love Meter",
-        "description": "In this video, we'll be going through the Love Meter tutorial - https://makecode.microbit.org/#tutorial:/projects/love-meter",
-        "youTubeId": "1IYsy0_9n8g",
-        "youTubePlaylistId": "PLMMBk9hE-SepocOwueEtTDyOPI_TBE9yC",
-        "imageUrl": "/docs/static/live-coding/1IYsy0_9n8g.jpg"
-    },
-    {
-        "name": "Micro Chat",
-        "description": "In this video, we'll be going through the Micro Chat tutorial - https://makecode.microbit.org/#tutorial:/projects/micro-chat",
-        "youTubeId": "5XqsGROG2fI",
-        "youTubePlaylistId": "PLMMBk9hE-SepocOwueEtTDyOPI_TBE9yC",
-        "imageUrl": "/docs/static/live-coding/5XqsGROG2fI.jpg"
-    },
-    {
-        "name": "Rock Paper Scissors",
-        "description": "In this video, we'll be going through the Rock Paper Scissors tutorial - https://makecode.microbit.org/#tutorial:/projects/rock-paper-scissors",
-        "youTubeId": "94lLBB3b1kU",
-        "youTubePlaylistId": "PLMMBk9hE-SepocOwueEtTDyOPI_TBE9yC",
-        "imageUrl": "/docs/static/live-coding/94lLBB3b1kU.jpg"
-    },
-    {
-        "name": "Multi Dice",
-        "description": "In this video, we'll be going through the Multi Dice tutorial - https://makecode.microbit.org/#tutorial:/projects/multi-dice",
-        "youTubeId": "r-rsS4Pl6YQ",
-        "youTubePlaylistId": "PLMMBk9hE-SepocOwueEtTDyOPI_TBE9yC",
-        "imageUrl": "/docs/static/live-coding/r-rsS4Pl6YQ.jpg"
-    },
-    {
-        "name": "Snap The Dot",
-        "description": "In this video, we'll be going through the Snap the Dot tutorial - https://makecode.microbit.org/#tutorial:/projects/snap-the-dot",
-        "youTubeId": "ew15T97VrF4",
-        "youTubePlaylistId": "PLMMBk9hE-SepocOwueEtTDyOPI_TBE9yC",
-        "imageUrl": "/docs/static/live-coding/ew15T97VrF4.jpg"
-    },
-    {
-        "name": "Hack Your Headphone",
-        "description": "In this video, we will be showing you how to hack your headphones with the micro:bit - https://makecode.microbit.org/projects/hack-your-headphones",
-        "youTubeId": "pC02U_YaSMw",
-        "youTubePlaylistId": "PLMMBk9hE-SepocOwueEtTDyOPI_TBE9yC",
-        "imageUrl": "/docs/static/live-coding/pC02U_YaSMw.jpg"
-    },
-    {
-        "name": "Hot Potato",
-        "description": "Hot hot hot!",
-        "youTubeId": "xLEy1B_gWKY",
-        "youTubePlaylistId": "PLMMBk9hE-SepocOwueEtTDyOPI_TBE9yC",
-        "imageUrl": "/docs/static/live-coding/xLEy1B_gWKY.jpg"
-    },
-    {
-        "name": "Heads Guess!",
-        "description": "Famous word guessing game with micro:bit.",
-        "youTubeId": "WgMj1AT2G38",
-        "youTubePlaylistId": "PLMMBk9hE-SepocOwueEtTDyOPI_TBE9yC",
-        "imageUrl": "/docs/static/live-coding/WgMj1AT2G38.jpg"
-    },
-    {
-        "name": "Flashing Heart",
-        "description": "Show animation on the micro:bit screen!",
-        "youTubeId": "2Q9mf8a9Bt8",
-        "youTubePlaylistId": "PLMMBk9hE-SepocOwueEtTDyOPI_TBE9yC",
-        "imageUrl": "/docs/static/live-coding/2Q9mf8a9Bt8.jpg"
-    },
-    {
-        "name": "Level",
-        "description": "Build a level using the accelerometer and the micro:bit.",
-        "youTubeId": "MLb9qTV5-5w",
-        "youTubePlaylistId": "PLMMBk9hE-SepocOwueEtTDyOPI_TBE9yC",
-        "imageUrl": "/docs/static/live-coding/MLb9qTV5-5w.jpg"
-    },
-    {
-        "name": "Stopwatch",
-        "description": "Make a stopwatch with a micro:bit.",
-        "youTubeId": "RFXS871b50I",
-        "youTubePlaylistId": "PLMMBk9hE-SepocOwueEtTDyOPI_TBE9yC",
-        "imageUrl": "/docs/static/live-coding/RFXS871b50I.jpg"
-    },
-    {
-        "name": "Guitar",
-        "description": "Build your own micro:bit guitar.",
-        "youTubeId": "dcSIy1dD5Rg",
-        "youTubePlaylistId": "PLMMBk9hE-SepocOwueEtTDyOPI_TBE9yC",
-        "imageUrl": "/docs/static/live-coding/dcSIy1dD5Rg.jpg"
-    },
-    {
-        "name": "Hand Washing Timer",
-        "description": "Wash your hands for 20 seconds!",
-        "youTubeId": "yFviqqPlWyQ",
-        "youTubePlaylistId": "PLMMBk9hE-SepocOwueEtTDyOPI_TBE9yC",
-        "imageUrl": "/docs/static/live-coding/yFviqqPlWyQ.jpg"
-    },
-    {
-        "name": "Reaction Time Game",
-        "description": "Learn to code with MakeCode and micro:bit.",
-        "youTubeId": "S_hzUenqAM0",
-        "youTubePlaylistId": "PLMMBk9hE-SepocOwueEtTDyOPI_TBE9yC",
-        "imageUrl": "/docs/static/live-coding/S_hzUenqAM0.jpg"
-    },
-    {
-        "name": "Combination Lock",
-        "description": "Learn to code with MakeCode and micro:bit.",
-        "youTubeId": "DRd0jjiSXGM",
-        "youTubePlaylistId": "PLMMBk9hE-SepocOwueEtTDyOPI_TBE9yC",
-        "imageUrl": "/docs/static/live-coding/DRd0jjiSXGM.jpg"
-    },
-    {
-        "name": "Coin Toss",
-        "description": "Toss a coin with your micro:bit.",
-        "youTubeId": "678ATmGGlvk",
-        "youTubePlaylistId": "PLMMBk9hE-SepocOwueEtTDyOPI_TBE9yC",
-        "imageUrl": "/docs/static/live-coding/678ATmGGlvk.jpg"
-    },
-    {
-        "name": "Step Counter",
-        "description": "Count your steps with your micro:bit.",
-        "youTubeId": "TTI0OfoclcU",
-        "youTubePlaylistId": "PLMMBk9hE-SepocOwueEtTDyOPI_TBE9yC",
-        "imageUrl": "/docs/static/live-coding/TTI0OfoclcU.jpg"
-    },
-    {
-        "name": "7 second game",
-        "description": "Learn to code with MakeCode and micro:bit.",
-        "youTubeId": "LINr5wa4okg",
-        "youTubePlaylistId": "PLMMBk9hE-SepocOwueEtTDyOPI_TBE9yC",
-        "imageUrl": "/docs/static/live-coding/LINr5wa4okg.jpg"
-    },
-    {
-        "name": "Tug of LED",
-        "description": "A tug-of-war style game using the micro:bit.",
-        "youTubeId": "oZrvVB4cGWU",
-        "youTubePlaylistId": "PLMMBk9hE-SepocOwueEtTDyOPI_TBE9yC",
-        "imageUrl": "/docs/static/live-coding/oZrvVB4cGWU.jpg"
-    },
-    {
-        "name": "Arcade Buttons!",
-        "description": "Use Arcade buttons with your micro:bit!",
-        "youTubeId": "Gy_B--9iuXQ",
-        "youTubePlaylistId": "PLMMBk9hE-SepocOwueEtTDyOPI_TBE9yC",
-        "imageUrl": "/docs/static/live-coding/Gy_B--9iuXQ.jpg"
-    },
-    {
-        "name": "Radio Firefly",
-        "description": "micro:bit communicate and reproduce a Firefly effect.",
-        "youTubeId": "_t14jxCuMJg",
-        "youTubePlaylistId": "PLMMBk9hE-SepocOwueEtTDyOPI_TBE9yC",
-        "imageUrl": "/docs/static/live-coding/_t14jxCuMJg.jpg"
-    },
-    {
-        "name": "Hot Or Cold",
-        "description": "Build a hot-or-cold treasure quest game with the micro:bit radio.",
-        "youTubeId": "uUeY3dHiXkE",
-        "youTubePlaylistId": "PLMMBk9hE-SepocOwueEtTDyOPI_TBE9yC",
-        "imageUrl": "/docs/static/live-coding/uUeY3dHiXkE.jpg"
-    },
-    {
-        "name": "Compass",
-        "description": "Build a compass with your micro:bit",
-        "youTubeId": "9IyssvevhJ0",
-        "youTubePlaylistId": "PLMMBk9hE-SepocOwueEtTDyOPI_TBE9yC",
-        "imageUrl": "/docs/static/live-coding/9IyssvevhJ0.jpg"
-    },
-    {
-        "name": "Programmable LEDs",
-        "description": "Use programmables LED strips in MakeCode for micro:bit.",
-        "youTubeId": "bV8Co98AYkA",
-        "youTubePlaylistId": "PLMMBk9hE-SepocOwueEtTDyOPI_TBE9yC",
-        "imageUrl": "/docs/static/live-coding/bV8Co98AYkA.jpg"
-    },
-    {
-        "name": "Binary Stopwatch",
-        "description": "Build a compass with your micro:bit",
-        "youTubeId": "Jm3yxMA1mDo",
-        "youTubePlaylistId": "PLMMBk9hE-SepocOwueEtTDyOPI_TBE9yC",
-        "imageUrl": "/docs/static/live-coding/Jm3yxMA1mDo.jpg"
-    },
-    {
-        "name": "Temperature",
-        "description": "Measure temperature with the micro:bit",
-        "youTubeId": "uv4NtRzMwaA",
-        "youTubePlaylistId": "PLMMBk9hE-SepocOwueEtTDyOPI_TBE9yC",
-        "imageUrl": "/docs/static/live-coding/uv4NtRzMwaA.jpg"
-    },
-    {
-        "name": "Red Light Green Light",
-        "description": "Red light, green light game with micro:bit",
-        "youTubeId": "Cm22diu8CFA",
-        "youTubePlaylistId": "PLMMBk9hE-SepocOwueEtTDyOPI_TBE9yC",
-        "imageUrl": "/docs/static/live-coding/Cm22diu8CFA.jpg"
-    },
-    {
-        "name": "Stopwatch progress",
-        "description": "Building the ultimate stopwatch with the micro:bit and MakeCode https://makecode.microbit.org",
-        "youTubeId": "2aAcBP2xcaI",
-        "youTubePlaylistId": "PLMMBk9hE-SepocOwueEtTDyOPI_TBE9yC",
-        "imageUrl": "/docs/static/live-coding/2aAcBP2xcaI.jpg"
-    },
-    {
-        "name": "PlayList",
-        "description": "See entire playlist on YouTube",
-        "url": "https://www.youtube.com/playlist?list=PLMMBk9hE-SepocOwueEtTDyOPI_TBE9yC",
-        "youTubePlaylistId": "PLMMBk9hE-SepocOwueEtTDyOPI_TBE9yC",
-        "imageUrl": "/docs/static/live-coding/playlist.png"
-    }
-]
-```
+### ~ codecard
+
+* name: Space Arcade Game
+* description: Join Jacqueline to create a retro space game while learning the basics of coding in MakeCode Arcade!
+* youTubeId: 7pBGS_tKfmU
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/7pBGS_tKfmU.jpg
+
+---
+
+* name: Chase the Pizza
+* description: In this video, we'll be going through the Chase the Pizza tutorial - https://arcade.makecode.com/#tutorial:/tutorials/chase-the-pizza.
+* youTubeId: sgeHKw437oE
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/sgeHKw437oE.jpg
+
+---
+
+* name: Happy Flower
+* description: In this video, we'll be going through the Happy Flower tutorial - https://arcade.makecode.com/#tutorial:/tutorials/happy-flower.
+* youTubeId: 4m4XDiPD8XE
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/4m4XDiPD8XE.jpg
+
+---
+
+* name: Lemon Leak
+* description: In this video, we'll be going through the Lemon Leak tutorial -  https://arcade.makecode.com/#tutorial:/tutorials/lemon-leak
+* youTubeId: 2vjLXenKamE
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/2vjLXenKamE.jpg
+
+---
+
+* name: Maze
+* description: In this tutorial, we'll be going through the Maze tutorial - https://arcade.makecode.com/#tutorial:/tutorials/maze.
+* youTubeId: _sXUtLg7upA
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/_sXUtLg7upA.jpg
+
+---
+
+* name: Simple Extensions
+* description: Using extensions in games.
+* youTubeId: NgoLRM4qbzA
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/NgoLRM4qbzA.jpg
+
+---
+
+* name: Galga 2 player
+* description: A remake of galga.
+* youTubeId: AyvYTKc15pw
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/AyvYTKc15pw.jpg
+
+---
+
+* name: Hacking Balloons
+* description: Modded ballon game
+* youTubeId: 7LdYMmicEgg
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/7LdYMmicEgg.jpg
+
+---
+
+* name: Game Design Concepts 1
+* description: Game Design Concept 1
+* youTubeId: 8gnqh1iSbHs
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/8gnqh1iSbHs.jpg
+
+---
+
+* name: Bouncing Burgers
+* description: Bouncing sprites.
+* youTubeId: 47a2_3V9NH4
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/47a2_3V9NH4.jpg
+
+---
+
+* name: Group of Sprites
+* description: Handle sprites in groups.
+* youTubeId: 3nfx1BL1Buo
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/3nfx1BL1Buo.jpg
+
+---
+
+* name: Dodge the Snake
+* description: Dodge the snake game.
+* youTubeId: JnlUrcXNMQY
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/JnlUrcXNMQY.jpg
+
+---
+
+* name: Dancy Party
+* description: Build a dance party game!
+* youTubeId: iyJDSaSyIGY
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/iyJDSaSyIGY.jpg
+
+---
+
+* name: Star Field
+* description: Build a star field effect.
+* youTubeId: V5WnlNRP_OI
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/V5WnlNRP_OI.jpg
+
+---
+
+* name: Button Repeat
+* description: Learning to repeat commands with a button press.
+* youTubeId: EBSyV7PKu3o
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/EBSyV7PKu3o.jpg
+
+---
+
+* name: Tug of Yard
+* description: Building a tug-of-war style of game.
+* youTubeId: XUDdTPggLwc
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/XUDdTPggLwc.jpg
+
+---
+
+* name: Buttons Concept
+* description: Learning to repeat commands with a button press.
+* youTubeId: yl5u5BHU9EA
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/yl5u5BHU9EA.jpg
+
+---
+
+* name: TileMaps
+* description: Building a tug-of-war style of game.
+* youTubeId: 1S5qXW6tstM
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/1S5qXW6tstM.jpg
+
+---
+
+* name: Space Story Telling
+* description: Scrolling text on the screen.
+* youTubeId: MUW8c_T9Hpk
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/MUW8c_T9Hpk.jpg
+
+---
+
+* name: Pong
+* description: Revisiting the classic game, pong.
+* youTubeId: ql_1yJulyC8
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/ql_1yJulyC8.jpg
+
+---
+
+* name: Skeet
+* description: Building another classic, a skeet game.
+* youTubeId: JpE9ku3-XHk
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/JpE9ku3-XHk.jpg
+
+---
+
+* name: Skeet 2
+* description: Building another classic, a skeet game.
+* youTubeId: vnWzu5QZs1w
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/vnWzu5QZs1w.jpg
+
+---
+
+* name: Pang part 1
+* description: Building another classic, Pang.
+* youTubeId: q-7uJfGar98
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/q-7uJfGar98.jpg
+
+---
+
+* name: Smash Buddies Part 1
+* description: Building a simple 2 player platformer game.
+* youTubeId: XkKoEN7-2Pk
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/XkKoEN7-2Pk.jpg
+
+---
+
+* name: Smash Buddies 2
+* description: Building a simple 2 player platformer game.
+* youTubeId: SRcQB1sPkBk
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/SRcQB1sPkBk.jpg
+
+---
+
+* name: Mouse Clicker
+* description: Turn your Arcade into a Mouse clicker!
+* youTubeId: vJbEfkM9158
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/vJbEfkM9158.jpg
+
+---
+
+* name: Lunar Lander Part 1
+* description: Turn your Arcade into a Mouse clicker!
+* youTubeId: m-SIWLuuzNI
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/m-SIWLuuzNI.jpg
+
+---
+
+* name: Lunar Lander Part 2
+* description: Building a lunar lander style of game part 2
+* youTubeId: E0QgyHKYv8Y
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/E0QgyHKYv8Y.jpg
+
+---
+
+* name: Lunar Lander Part 3
+* description: Finishing the lunar lander!
+* youTubeId: Viv8bWMbKLU
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/Viv8bWMbKLU.jpg
+
+---
+
+* name: Racer Game Part 1
+* description: Build Grand Racer game
+* youTubeId: 8wTYVDOyc_c
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/8wTYVDOyc_c.jpg
+
+---
+
+* name: Racer Part 2
+* description: Finishing the racer!
+* youTubeId: oRZHdtxmcps
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/oRZHdtxmcps.jpg
+
+---
+
+* name: Water Sim
+* description: Building a water sim
+* youTubeId: ZhrK3o-biHA
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/ZhrK3o-biHA.jpg
+
+---
+
+* name: Water Sim 2
+* description: Building a water sim part 2.
+* youTubeId: VcwWa8bvs6I
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/VcwWa8bvs6I.jpg
+
+---
+
+* name: Water Sim 3
+* description: Building a water sim part 3: A physical button
+* youTubeId: oAgKi8_MCLE
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/oAgKi8_MCLE.jpg
+
+---
+
+* name: Slugs vs Salads Part 1
+* description: Building a slugs vs salads tower defence game
+* youTubeId: LBcemZpq-DQ
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/LBcemZpq-DQ.jpg
+
+---
+
+* name: Slugs vs Salads part 2
+* description: Building a slugs vs salads tower defence game
+* youTubeId: f0c1khxngNU
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/f0c1khxngNU.jpg
+
+---
+
+* name: Slugs vs Salads 3
+* description: Part 3 of the Slugs vs Salads tower defence game.
+* youTubeId: q7wozPM3EKI
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/q7wozPM3EKI.jpg
+
+---
+
+* name: Slugs vs Salads part 4
+* description: We keep building our tower defense game with slugs and salads.
+* youTubeId: lJoUEKBWP_Y
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/lJoUEKBWP_Y.jpg
+
+---
+
+* name: Slugs vs Salads part 5
+* description: Part 5 of the slugs vs salad series in MakeCode Arcade. Adding waves!
+* youTubeId: 9CmRI-cplEg
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/9CmRI-cplEg.jpg
+
+---
+
+* name: PlayList
+* description: See entire playlist on YouTube
+* url: https://www.youtube.com/playlist?list=PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* youTubePlaylistId: PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0
+* imageUrl: /static/live-coding/playlist.png
+
+### ~
+
 
 ## See Also
 
-[YouTube Playlist](https://www.youtube.com/playlist?list=PLMMBk9hE-SepocOwueEtTDyOPI_TBE9yC)
+[YouTube Playlist](https://www.youtube.com/playlist?list=PLMMBk9hE-SepPgF7YE099S-VluvZmRkO0)
 

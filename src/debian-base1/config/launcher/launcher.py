@@ -135,6 +135,8 @@ class LauncherWindow(Gtk.Window):
         # username and logout
         self.header_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
         self.header_box.set_margin_bottom(15)
+        # added 1234
+        self.header_box.set_size_request(-1, 40)
         
         # Home icon to the left of username
         home_icon = self.create_icon_widget('stylized/homeSTYL.png', size=24)
@@ -191,6 +193,9 @@ class LauncherWindow(Gtk.Window):
         # Minimize or expand toggle button at the bottom of bar
         self.toggle_button = Gtk.Button()
         self.toggle_button.set_relief(Gtk.ReliefStyle.NONE)
+        # added 1234
+        self.toggle_button.set_size_request(-1, 50)
+
         self.toggle_hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
         self.toggle_hbox.set_margin_start(5)
         self.toggle_arrow = Gtk.Label(label="<")

@@ -10,29 +10,15 @@ radio.onReceivedString(function (receivedString) {})
 
 * **receivedString**: The [string](/types/string) that was sent in this packet or the empty string if this packet did not contain a string. See [send string](/reference/radio/send-string) and [send value](/reference/radio/send-value)
 
-### ~ hint
-
-#### @boardname@ radio
+## ~ hint
 
 Watch this video to see how the radio hardware works on the @boardname@:
 
 https://www.youtube.com/watch?v=Re3H2ISfQE8
 
-### ~
+## ~
 
-## Example
-
-This program continuously sends a cheerful message. It also receives a messages from nearby @boardname@s. It shows these messages on the screen.
-
-```blocks
-radio.setGroup(1)
-basic.forever(() => {
-    radio.sendString("I'm happy");
-})
-radio.onReceivedString(function (receivedString) {
-    basic.showString(receivedString)
-})
-```
+## #example
 
 ## Troubleshooting
 
@@ -42,6 +28,7 @@ The radio set group might need to be set, synchronized, before the radio events 
 
 ## See also
 
+[Bit Radio](/reference/radio)
 [on received number](/reference/radio/on-received-number),
 [received packet](/reference/radio/received-packet),
 [send number](/reference/radio/send-number),

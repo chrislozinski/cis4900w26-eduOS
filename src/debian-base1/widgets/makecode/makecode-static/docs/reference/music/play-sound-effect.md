@@ -54,18 +54,6 @@ music.playSoundEffect(music.createSoundEffect(
     ), SoundExpressionPlayMode.UntilDone)
 ```
 
-### Built-in sounds
-
-Play the `giggle` [built-in sound effect](/reference/music/builtin-sound-effect) until it finishes.
-
-```blocks
-music.playSoundEffect(music.builtinSoundEffect(soundExpression.giggle), SoundExpressionPlayMode.UntilDone)
-
-```
-
 ## See also
 
-[create sound effect](/reference/music/create-sound-effect),
-[built-in sound effect](/reference/music/builtin-sound-effect),
-[set built in speaker enabled](/reference/music/set-built-in-speaker-enabled),
-[analog set pitch pin](/reference/pins/analog-set-pitch-pin)
+[create sound effect](/reference/music/create-sound-effect)

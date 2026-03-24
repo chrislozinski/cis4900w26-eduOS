@@ -2,33 +2,58 @@
 
 Events and data from sensors
 
+## Accelerometer #acceleration
+
 ```cards
-input.onButtonPressed(Button.A, function () {})
-input.onGesture(Gesture.Shake, function () {})
-input.onPinPressed(TouchPin.P0, function() {})
-input.onPinReleased(TouchPin.P0, function() {})
-input.buttonIsPressed(Button.A)
-input.pinIsPressed(TouchPin.P0)
-input.isGesture(Gesture.Shake)
-input.compassHeading()
-input.temperature()
-input.acceleration(Dimension.X)
-input.lightLevel()
-input.rotation(Rotation.Pitch)
-input.magneticForce(Dimension.X)
-input.runningTime()
-input.runningTimeMicros()
+input.onGesture(Gesture.Shake, () => {
+
+})
 input.setAccelerometerRange(AcceleratorRange.OneG)
+input.acceleration(Dimension.X)
+input.rotation(Rotation.Pitch)
+
 ```
 
-## See also
+## Light sensor #lightsensor
 
-[onButtonPressed](/reference/input/on-button-pressed), [onGesture](/reference/input/on-gesture),
-[onPinPressed](/reference/input/on-pin-pressed), [onPinReleased](/reference/input/on-pin-released),
-[buttonIsPressed](/reference/input/button-is-pressed), [pinIsPressed](/reference/input/pin-is-pressed),
-[is gesture](/reference/input/is-gesture),
-[compassHeading](/reference/input/compass-heading), [temperature](/reference/input/temperature),
-[acceleration](/reference/input/acceleration), [lightLevel](/reference/input/light-level),
-[rotation](/reference/input/rotation), [magneticForce](/reference/input/magnetic-force),
-[runningTime](/reference/input/running-time), [setAccelerometerRange](/reference/input/set-accelerometer-range),
-[calibrate-compass](/reference/input/calibrate-compass)
+```cards
+input.onLightConditionChanged(LightCondition.Dark, () => {
+
+})
+input.lightLevel()
+```
+
+## Buttons #buttons
+
+```cards
+input.buttonA.isPressed()
+input.buttonA.wasPressed()
+input.onSwitchMoved(SwitchDirection.Left, () => {
+
+})
+input.buttonA.onEvent(ButtonEvent.Click, () => {
+
+})
+```
+
+## Microphone #microphone
+
+```cards
+input.soundLevel();
+input.onLoudSound(() => {});
+input.setLoudSoundThreshold(0)
+```
+
+```package
+microphone
+```
+
+## Thermometer #thermometer
+
+```cards
+input.onTemperatureConditionChanged(TemperatureCondition.Hot, 15, TemperatureUnit.Celsius, () => {
+	
+})
+input.temperature(TemperatureUnit.Celsius)
+```
+

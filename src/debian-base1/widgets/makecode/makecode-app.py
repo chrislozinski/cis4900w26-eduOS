@@ -32,7 +32,7 @@ def start_server():
 
 class MakeCodeWindow(Gtk.Window):
     def __init__(self):
-        super().__init__(title="MakeCode for micro:bit")
+        super().__init__(title="MakeCode")
         self.set_default_size(1280, 900)
         self.connect("destroy", Gtk.main_quit)
 

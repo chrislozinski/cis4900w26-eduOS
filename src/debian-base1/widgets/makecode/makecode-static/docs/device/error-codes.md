@@ -1,63 +1,20 @@
 # Error codes
 
-Your @boardname@ may encounter a situation that prevents it from running your code. When this happens, a frowny face will appear on your @boardname@ screen (see picture) followed by an error number. These are called _panic_ codes.
+## #error-info
 
-```sim
-basic.forever(function() {
-    basic.showLeds(`
-        # . . . #
-        # # . # #
-        . . . . .
-        . # # # .
-        # . . . #
-        `)
-    basic.pause(1000)
-    basic.clearScreen()
-    basic.showString("020")
-})
-```
+Your @boardname@ may encounter a situation that prevents it from running your code. The system software that runs the programs on your board may notify you that an error occurred. It might show this error as a numeric code on the display, LEDs, or as output on a data port. These are called _panic_ codes. When an error happens that causes a panic code, your program will stop and you'll need to reset the board to start again.
 
-## Board system errors
+## Panic codes
 
-The @boardname@ system errors range between **01** - **99**. For a full list of these codes, what they mean and what you can do to resolve them, visit the [micro:bit guide to error codes](https://support.microbit.org/en/support/solutions/articles/19000016969).
+Some panic codes are for general errors that might occur while your program runs. Other times, a device or resource you want to use isn't present or isn't working and you receive a panic code for that. Several panic codes are related to the use of memory and accessing data in it.
 
-* **10** (`MICROBIT_I2C_LOCKUP`): the @boardname@'s I2C bus is not working
-* **20** (`MICROBIT_OOM`): there is no free memory on the @boardname@
-* **30** (`MICROBIT_HEAP_ERROR`): a problem in the heap space
-* **40** (`MICROBIT_NULL_DEREFERENCE `): there was a NULL dereference, the @boardname@ tried to manage a invalid object pointer
-* **42** (`MICROBIT_SYSTEM_ERROR`): there's an error condition in the @boardname@ system software
-* **43** (`MICROBIT_NO_RADIO`): the @boardname@ can't enable the radio
-* **50** (`MICROBIT_HARDWARE_UNAVAILABLE_ACC`): an error occurred with the micro:bit's accelerometer component
-* **51** (`MICROBIT_HARDWARE_UNAVAILABLE_MAG`): an error occurred with the micro:bit's magnetometer component
-* **90** (`MICROBIT_HARDWARE_CONFIGURATION_ERROR`): actual board hardware doesn't match the configuration description
-* **98** (`MICROBIT_ASSERTION_FAILED`): assertion failed, the condition in an [assert](/reference/control/assert) was false
-
-## Memory errors
-
-Memory error codes range from **800** - **909**.
-
-### ~alert
-
-#### Report errors!
-
-If you ever see an error within the range of **800** - **909**, please report an issue at [GitHub](https://github.com/microsoft/pxt-microbit/issues) or on the [support](https://support.microbit.org/) page.
-
-### ~
-
-### Garbage collector errors
-
-Error codes generated from the garbage collector.
-
-* **840**: Allocation pointer is null or invalid
-* **841**: Garbage collection work queue error
-* **843**: VTable entry is not free
-* **844**: GC allocation failed for requested number of bytes
-* **846**: Invalid allocation thread
-* **848**: Allocation pointer beyond allocation header
-* **849**: Allocation pointer is null
-
-### Program access errors
-
+* **20** (`PANIC_CODAL_OOM`): there is no free memory on the @boardname@
+* **21** (`PANIC_GC_OOM`): Garbage Collection can't allocate any more memory
+* **22** (`PANIC_GC_TOO_BIG_ALLOCATION`): Garbage Collection can't allocate memory for the requested size
+* **30** (`PANIC_CODAL_HEAP_ERROR`): a general memory allocation error
+* **40** (`PANIC_CODAL_NULL_DEREFERENCE`): a memory pointer is NULL and points to an invalid location
+* **50** (`PANIC_CODAL_USB_ERROR`): USB is not available or can't initialize, transmit, or receive
+* **90** (`PANIC_CODAL_HARDWARE_CONFIGURATION_ERROR`): actual board hardware doesn't match the configuration description
 * **901** (`PANIC_INVALID_BINARY_HEADER`): the type header for the object is not valid
 * **902** (`PANIC_OUT_OF_BOUNDS`): the object data portion is greater than the length defined for it
 * **903** (`PANIC_REF_DELETED`): an object reference was deleted and the object is no longer valid
@@ -65,24 +22,31 @@ Error codes generated from the garbage collector.
 * **905** (`PANIC_INVALID_VTABLE`): an object vtable is invalid or not initialized
 * **906** (`PANIC_INTERNAL_ERROR`): an internal resource error
 * **907** (`PANIC_NO_SUCH_CONFIG`): the specified device resource is not present
+* **908** (`NO_SUCH_PIN`): the specified pin is not present on the board
 * **909** (`PANIC_INVALID_ARGUMENT`): the argument value is out of range or the type or format is invalid
-* **927** (`PANIC_VARIANT_NOT_SUPPORTED`): using a v2 feature on a v1 board
-* **928** (`MICROBIT_LOG_FULL`): The @boardname@ failed to write to datalogger as the log was full
+* **910** (`PANIC_MEMORY_LIMIT_EXCEEDED`): insufficient memory is available to satisfy and allocation request
+* **911** (`PANIC_SCREEN_ERROR`): the screen isn't present or it can't properly display the output
+* **912** (`PANIC_MISSING_PROPERTY`): the property requested is not present in the current object
+* **913** (`PANIC_INVALID_IMAGE`): the data for a screen image data is invalid or formatted incorrectly
+* **914** (`PANIC_CALLED_FROM_ISR`): the current code isn't allowed to run in an interrupt service routine (ISR)
+* **915** (`PANIC_HEAP_DUMPED`): the contents of memory was output to a debug port
+* **916** (`PANIC_STACK_OVERFLOW`): stack size limit for the fiber was exceeded
+* **917** (`PANIC_BLOCKING_TO_STRING`): inline execution blocked due to an existing resume context
+* **918** (`PANIC_VM_ERROR`): VM execution context error
+* **920** (`PANIC_SETTINGS_CLEARED`): storage required for system settings, user settings were cleared
+* **921** (`PANIC_SETTINGS_OVERLOAD`): frequency of writes to settings storage is too high
+* **922** (`PANIC_SETTINGS_SECRET_MISSING`): settings storage in flash memory is inconsistent
+* **923** (`PANIC_DELETE_ON_CLASS`): a settings key delete was attempted on a class
+* **924** (`PANIC_OUT_OF_TIMERS`): no more timers are available
+* **980** (`PANIC_CAST_FROM_UNDEFINED`): attempted cast from an `undefined` value to another type
+* **981** (`PANIC_CAST_FROM_BOOLEAN`): attempted cast from a [boolean](/types/boolean) value to an incompatible type
+* **982** (`PANIC_CAST_FROM_NUMBER`): attempted cast from a [number](/types) value to an incompatible type or no conversion is available
+* **983** (`PANIC_CAST_FROM_STRING`): attempted cast from a [string](/types/string) value to an incompatible type or no conversion is available
+* **984** (`PANIC_CAST_FROM_OBJECT`): attempted cast from an object to an incompatible type
+* **985** (`PANIC_CAST_FROM_FUNCTION`): attempted cast from a function to a non-function type
+* **989** (`PANIC_CAST_FROM_NULL`): attempted cast from a `null` value to another type
 
-
-## JavaScript runtime codes
-
-### Invalid cast codes
-
-When the static type of ``x`` is a class ``C``, the dynamic type of ``x`` isn’t ``C``, and you try to access a field on ``x`` or call a method on ``x``, you will get one of the following codes, depending on dynamic type of ``x``.
-
-* **980** (`PANIC_CAST_FROM_UNDEFINED`): when value of ``x`` is ``undefined``
-* **981** (`PANIC_CAST_FROM_BOOLEAN`): when value of ``x`` is ``true`` or ``false``
-* **982** (`PANIC_CAST_FROM_NUMBER`): when ``x`` is a ``number``
-* **983** (`PANIC_CAST_FROM_STRING`): when ``x`` is a ``string``
-* **984** (`PANIC_CAST_FROM_OBJECT`): when ``x`` is object of some type
-* **985** (`PANIC_CAST_FROM_FUNCTION`): when ``x`` is a function
-* **989** (`PANIC_CAST_FROM_NULL`): when ``x`` is ``null``
+## #specific
 
 ## See also
 

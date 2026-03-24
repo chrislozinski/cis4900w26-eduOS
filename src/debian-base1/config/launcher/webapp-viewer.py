@@ -45,7 +45,7 @@ def main():
     win.connect("destroy", Gtk.main_quit)
 
     css = Gtk.CssProvider()
-    css.load_from_data(b"window { background-color: #262626; }")
+    css.load_from_data(b"window { background-color: #262626; } spinner { color: #cccccc; }")
     Gtk.StyleContext.add_provider_for_screen(
         Gdk.Screen.get_default(), css,
         Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
@@ -54,6 +54,22 @@ def main():
 
     # match window background so blank canvas never shows as a white/light square
     webview.set_background_color(Gdk.RGBA(0.149, 0.149, 0.149, 1))  # #262626
+
+    overlay = Gtk.Overlay()
+    overlay.add(webview)
+
+    spinner = Gtk.Spinner()
+    spinner.set_size_request(192, 192)
+    spinner.set_halign(Gtk.Align.CENTER)
+    spinner.set_valign(Gtk.Align.CENTER)
+    spinner.start()
+    overlay.add_overlay(spinner)
+
+    def _on_load_changed(wv, event):
+        if event == WebKit2.LoadEvent.FINISHED:
+            spinner.stop()
+            spinner.hide()
+    webview.connect('load-changed', _on_load_changed)
 
     # use CSS to hide common ad elements
     cm = webview.get_user_content_manager()
@@ -98,7 +114,7 @@ def main():
     webview.connect("context-menu", lambda *a: True)
 
     webview.load_uri(url)
-    win.add(webview)
+    win.add(overlay)
     win.show_all()
     Gtk.main()
 

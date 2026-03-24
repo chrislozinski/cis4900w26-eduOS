@@ -2,10 +2,14 @@
 
 Set the volume for the sound synthesizer.
 
+The synthesizer volume controls the
+level of the sound playing on current sound output of the board (speaker or pin).
+
 ```sig
 music.setVolume(128)
 ```
 
+## #simnote
 ### ~hint
 
 #### Simulator
@@ -24,12 +28,10 @@ Set the synthesizer volume to something quieter.
 
 ```blocks
 music.setVolume(50)
+let freq = music.noteFrequency(Note.C);
+music.playTone(freq, 1000)
 ```
 
-## See also
+## See also #seealso
 
-[volume](/reference/music/volume)
-
-```package
-music
-```
+[play tone](/reference/music/play-tone)

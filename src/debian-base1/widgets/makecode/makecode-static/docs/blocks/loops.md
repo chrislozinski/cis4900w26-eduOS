@@ -7,11 +7,7 @@ for(let i= 0; i < 5; i++) {}
 for(let value of [""]) {}
 ```
 
-###  #specific
-
-```cards
-loops.everyInterval(500, function () {})
-```
+### #specific
 
 ## See also #seealso
 
@@ -19,5 +15,3 @@ loops.everyInterval(500, function () {})
 [while](/blocks/loops/while), 
 [repeat](/blocks/loops/repeat), 
 [for of](/blocks/loops/for-of),
-[every](/reference/loops/every-interval)
-

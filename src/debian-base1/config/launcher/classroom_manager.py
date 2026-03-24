@@ -38,10 +38,10 @@ def save_classrooms(data):
     try:
         with open(CLASSROOMS_FILE, 'w') as f:
             json.dump(data, f, indent=2)
-    except PermissionError:
-        raise RuntimeError(
-            f"Cannot write to {CLASSROOMS_FILE}. "
-            "Make sure you are in the 'teacher' group and the file is group writable.")
+            f.flush()
+            os.fsync(f.fileno())
+    except Exception as e:
+        raise RuntimeError(f"Cannot write to {CLASSROOMS_FILE}: {e}")
 
 def load_available_apps():
     """Return the full list of static apps teachers can grant to students."""
@@ -109,6 +109,12 @@ class ClassroomManager(Gtk.Window):
         self.cls_listbox.set_selection_mode(Gtk.SelectionMode.SINGLE)
         self.cls_listbox.connect('row-selected', self._on_cls_selected)
         cls_sw.add(self.cls_listbox)
+        # drag dest: receive student drops from the student list
+        self.cls_listbox.drag_dest_set(
+            Gtk.DestDefaults.ALL,
+            [Gtk.TargetEntry.new('text/plain', Gtk.TargetFlags.SAME_APP, 0)],
+            Gdk.DragAction.COPY)
+        self.cls_listbox.connect('drag-data-received', self._on_cls_drag_received)
 
         cls_btn_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=4)
         left.pack_start(cls_btn_row, False, False, 0)
@@ -175,6 +181,7 @@ class ClassroomManager(Gtk.Window):
 
     #  Refresh helpers 
     def _refresh_cls_list(self):
+        self.data = load_classrooms()
         for row in self.cls_listbox.get_children():
             self.cls_listbox.remove(row)
         
@@ -201,6 +208,18 @@ class ClassroomManager(Gtk.Window):
             self.cls_listbox.add(row)
 
         self.cls_listbox.show_all()
+
+        # restore visual selection without triggering _on_cls_selected cascade
+        if self.selected_cls_id:
+            for row in self.cls_listbox.get_children():
+                if getattr(row, 'cls_id', None) == self.selected_cls_id:
+                    self.cls_listbox.handler_block_by_func(self._on_cls_selected)
+                    self.cls_listbox.select_row(row)
+                    self.cls_listbox.handler_unblock_by_func(self._on_cls_selected)
+                    fresh_cls = self._get_cls(self.selected_cls_id)
+                    if fresh_cls:
+                        self._show_detail(fresh_cls)
+                    break
 
     def _refresh_wa_list(self):
         for row in self.wa_listbox.get_children():
@@ -288,7 +307,9 @@ class ClassroomManager(Gtk.Window):
         id_entry = Gtk.Entry()
         id_entry.set_placeholder_text("e.g. math101")
         box.pack_start(id_entry, False, False, 0)
-        
+        dialog.set_default_response(Gtk.ResponseType.OK)
+        name_entry.set_activates_default(True)
+        id_entry.set_activates_default(True)
         dialog.show_all()
         response = dialog.run()
         name   = name_entry.get_text().strip()
@@ -304,10 +325,7 @@ class ClassroomManager(Gtk.Window):
         self.data['classrooms'].append({
             'id': cls_id, 'name': name,
             'students': [], 'enabled_apps': []})
-        try:
-            save_classrooms(self.data)
-        except RuntimeError as e:
-            self._error(str(e)); return
+        self._ensure_save()
         self._refresh_cls_list()
 
     def _on_del_cls(self, _btn):
@@ -323,16 +341,14 @@ class ClassroomManager(Gtk.Window):
             message_type=Gtk.MessageType.QUESTION,
             buttons=Gtk.ButtonsType.YES_NO,
             text=f"Delete classroom '{cls['name']}'?")
+        confirm.set_default_response(Gtk.ResponseType.YES)
         confirm.format_secondary_text("This cannot be undone.")
         resp = confirm.run(); confirm.destroy()
         if resp != Gtk.ResponseType.YES:
             return
         self.data['classrooms'] = [
             c for c in self.data['classrooms'] if c['id'] != self.selected_cls_id]
-        try:
-            save_classrooms(self.data)
-        except RuntimeError as e:
-            self._error(str(e)); return
+        self._ensure_save()
         self.selected_cls_id = None
         self._show_placeholder("Select a classroom on the left to manage it.")
         self._refresh_cls_list()
@@ -358,7 +374,9 @@ class ClassroomManager(Gtk.Window):
         url_entry.set_placeholder_text("https://classroom.google.com")
         url_entry.set_width_chars(40)
         box.pack_start(url_entry, False, False, 0)
-
+        dialog.set_default_response(Gtk.ResponseType.OK)
+        name_entry.set_activates_default(True)
+        url_entry.set_activates_default(True)
         dialog.show_all()
         response = dialog.run()
         name = name_entry.get_text().strip()
@@ -378,10 +396,7 @@ class ClassroomManager(Gtk.Window):
             return
 
         self.data['web_apps'].append({'label': name, 'url': url})
-        try:
-            save_classrooms(self.data)
-        except RuntimeError as e:
-            self._error(str(e)); return
+        self._ensure_save()
         self._refresh_wa_list()
 
         # If a classroom is currently open, refresh its checklist so the new
@@ -403,6 +418,7 @@ class ClassroomManager(Gtk.Window):
             message_type=Gtk.MessageType.QUESTION,
             buttons=Gtk.ButtonsType.YES_NO,
             text=f"Remove web app '{wa['label']}'?")
+        confirm.set_default_response(Gtk.ResponseType.YES)
         confirm.format_secondary_text(
             "It will also be removed from all classrooms where it was enabled.")
         resp = confirm.run(); confirm.destroy()
@@ -417,10 +433,7 @@ class ClassroomManager(Gtk.Window):
             cls['enabled_apps'] = [
                 a for a in cls.get('enabled_apps', []) if a.get('label') != label]
 
-        try:
-            save_classrooms(self.data)
-        except RuntimeError as e:
-            self._error(str(e)); return
+        self._ensure_save()
 
         self.selected_wa_idx = None
         self._refresh_wa_list()
@@ -452,11 +465,17 @@ class ClassroomManager(Gtk.Window):
         self.right_box.pack_start(s_hdr, False, False, 0)
 
         self.student_lb = Gtk.ListBox()
-        self.student_lb.set_selection_mode(Gtk.SelectionMode.SINGLE)
+        self.student_lb.set_selection_mode(Gtk.SelectionMode.MULTIPLE)
         self.student_lb.get_style_context().add_class("inner-list")
         for name in cls.get('students', []):
             self.student_lb.add(self._make_text_row(name, attr='student_name'))
         self.right_box.pack_start(self.student_lb, False, False, 0)
+        # drag source: selected students can be dragged to another classroom
+        self.student_lb.drag_source_set(
+            Gdk.ModifierType.BUTTON1_MASK,
+            [Gtk.TargetEntry.new('text/plain', Gtk.TargetFlags.SAME_APP, 0)],
+            Gdk.DragAction.COPY)
+        self.student_lb.connect('drag-data-get', self._on_student_drag_data_get)
 
         s_btns = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=4)
         add_s = Gtk.Button(label="+ Add Student")
@@ -486,8 +505,8 @@ class ClassroomManager(Gtk.Window):
         self._pending_connects = []
         self.right_box.pack_start(self._build_app_checklist(cls), False, False, 0)
         self.right_box.show_all()
-        for cb, app, cls_ref in self._pending_connects:
-            cb.connect('clicked', self._on_app_toggle, app, cls_ref)
+        for cb, app, cls_id in self._pending_connects:
+            cb.connect('toggled', self._on_app_toggle, app, cls_id)
         self._pending_connects = []
 
     #  App checklist (static apps + web apps) 
@@ -539,7 +558,7 @@ class ClassroomManager(Gtk.Window):
 
             cb = Gtk.CheckButton()
             cb.set_active(app['label'] in enabled_labels)
-            self._pending_connects.append((cb, app, cls))
+            self._pending_connects.append((cb, app, cls['id']))
             row_box.pack_start(cb, False, False, 0)
 
             desc = Gtk.Label()
@@ -561,18 +580,18 @@ class ClassroomManager(Gtk.Window):
 
         return frame
 
-    def _on_app_toggle(self, cb, app, cls):
+    def _on_app_toggle(self, cb, app, cls_id):
         """Called when a checkbox is toggled, updates cls and saves immediately."""
+        cls = self._get_cls(cls_id)
+        if not cls:
+            return
         if cb.get_active():
             if not any(a['label'] == app['label'] for a in cls['enabled_apps']):
                 cls['enabled_apps'].append(app)
         else:
             cls['enabled_apps'] = [
                 a for a in cls['enabled_apps'] if a['label'] != app['label']]
-        try:
-            save_classrooms(self.data)
-        except RuntimeError as e:
-            self._error(str(e))
+        self._ensure_save()
 
     #  Rows and student management
     def _make_text_row(self, text, attr=None):
@@ -596,6 +615,8 @@ class ClassroomManager(Gtk.Window):
         entry = Gtk.Entry()
         entry.set_placeholder_text("e.g. studentuser")
         box.pack_start(entry, False, False, 0)
+        dialog.set_default_response(Gtk.ResponseType.OK)
+        entry.set_activates_default(True)
         dialog.show_all()
         response = dialog.run()
         username = entry.get_text().strip()
@@ -606,10 +627,7 @@ class ClassroomManager(Gtk.Window):
             self._error(f"'{username}' is already enrolled.")
             return
         cls['students'].append(username)
-        try:
-            save_classrooms(self.data)
-        except RuntimeError as e:
-            self._error(str(e)); return
+        self._ensure_save()
         self._show_detail(cls)
 
     def _on_rem_student(self, _btn, cls):
@@ -617,11 +635,47 @@ class ClassroomManager(Gtk.Window):
         if not row or not hasattr(row, 'student_name'):
             return
         cls['students'] = [s for s in cls['students'] if s != row.student_name]
+        self._ensure_save()
+        self._show_detail(cls)
+
+    def _on_student_drag_data_get(self, widget, _ctx, data, _info, _time):
+        selected = self.student_lb.get_selected_rows()
+        names = [r.student_name for r in selected if hasattr(r, 'student_name')]
+        data.set_text(','.join(names), -1)
+
+    def _on_cls_drag_received(self, widget, _ctx, x, y, data, _info, _time):
+        names_str = data.get_text()
+        if not names_str:
+            return
+        names = [n for n in names_str.split(',') if n]
+        row = self.cls_listbox.get_row_at_y(y)
+        if row is None or not hasattr(row, 'cls_id'):
+            return
+        if row.cls_id == self.selected_cls_id:
+            return
+        target_cls = self._get_cls(row.cls_id)
+        if not target_cls:
+            return
+        count = len(names)
+        confirm = Gtk.MessageDialog(
+            transient_for=self, flags=0,
+            message_type=Gtk.MessageType.QUESTION,
+            buttons=Gtk.ButtonsType.YES_NO,
+            text=f"Copy {count} student{'s' if count != 1 else ''} to '{target_cls['name']}'?")
+        confirm.set_default_response(Gtk.ResponseType.YES)
+        resp = confirm.run(); confirm.destroy()
+        if resp != Gtk.ResponseType.YES:
+            return
+        for name in names:
+            if name not in target_cls['students']:
+                target_cls['students'].append(name)
+        self._ensure_save()
+
+    def _ensure_save(self):
         try:
             save_classrooms(self.data)
-        except RuntimeError as e:
-            self._error(str(e)); return
-        self._show_detail(cls)
+        except Exception as e:
+            self._error(str(e))
 
     def _error(self, msg):
         d = Gtk.MessageDialog(

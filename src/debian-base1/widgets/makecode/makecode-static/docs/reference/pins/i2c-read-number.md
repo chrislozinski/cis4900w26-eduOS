@@ -1,72 +1,68 @@
 # i2c Read Number
 
-Read one number from an I2C address using a specified number format.
+Read a number from an address on the I2C bus.
 
 ```sig
-pins.i2cReadNumber(0, NumberFormat.Int8LE, false);
+pins.i2cReadNumber(0, NumberFormat.Int8LE, false)
 ```
 
-### ~ hint
+If your board has pins that say **SDA** and **SCL**, then you can read numbers from
+other chips that are not on your board. The **SDA** and **SCL** pins connect to other chips
+([ICs](https://wikipedia.org/wiki/Integrated_circuit)) that also have these same pins. This connection
+is called [**I2C**](https://wikipedia.org/wiki/I2C). It only needs two wires to read or write
+a number. As you can guess, one wire is for **SDA** and the other is for **SCL**.
 
-#### Simulator
+The wires, and the signals that go through them, together are called a _bus_. An I2C connection is
+an _I2C bus_.
 
-This function needs real hardware to work with. It's not supported in the simulator.
+You might know that storing a number in electronics takes several bits of digital information that exist
+all at one time (a combination of many high and low voltages inside a chip). Since the I2C
+bus has only two wires, a number moves through one of the wires just one bit at a time. The
+bits of the number are short pulses of high and low voltage on the **SDA** wire. The **SCL**
+wire lets one chip tell another chip when the next bit of the number is on the **SDA** wire.
 
-### ~
+### Addresses
+
+To keep things simple, the I2C bus lets many chips connect to the same wires. Nice, because
+it could get messy if each chip couldn't share the same wires. This is like pretending the
+chips are houses on a street. The street is the bus connected to the chips, the houses. We know that
+a house on a street usually has an address. Same thing with chips on a bus. Without an address,
+a number would move on the bus but the chips waiting for input wouldn't know who's
+supposed to receive it.
+
+The chips on your bus can have address numbers that are between `8` and `123`. Make
+sure that all of the chips are using a different number so they respond to their own address.
 
 ## Parameters
 
-* **address**: the 7-bit I2C address of the device you want to read a number from.
-* **format**: the [NumberFormat](/types/buffer/number-format) of the number value to read.
-* **repeated**: if `true`, don't send a stop condition after the read. Otherwise, a stop condition is sent when `false` (the default).
+* **address**: a [number](types/number) between `8` and `123` that is the address of a chip on the I2C bus.
+* **format**: the type of number you will read from the bus, like: `Int8LE`.
+* **repeated**: a [boolean](/types/boolean) value, `true` or `false`, to say if you want to read
+again right away.
+>This is usually `false` if you wait for a while before reading from, or writing to, the bus again.
 
-### ~ hint
-
-#### Repeated start
-
-A [repeated start condition](http://www.i2c-bus.org/repeated-start-condition/) is set to help make sure that when you want to read multiple numbers from the device at one time, it can happen without interruption. A start conditon is sent (if **repeated** is `true`) each time a number is read without a matching stop condition. When the last number is read, the stop conditon can be sent by setting **repeated** to `false`. For single reads, don't use **repeated** or set it to `false`.
-
-#### Reserved addresses
-
-Some sensors on your @boardname@ use the same I2C bus that is connected to the pins that you program. This means that you should be careful to **NOT** use an address for your device that is the same as the any of the ones used by the sensors on the board. Check the [I2C sensor addresses](https://tech.microbit.org/hardware/i2c/) list before you assign one to your device. This will help you keep the addresses separate.
-
-#### Bus address format
-
-The @boardname@ uses 7-bit values to address the devices connected on the I2C bus. Before an address is transmitted, it is adjusted temporarily to an 8-bit value so that the valid address bits are sent properly. This means that the value of an 8-bit address present on the bus will appear as twice that of what you specified. This is fine though, since the device you are addressing will decode it to match the address you gave. If your device address is specified as an 8-bit address, you will need to use an address that is half that value when you read to or write from it.
-
-### ~
 
 ## Returns
 
-* a number from the device with the [NumberFormat](/types/buffer/number-format) you asked for.
+* a [number](types/number) that is read from the I2C bus. It is one or more
+bytes in size depending on what type you asked for in **format**.
 
-## Examples
+## Example #example
 
-### Read a big endian number from a device
-
-The following example reads a number in big-endian, 16-bit, unsigned integer
-format from the 7-bit I2C address `32`.
-
-Read a number from the device at a 7-bit I2C address as a 16-bit number. The `16`, big-endian, and integer chosen for the format.
+Connect a temperature sensor on a breadboard to the **SDA** and **SCL** pins on your board. Set your sensor
+to respond to address `24`. Every 30 seconds, read the temperature from the sensor and write it as Fahrenheit
+to the serial port.
 
 ```blocks
-let inValue = pins.i2cReadNumber(32, NumberFormat.UInt16BE, false);
+forever(() => {
+    let celcius = pins.i2cReadNumber(24, NumberFormat.Int8LE, false)
+    let fahr = Math.map(celcius, 0, 100, 32, 212)
+    serial.writeValue("Degrees F", fahr)
+    pause(30000)
+})
 ```
 
-### Repeated reads
+## See also #seealso
 
-Read three bytes from a device at address `33` at one time.
-
-```blocks
-let nums: number[] = []
-
-nums[0] = pins.i2cReadNumber(33, NumberFormat.UInt8LE, true)
-nums[1] = pins.i2cReadNumber(33, NumberFormat.UInt8LE, true)
-nums[2] = pins.i2cReadNumber(33, NumberFormat.UInt8LE, false)
-```
-
-## See also
-
-[i2c write number](/reference/pins/i2c-write-number)
-
-[What's I2C?](http://www.i2c-bus.org/), [number format](/types/buffer/number-format)
+[i2c write number](/reference/pins/i2c-write-number),
+[create i2c](/reference/pins/create-i2c)

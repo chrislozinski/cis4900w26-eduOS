@@ -20,7 +20,7 @@ if (Test-Path $outputDir) {
 New-Item -ItemType Directory -Path $outputDir -Force | Out-Null
 
 # cloned directly into /build/pxt-microbit
-docker cp mc-extract:/build/pxt-microbit/built/packaged/. "$outputDir"
+docker cp mc-extract:/build/pxt-arcade/built/packaged/. "$outputDir"
 
 # Clean up Docker artifacts
 Write-Host "`n[3/4] Cleaning up Docker artifacts..." -ForegroundColor Yellow

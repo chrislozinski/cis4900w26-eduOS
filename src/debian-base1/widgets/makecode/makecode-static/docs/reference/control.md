@@ -1,19 +1,25 @@
 # Control
 
-Runtime and event utilities.
+Program controls and events.
 
 ```cards
-control.inBackground(() => {
-
+control.millis();
+control.runInParallel(() => {
+    
 });
 control.reset();
 control.waitMicros(4);
-control.onEvent(0, 0, () => { });
-control.raiseEvent(0, 0);
-control.eventTimestamp();
-control.eventValue();
+control.deviceSerialNumber();
 ```
 
-## See Also
+## Advanced #advanced
 
-[inBackground](/reference/control/in-background), [reset](/reference/control/reset), [waitMicros](/reference/control/wait-micros), [onEvent](/reference/control/on-event), [raiseEvent](/reference/control/raise-event), [eventTimestamp](/reference/control/event-timestamp), [eventValue](/reference/control/event-value)
+```cards
+control.raiseEvent(0, 0);
+control.onEvent(0, 0, () => {
+    
+});
+control.assert(false, 0);
+control.deviceDalVersion();
+control.panic(0);
+```

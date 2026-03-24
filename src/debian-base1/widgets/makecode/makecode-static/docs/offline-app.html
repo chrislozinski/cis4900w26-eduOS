@@ -55,8 +55,8 @@
     
 <!-- include offline-app-head.html -->
     <meta charset="UTF-8">
-    <title>makecode.microbit.org Offline App</title>
-    <meta name="Description" content="A makecode.microbit.org offline app" />
+    <title>arcade Offline App</title>
+    <meta name="Description" content="A arcade offline app" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" data-rtl="/blb/rtlsemantic.css" href="/doccdn/semantic.css" />
     <link rel="stylesheet" href="/docfiles/target.css" />
@@ -522,9 +522,6 @@
 
     <style>
         
-.ui.accent { color: #5C005C; }
-.ui.inverted.accent { background: #5C005C; }
-
     </style>
 
     
@@ -662,23 +659,23 @@
         }
 
         function updateDownloadLinks(electronVersion) {
-            $("#download-win64").attr("href", "https://makecode.com/api/release/microbit/" + electronVersion + "/win64");
-            $("#download-winarm64").attr("href", "https://makecode.com/api/release/microbit/" + electronVersion + "/winarm64");
-            $("#download-mac64").attr("href", "https://makecode.com/api/release/microbit/" + electronVersion + "/mac64");
-            $("#download-macarm64").attr("href", "https://makecode.com/api/release/microbit/" + electronVersion + "/macarm64");
+            $("#download-win64").attr("href", "https://makecode.com/api/release/arcade/" + electronVersion + "/win64");
+            $("#download-winarm64").attr("href", "https://makecode.com/api/release/arcade/" + electronVersion + "/winarm64");
+            $("#download-mac64").attr("href", "https://makecode.com/api/release/arcade/" + electronVersion + "/mac64");
+            $("#download-macarm64").attr("href", "https://makecode.com/api/release/arcade/" + electronVersion + "/macarm64");
             
         }
         function downloadWin64() {
-            window.pxtTickEvent("offlineapp.download", { "target": "microbit", "platform": "win64" });
+            window.pxtTickEvent("offlineapp.download", { "target": "arcade", "platform": "win64" });
         }
         function downloadWinArm64() {
-            window.pxtTickEvent("offlineapp.download", { "target": "microbit", "platform": "winarm64" });
+            window.pxtTickEvent("offlineapp.download", { "target": "arcade", "platform": "winarm64" });
         }
         function downloadMac64() {
-            window.pxtTickEvent("offlineapp.download", { "target": "microbit", "platform": "mac64" });
+            window.pxtTickEvent("offlineapp.download", { "target": "arcade", "platform": "mac64" });
         }
         function downloadMacArm64() {
-            window.pxtTickEvent("offlineapp.download", { "target": "microbit", "platform": "macarm64" });
+            window.pxtTickEvent("offlineapp.download", { "target": "arcade", "platform": "macarm64" });
         }
         $(function () {
             try {
@@ -695,7 +692,7 @@
                 console.warn("Could not parse search string", e);
             }
 
-            $.getJSON("https://makecode.com/api/config/microbit/targetconfig")
+            $.getJSON("https://makecode.com/api/config/arcade/targetconfig")
                 .then(function (data) {
                     hideLoader();
                     if (data && data.electronManifest && data.electronManifest.latest) {
@@ -729,12 +726,12 @@
         <div class="topbar inverted">
             <div class="left flex-wrapper">
                 <a href="/docs/.html" tabindex="0" title="Go to editor">
-                    <img class="headerlogo" src="docs/static/icons/apple-touch-icon.png" alt="Editor logo" />
+                    <img class="headerlogo" src="docs/static/logo.png" alt="Editor logo" />
                 </a>
             </div>
             <h1 class="welcomeheader">MakeCode Offline App</h1>
             <div class="right flex-wrapper">
-                <a href="https://makecode.com/" tabindex="0" title="Go to organization">
+                <a href="https://makecode.com/org" tabindex="0" title="Go to organization">
                     <img class="headerlogo" src="/static/Microsoft-logo_rgb_c-white.png" alt="Microsoft logo" />
                 </a>
             </div>
@@ -750,7 +747,7 @@
             <div id="legal-segment" class="ui left aligned segment terms hidden">
                 <div class="c17">
                     <p class="c12"><span class="c3 c2">MICROSOFT SOFTWARE LICENSE TERMS</span></p>
-                    <p class="c0"><span class="c3 c2">MICROSOFT MAKECODE SOFTWARE FOR <span class="touppercase">micro:bit</span></span></p>
+                    <p class="c0"><span class="c3 c2">MICROSOFT MAKECODE SOFTWARE FOR <span class="touppercase">Arcade</span></span></p>
                     <p class="c12"><span class="c6">These license terms are an agreement between Microsoft Corporation (or based on
                             where you live, one of its affiliates) and you. They apply to the software named above. The terms also apply
                             to any Microsoft services or updates for the software, except to the extent those have additional
@@ -758,7 +755,7 @@
                     <p class="c16"><span class="c3 c2">IF YOU COMPLY WITH THESE LICENSE TERMS, YOU HAVE THE RIGHTS BELOW.</span></p>
                     <p class="c1 c9"><span class="c2">1.</span><span class="c6">&nbsp;&nbsp;&nbsp; </span><span class="c2">INSTALLATION
                             AND USE RIGHTS. </span><span class="c6">You may install and use any number of copies of the software to
-                            develop and test your software applications for use with micro:bit hardware. </span></p>
+                            develop and test your software applications for use with Arcade hardware. </span></p>
                     <p class="c1 c9"><span class="c2">2.</span><span class="c6">&nbsp;&nbsp;&nbsp; </span><span class="c2">ASSOCIATED
                             ONLINE SERVICES.</span><span class="c3 c5">&nbsp;&nbsp;Some features of the software provide access to, or
                             rely on, online services to provide you information about updates to the software or extensions, or to
@@ -912,8 +909,8 @@
                     <p class="c23"><span class="c3 c5">
                         
 <!-- include offline-app-trademarks.html -->
-Micro:bit and micro:bit logo are trademarks and/ or copyrights of the Micro:bit
-Educational Foundation. &copy; Micro:bit Educational Foundation. All rights reserved.
+<!-- To be overridden by target -->
+
 <!-- end include offline-app-trademarks.html -->
 
                     </span></p>
@@ -939,14 +936,14 @@ Educational Foundation. &copy; Micro:bit Educational Foundation. All rights rese
                             <h4 class="ui">Intel/AMD</h4>
                             <a id="download-win64" class="ui icon button" onclick="downloadWin64()">
                                 <i class="download icon"></i>
-                                makecode-microbit-setup-win64.exe
+                                makecode-arcade-setup-win64.exe
                             </a>
                         </div>
                         <div class="ui segment" id="winarm64-section">
                             <h4 class="ui">ARM</h4>
                             <a id="download-winarm64" class="ui icon button" onclick="downloadWinArm64()">
                                 <i class="download icon"></i>
-                                makecode-microbit-setup-winarm64.exe
+                                makecode-arcade-setup-winarm64.exe
                             </a>
                         </div>
                     </div>
@@ -956,14 +953,14 @@ Educational Foundation. &copy; Micro:bit Educational Foundation. All rights rese
                             <h4 class="ui">Intel</h4>
                             <a id="download-mac64" class="ui icon button" onclick="downloadMac64()">
                                 <i class="download icon"></i>
-                                makecode-microbit-mac64.zip
+                                makecode-arcade-mac64.zip
                             </a>
                         </div>
                         <div class="ui segment">
                             <h4 class="ui">Apple Silicon</h4>
                             <a id="download-macarm64" class="ui icon button" onclick="downloadMacArm64()">
                                 <i class="download icon"></i>
-                                makecode-microbit-macarm64.zip
+                                makecode-arcade-macarm64.zip
                             </a>
                         </div>
                     </div>
@@ -1057,7 +1054,7 @@ Educational Foundation. &copy; Micro:bit Educational Foundation. All rights rese
                     telemetryItem.properties = telemetryItem.properties || {};
                     telemetryItem.properties["cookie"] = isProduction;
                     if (typeof pxtConfig === "undefined" || !pxtConfig || !pxtConfig.targetId) {
-                        telemetryItem.properties["target"] = "microbit";
+                        telemetryItem.properties["target"] = "arcade";
                         return true;
                     }
                     telemetryItem.properties["target"] = pxtConfig.targetId;
