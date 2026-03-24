@@ -69,6 +69,21 @@
 
 
     <link rel="stylesheet" data-rtl="/rtlsemantic.css" href="/semantic.css" type="text/css">
+    <style>
+        /* Hide hero banner */
+        .getting-started-segment.hero { display: none !important; }
+        /* Hide skillmaps carousels */
+        .gallerysegment:not(.mystuff-segment) { display: none !important; }
+        /* Hide Microsoft org logo in footer/header */
+        .ui.item.logo.organization { display: none !important; }
+        /* Hide footer */
+        .homefooter { display: none !important; }
+
+        .ui.item.logo.brand::before {
+            display: none !important;
+            content: none !important;
+        }
+    </style>
 </head>
 
 <body class="main pxt-theme-root">

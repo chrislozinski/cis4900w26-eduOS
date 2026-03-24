@@ -63,12 +63,6 @@
     "hasAudio": true,
     "allowPackageExtensions": true,
     "homeScreenHero": {
-        "imageUrl": "docs/static/hero-gallery/skillmap.png",
-        "name": "Start Coding",
-        "url": "/tutorials/intro",
-        "buttonLabel": "Start Coding",
-        "description": "New? Start here!",
-        "cardType": "tutorial"
     },
     "homeScreenHeroGallery": "/hero-banner",
     "socialOptions": {
@@ -94,7 +88,7 @@
         "arrays": "#FF8F08",
         "functions": "#1446A0"
     },
-    "defaultColorTheme": "arcade-orange",
+    "defaultColorTheme": "arcade-dark",
     "highContrastColorTheme": "pxt-high-contrast",
     "simAnimationEnter": "fly right in",
     "simAnimationExit": "fly right out",

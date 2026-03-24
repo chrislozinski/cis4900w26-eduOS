@@ -590,21 +590,6 @@
         "print": true,
         "hasAudio": true,
         "allowPackageExtensions": true,
-        "homeScreenHero": {
-            "imageUrl": "docs/static/hero-gallery/skillmap.png",
-            "name": "Start Coding",
-            "url": "/tutorials/intro",
-            "buttonLabel": "Start Coding",
-            "description": "New? Start here!",
-            "cardType": "tutorial"
-        },
-        "homeScreenHeroGallery": "/hero-banner",
-        "socialOptions": {
-            "orgTwitterHandle": "MSMakeCode",
-            "hashtags": "MakeCode",
-            "discourse": "https://forum.makecode.com/",
-            "discourseCategory": "Arcade"
-        },
         "blocklyOptions": {
             "grid": {
                 "spacing": 30,
@@ -622,7 +607,7 @@
             "arrays": "#FF8F08",
             "functions": "#1446A0"
         },
-        "defaultColorTheme": "arcade-orange",
+        "defaultColorTheme": "arcade-dark",
         "highContrastColorTheme": "pxt-high-contrast",
         "simAnimationEnter": "fly right in",
         "simAnimationExit": "fly right out",
@@ -691,9 +676,7 @@
         "timeMachine": true,
         "timeMachineDiffInterval": 600000,
         "timeMachineSnapshotInterval": 1800000,
-        "feedbackEnabled": true,
-        "ocvAppId": 50315,
-        "ocvFrameUrl": "https://admin-ignite.microsoft.com",
+        "feedbackEnabled": false,
         "pxtJsonOptions": [
             {
                 "label": "Import as asset pack",

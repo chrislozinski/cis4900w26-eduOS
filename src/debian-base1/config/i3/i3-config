@@ -58,6 +58,7 @@ bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'Exit?' -B 'Yes' 'i3-msg exit
 
 default_orientation horizontal
 workspace_layout default
+tiling_drag off
 
 # i3 status bar 
 bar {

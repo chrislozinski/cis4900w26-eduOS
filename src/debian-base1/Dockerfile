@@ -17,6 +17,9 @@ WORKDIR /i3
 #  set deco_height to 0 so tab decorations are invisible
 RUN sed -i 's/params\.deco_height = render_deco_height();/params.deco_height = 0;/' src/render.c
 
+# Disable mouse drag resize between split containers
+RUN python3 -c "import re; src=open('src/resize.c').read(); src=re.sub(r'(void resize_graphical_handler\b[^{]*\{)', r'\1\n    return;', src); open('src/resize.c','w').write(src)"
+
 RUN meson setup build && ninja -C build
 
 # debootstrap minimal Debian base
