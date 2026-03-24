@@ -55,11 +55,13 @@ def main():
         }
         progressbar {
             padding: 4px;
+            padding-bottom: 10px;
         }
         progressbar text {
             color: #2b2b2b;
             font-size: 16px;
             padding: 4px;
+            margin-bottom: 6px;
         }
         progressbar trough {
             background-color: #e0dccf;
@@ -68,7 +70,7 @@ def main():
             box-shadow: inset 0 1px 2px rgba(0,0,0,0.15);
         }
         progressbar progress {
-            background-color: #5c7cfa;
+            background-color: #12921E;
             border-radius: 6px;
             min-height: 10px;
         }

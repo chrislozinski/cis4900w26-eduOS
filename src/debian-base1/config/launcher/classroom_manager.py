@@ -24,7 +24,6 @@ AVAILABLE_APPS_FILE = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), 'available-apps.json')
 
 #  Helpers 
-
 def load_classrooms():
     if os.path.exists(CLASSROOMS_FILE):
         try:
@@ -82,6 +81,7 @@ class ClassroomManager(Gtk.Window):
         self.data.setdefault("web_apps", [])
         self.selected_cls_id = None
         self.selected_wa_idx = None   # index into data["web_apps"]
+        self._app_toggle_handlers = []   
 
         #  Top-level layout 
         paned = Gtk.Paned(orientation=Gtk.Orientation.HORIZONTAL)
@@ -94,7 +94,7 @@ class ClassroomManager(Gtk.Window):
         paned.pack1(left, False, False)
         paned.set_position(250)
 
-        # — Classrooms section —
+        # Classrooms section 
         cls_hdr = Gtk.Label()
         cls_hdr.set_markup("<b>Classrooms</b>")
         cls_hdr.set_halign(Gtk.Align.START)
@@ -505,8 +505,15 @@ class ClassroomManager(Gtk.Window):
         self._pending_connects = []
         self.right_box.pack_start(self._build_app_checklist(cls), False, False, 0)
         self.right_box.show_all()
+        for old_cb, hid in self._app_toggle_handlers:
+            try:
+                old_cb.disconnect(hid)
+            except Exception:
+                pass
+        self._app_toggle_handlers = []
         for cb, app, cls_id in self._pending_connects:
-            cb.connect('toggled', self._on_app_toggle, app, cls_id)
+            hid = cb.connect('toggled', self._on_app_toggle, app, cls_id)
+            self._app_toggle_handlers.append((cb, hid))
         self._pending_connects = []
 
     #  App checklist (static apps + web apps) 
