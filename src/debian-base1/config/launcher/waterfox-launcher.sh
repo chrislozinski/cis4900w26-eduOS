@@ -1,4 +1,6 @@
 #!/bin/bash
+LOCK="/tmp/waterfox-launching.lock"
+
 CON_ID=$(i3-msg -t get_tree | python3 -c "
 import json, sys
 
@@ -19,6 +21,8 @@ print(find_waterfox(tree) or '')
 
 if [ -n "$CON_ID" ]; then
     i3-msg "[con_id=\"$CON_ID\"] focus"
-else
+elif [ ! -f "$LOCK" ]; then
+    touch "$LOCK"
     i3-msg '[con_mark="viewer_tabs"] focus; focus child; exec waterfox'
+    rm -f "$LOCK"
 fi

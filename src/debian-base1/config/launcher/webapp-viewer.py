@@ -42,68 +42,124 @@ def main():
     win = Gtk.Window(title=title)
     win.set_wmclass("webapp_viewer", "WebAppViewer")
     win.set_default_size(1280, 900)
+    win.set_position(Gtk.WindowPosition.CENTER)
     win.connect("destroy", Gtk.main_quit)
 
+    context = WebKit2.WebContext.get_default()
+    context.set_process_model(WebKit2.ProcessModel.MULTIPLE_SECONDARY_PROCESSES)
+
     css = Gtk.CssProvider()
-    css.load_from_data(b"window { background-color: #262626; } spinner { color: #cccccc; }")
+    css.load_from_data(b"""
+        window {
+            background-color: #F2EEDE;
+        }
+        progressbar {
+            padding: 4px;
+        }
+        progressbar text {
+            color: #2b2b2b;
+            font-size: 16px;
+            padding: 4px;
+        }
+        progressbar trough {
+            background-color: #e0dccf;
+            border-radius: 6px;
+            min-height: 10px;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.15);
+        }
+        progressbar progress {
+            background-color: #5c7cfa;
+            border-radius: 6px;
+            min-height: 10px;
+        }
+        """)
     Gtk.StyleContext.add_provider_for_screen(
         Gdk.Screen.get_default(), css,
         Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
-    webview = WebKit2.WebView()
-
-    # match window background so blank canvas never shows as a white/light square
-    webview.set_background_color(Gdk.RGBA(0.149, 0.149, 0.149, 1))  # #262626
+    webview = WebKit2.WebView.new_with_context(context)
+    webview.set_opacity(0)
 
     overlay = Gtk.Overlay()
     overlay.add(webview)
 
-    spinner = Gtk.Spinner()
-    spinner.set_size_request(192, 192)
-    spinner.set_halign(Gtk.Align.CENTER)
-    spinner.set_valign(Gtk.Align.CENTER)
-    spinner.start()
-    overlay.add_overlay(spinner)
+    progress = Gtk.ProgressBar()
+    progress.set_halign(Gtk.Align.CENTER)
+    progress.set_valign(Gtk.Align.CENTER)
+    progress.set_size_request(300, -1)
+    overlay.add_overlay(progress)
+    progress.show()
+
+    progress.set_show_text(True)
+    progress.set_text("Loading…")
+
+    first_load = True
 
     def _on_load_changed(wv, event):
+        nonlocal first_load
+
+        if first_load and event == WebKit2.LoadEvent.STARTED:
+            progress.show()
+            webview.set_opacity(0.0)
+            progress.set_fraction(0.0)
+            return
+
         if event == WebKit2.LoadEvent.FINISHED:
-            spinner.stop()
-            spinner.hide()
-    webview.connect('load-changed', _on_load_changed)
+            progress.hide()
+            webview.set_opacity(1.0)
+            first_load = False
+
+    webview.connect("load-changed", _on_load_changed)
+
+    def _on_progress_notify(wv, pspec):
+        if progress.get_visible():
+            progress.set_fraction(wv.get_estimated_load_progress())
+
+    webview.connect("notify::estimated-load-progress", _on_progress_notify)
 
     # use CSS to hide common ad elements
     cm = webview.get_user_content_manager()
     cm.add_style_sheet(WebKit2.UserStyleSheet(
         _AD_CSS,
-        WebKit2.UserContentInjectedFrames.ALL_FRAMES,
+        WebKit2.UserContentInjectedFrames.TOP_FRAME,
         WebKit2.UserStyleLevel.USER,
         None, None))
 
     # Block ad networks and lock navigation to the original domain
     _origin = urlparse(url).netloc.lstrip('www.')
+    
     def _on_decide_policy(wv, decision, dtype):
         if dtype in (WebKit2.PolicyDecisionType.NAVIGATION_ACTION,
                      WebKit2.PolicyDecisionType.NEW_WINDOW_ACTION):
             action  = decision.get_navigation_action()
             nav_url = action.get_request().get_uri()
+            
             if nav_url.startswith(('http://', 'https://')):
                 host = urlparse(nav_url).netloc.lstrip('www.')
                 if any(host == d or host.endswith('.' + d) for d in _AD_DOMAINS):
                     decision.ignore()
                     return True
-                if (action.get_navigation_type() == WebKit2.NavigationType.LINK_CLICKED
-                        and host != _origin
+                if (host != _origin
                         and not host.endswith('.' + _origin)
                         and not _origin.endswith('.' + host)):
                     decision.ignore()
                     return True
         return False
+    
     webview.connect('decide-policy', _on_decide_policy)
 
     settings = webview.get_settings()
     settings.set_enable_javascript(True)
     settings.set_enable_developer_extras(False)
+    settings.set_enable_accelerated_2d_canvas(True)
+    settings.set_enable_webgl(True)
+    settings.set_hardware_acceleration_policy(
+        WebKit2.HardwareAccelerationPolicy.ALWAYS
+    )
+    settings.set_javascript_can_open_windows_automatically(False)
     settings.set_allow_file_access_from_file_urls(False)
+    settings.set_media_playback_requires_user_gesture(True)
+    
     # Allow the JS Clipboard API so web apps (e.g. Google Docs) can read/write the clipboard
     try:
         settings.set_javascript_can_access_clipboard(True)

@@ -20,6 +20,10 @@ RUN sed -i 's/params\.deco_height = render_deco_height();/params.deco_height = 0
 # Disable mouse drag resize between split containers
 RUN python3 -c "import re; src=open('src/resize.c').read(); src=re.sub(r'(void resize_graphical_handler\b[^{]*\{)', r'\1\n    return;', src); open('src/resize.c','w').write(src)"
 
+# Force the resize cursor to stay as a normal pointer
+RUN sed -i 's/xcursor_set_canvas_cursor(XCURSOR_CURSOR_RESIZE_HORIZONTAL);/xcursor_set_canvas_cursor(XCURSOR_CURSOR_POINTER);/' src/x.c && \
+    sed -i 's/xcursor_set_canvas_cursor(XCURSOR_CURSOR_RESIZE_VERTICAL);/xcursor_set_canvas_cursor(XCURSOR_CURSOR_POINTER);/' src/x.c
+
 RUN meson setup build && ninja -C build
 
 # debootstrap minimal Debian base
@@ -68,7 +72,7 @@ RUN apt-get update && apt-get install -y \
 # MakeCode static editor using the pre built HTML/JS/CSS to avoid runtime deps 
 COPY widgets/makecode/makecode-static/ /opt/makecode/static/
 
-# Install Waterfox (teacher browser) — fetch latest version from GitHub releases API
+# Install Waterfox (teacher browser), fetch latest version from GitHub releases 
 RUN WF_VER=$(curl -sf https://api.github.com/repos/BrowserWorks/Waterfox/releases/latest \
         | grep -oP '"tag_name":\s*"\K[^"]+') \
     && : "${WF_VER:=6.6.9}" \
@@ -104,16 +108,16 @@ COPY config/i3/layout.json /etc/skel/.config/i3/layout.json
 COPY config/interface/vifmrc /etc/skel/.config/vifm/vifmrc
 
 # Copy launcher scripts
-COPY config/launcher/launcher.py           /etc/skel/.config/launcher/launcher.py
-COPY config/launcher/folder_viewer.py      /etc/skel/.config/launcher/folder_viewer.py
-COPY config/launcher/app-window.py         /etc/skel/.config/launcher/app-window.py
-COPY config/launcher/classroom_manager.py  /etc/skel/.config/launcher/classroom_manager.py
-COPY widgets/makecode/makecode-app.py      /etc/skel/.config/launcher/makecode-app.py
-COPY widgets/library/library.py            /etc/skel/.config/launcher/library.py
-COPY config/launcher/lesson-config.py      /etc/skel/.config/launcher/lesson-config.py
-COPY config/launcher/waterfox-launcher.sh  /etc/skel/.config/launcher/waterfox-launcher.sh
+COPY config/launcher/launcher.py            /etc/skel/.config/launcher/launcher.py
+COPY config/launcher/folder_viewer.py       /etc/skel/.config/launcher/folder_viewer.py
+COPY config/launcher/app-window.py          /etc/skel/.config/launcher/app-window.py
+COPY config/launcher/classroom_manager.py   /etc/skel/.config/launcher/classroom_manager.py
+COPY widgets/makecode/makecode-app.py       /etc/skel/.config/launcher/makecode-app.py
+COPY widgets/library/library.py             /etc/skel/.config/launcher/library.py
+COPY config/launcher/lesson-config.py       /etc/skel/.config/launcher/lesson-config.py
+COPY config/launcher/waterfox-launcher.sh   /etc/skel/.config/launcher/waterfox-launcher.sh
 
-# Copy sidebar configs — generic fallback + role-specific
+# Copy sidebar configs as a generic fallback + role-specific
 COPY config/launcher/appbar-config.json          /etc/skel/.config/launcher/appbar-config.json
 COPY config/launcher/appbar-config-teacher.json  /etc/skel/.config/launcher/appbar-config-teacher.json
 COPY config/launcher/appbar-config-student.json  /etc/skel/.config/launcher/appbar-config-student.json

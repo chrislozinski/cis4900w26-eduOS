@@ -60,6 +60,14 @@ default_orientation horizontal
 workspace_layout default
 tiling_drag off
 
+# Disable mouse resizing by making border clicks do nothing
+bindsym --border button1 nop
+bindsym --border button3 nop
+
+# Ensure borders are invisible to the mouse interaction model
+default_border pixel 0
+default_floating_border pixel 0
+
 # i3 status bar 
 bar {
     status_command i3status -c ~/.config/i3status/config
