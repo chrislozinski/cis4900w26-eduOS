@@ -4,7 +4,8 @@
       "id": "class001",
       "name": "Class 001",
       "students": ["studentuser"],
-      "enabled_apps": []
+      "enabled_apps": [],
+      "enabled_lessons": []
     }
   ],
   "web_apps": []
