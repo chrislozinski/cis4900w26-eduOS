@@ -497,6 +497,8 @@ class LauncherWindow(Gtk.Window):
                 lbl.hide()
 
             self._viewer_widgets[pid] = (btn, lbl)
+            # Instant cleanup when the viewer process exits (no poll delay)
+            GLib.child_watch_add(pid, lambda *_: self.refresh_viewer_widgets())
 
         return True  # keep polling
 

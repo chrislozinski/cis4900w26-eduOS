@@ -28,7 +28,7 @@ for_window [instance="folder_viewer"] move container to mark viewer_tabs
 for_window [class="Zathura"] floating disable
 for_window [class="Zathura"] move container to mark viewer_tabs
 
-# fileViewer.py image viewer (nsxiv embedded inside GTK window)
+# fileViewer.py image viewer, with nsxiv embedded inside GTK window
 for_window [instance="file_viewer"] floating disable
 for_window [instance="file_viewer"] move container to mark viewer_tabs
 

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-FileViewer — dark GTK chrome + nsxiv embedded via XEmbed.
+FileViewer — dark GTK chrome + nsxiv embedded via XEmbed (raster images)
+                              + GdkPixbuf inline viewer (SVG images).
 Single persistent instance; folder_viewer signals via SIGUSR1 to add tabs.
 """
 import gi
@@ -11,10 +12,13 @@ import signal
 import subprocess
 
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, Gdk, GLib
+gi.require_version('Gdk', '3.0')
+from gi.repository import Gtk, Gdk, GdkPixbuf, GLib
 
-IMAGE_EXTS = {'.png', '.jpg', '.jpeg', '.gif', '.bmp', '.webp'}
-VIEWER_DIR = os.path.expanduser('~/.cache/launcher_viewers')
+RASTER_EXTS = {'.png', '.jpg', '.jpeg', '.gif', '.bmp', '.webp'}
+SVG_EXTS    = {'.svg'}
+ALL_EXTS    = RASTER_EXTS | SVG_EXTS
+VIEWER_DIR  = os.path.expanduser('~/.cache/launcher_viewers')
 
 
 def _siblings(path):
@@ -23,7 +27,7 @@ def _siblings(path):
     try:
         return sorted(
             os.path.join(d, f) for f in os.listdir(d)
-            if os.path.splitext(f)[1].lower() in IMAGE_EXTS and not f.startswith('.')
+            if os.path.splitext(f)[1].lower() in ALL_EXTS and not f.startswith('.')
         )
     except Exception:
         return [path]
@@ -39,6 +43,12 @@ class FileViewer(Gtk.Window):
         self.active = None
         self.nsxiv_proc = None
         self.nsxiv_watch_id = None
+
+        # SVG viewer state
+        self._svg_zoom   = 1.0
+        self._svg_scroll = None
+        self._svg_image  = None
+        self._svg_path   = None
 
         self._pid = os.getpid()
         self._pid_file  = os.path.join(VIEWER_DIR, 'fv.pid')
@@ -81,42 +91,60 @@ class FileViewer(Gtk.Window):
 
         self.vbox.pack_start(nav_box, False, False, 0)
 
-        # socket_area holds the current GtkSocket; recreated on every nsxiv launch
-        self.socket_area = Gtk.Box()
-        self.socket_area.set_name("viewer_socket")
-        self.vbox.pack_start(self.socket_area, True, True, 0)
+        # Overlay so zoom buttons float over the viewer area
+        self.viewerOverlay = Gtk.Overlay()
+        self.viewer_area = Gtk.Box()
+        self.viewer_area.set_name("viewer_socket")
+        self.viewerOverlay.add(self.viewer_area)
+
+        zoomOverlayBox = Gtk.Box(spacing=4)
+        zoomOverlayBox.get_style_context().add_class('zoomOverlay')
+        zoomOverlayBox.set_halign(Gtk.Align.START)
+        zoomOverlayBox.set_valign(Gtk.Align.END)
+        zoomOverlayBox.set_margin_start(8)
+        zoomOverlayBox.set_margin_bottom(8)
+
+        self.zoomOutBtn = Gtk.Button(label="−")
+        self.zoomInBtn  = Gtk.Button(label="+")
+        self.zoomOutBtn.connect('clicked', self._onZoomOut)
+        self.zoomInBtn.connect('clicked',  self._onZoomIn)
+        zoomOverlayBox.pack_start(self.zoomOutBtn, False, False, 0)
+        zoomOverlayBox.pack_start(self.zoomInBtn,  False, False, 0)
+
+        self.viewerOverlay.add_overlay(zoomOverlayBox)
+        self.viewerOverlay.set_overlay_pass_through(zoomOverlayBox, False)
+        self.vbox.pack_start(self.viewerOverlay, True, True, 0)
 
         GLib.unix_signal_add(GLib.PRIORITY_DEFAULT, signal.SIGUSR1, self._on_open_request)
 
         self._initial_path = os.path.abspath(initial_path)
 
-    #  socket management 
+    # ── socket management ─────────────────────────────────────────────────────
 
     def _fresh_socket(self):
-        """Replace socket_area with a brand-new GtkSocket and return its XID.
-        GtkSocket is one-use — once a plug disconnects the socket is dead."""
-        for child in self.socket_area.get_children():
-            self.socket_area.remove(child)
-
+        """Replace viewer_area with a brand-new GtkSocket and return its XID."""
+        self._clear_viewer_area()
         sock = Gtk.Socket()
-        self.socket_area.pack_start(sock, True, True, 0)
-        sock.realize()   # creates the X window so the XID is valid
+        self.viewer_area.pack_start(sock, True, True, 0)
+        sock.realize()
         sock.show()
-        Gdk.flush()      # flush all pending X11 commands before handing XID to nsxiv
+        Gdk.flush()
         return sock.get_id()
 
-    #  tab management 
+    def _clear_viewer_area(self):
+        for child in self.viewer_area.get_children():
+            self.viewer_area.remove(child)
+
+    # ── tab management ────────────────────────────────────────────────────────
 
     def _open_tab(self, path):
         path = os.path.abspath(path)
         files = _siblings(path)
-        # compare by basename to avoid path normalisation mismatches
         target = os.path.basename(path)
         index = next((i for i, f in enumerate(files) if os.path.basename(f) == target), 0)
         tab = {'files': files, 'index': index}
         self.tabs.append(tab)
 
-        # Box holds two separate buttons — label button switches tab, X button closes
         container = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
         container.get_style_context().add_class('tab')
 
@@ -149,13 +177,13 @@ class FileViewer(Gtk.Window):
         tab['widget'].get_style_context().add_class('active')
         self._update_tab_label(tab)
         self._update_nav_buttons()
-        self._launch_nsxiv(tab)
+        self._launchViewer(tab)
 
     def _close_tab(self, tab):
         idx = self.tabs.index(tab)
         was_active = tab is self.active
         if was_active:
-            self._kill_nsxiv()
+            self._killViewer()
         self.tab_bar.remove(tab['widget'])
         self.tabs.remove(tab)
         if not self.tabs:
@@ -180,10 +208,23 @@ class FileViewer(Gtk.Window):
                 pass
         return True
 
-    #  nsxiv ─
+    # ── viewer dispatch ───────────────────────────────────────────────────────
+
+    def _launchViewer(self, tab):
+        path = tab['files'][tab['index']]
+        if os.path.splitext(path)[1].lower() in SVG_EXTS:
+            self._launchSVGview(path)
+        else:
+            self._launch_nsxiv(tab)
+
+    def _killViewer(self):
+        self._kill_nsxiv()
+        self._killSVGview()
+
+    # ── nsxiv ─────────────────────────────────────────────────────────────────
 
     def _launch_nsxiv(self, tab):
-        self._kill_nsxiv()
+        self._killViewer()
         xid = self._fresh_socket()
         self.nsxiv_proc = subprocess.Popen(
             ['nsxiv', '-b', '-e', str(xid), tab['files'][tab['index']]]
@@ -210,7 +251,107 @@ class FileViewer(Gtk.Window):
         if self.active is not None:
             GLib.idle_add(self._close_tab, self.active)
 
-    #  navigation 
+    # ── SVG display (GdkPixbuf / librsvg) ────────────────────────────────────
+
+    def _launchSVGview(self, path):
+        self._killViewer()
+        self._svg_path = path
+        self._svg_zoom = 1.0
+
+        scroll = Gtk.ScrolledWindow()
+        scroll.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+        scroll.get_style_context().add_class('svgScroll')
+        img = Gtk.Image()
+        img.set_halign(Gtk.Align.CENTER)
+        img.set_valign(Gtk.Align.CENTER)
+        scroll.add_with_viewport(img)
+        self.viewer_area.pack_start(scroll, True, True, 0)
+        scroll.show_all()
+
+        self._svg_scroll = scroll
+        self._svg_image  = img
+        GLib.idle_add(self._renderSVG)
+
+    def _renderSVG(self):
+        if not self._svg_path or not self._svg_image:
+            return
+        alloc = self.viewer_area.get_allocation()
+        w, h = max(alloc.width, 200), max(alloc.height, 200)
+        try:
+            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(
+                self._svg_path, int(w * self._svg_zoom), int(h * self._svg_zoom), True
+            )
+            self._svg_image.set_from_pixbuf(pixbuf)
+        except Exception:
+            pass
+
+    def _killSVGview(self):
+        if self._svg_scroll is not None:
+            self.viewer_area.remove(self._svg_scroll)
+            self._svg_scroll = None
+            self._svg_image  = None
+            self._svg_path   = None
+
+    # ── zoom ──────────────────────────────────────────────────────────────────
+
+    def _onZoomIn(self, *_):
+        if self._svg_path:
+            self._svg_zoom *= 1.2
+            self._renderSVG()
+        else:
+            self._sendKeyToNsxiv('plus')
+
+    def _onZoomOut(self, *_):
+        if self._svg_path:
+            self._svg_zoom = max(0.1, self._svg_zoom / 1.2)
+            self._renderSVG()
+        else:
+            self._sendKeyToNsxiv('minus')
+
+    def _sendKeyToNsxiv(self, keyStr):
+        """Send a key to the embedded nsxiv via XTest (bypasses synthetic-event filtering)."""
+        socks = self.viewer_area.get_children()
+        if not socks or not isinstance(socks[0], Gtk.Socket):
+            return
+        plug = socks[0].get_plug_window()
+        if plug is None:
+            return
+        xid = plug.get_xid()
+        try:
+            import ctypes
+            x11  = ctypes.CDLL('libX11.so.6')
+            xtst = ctypes.CDLL('libXtst.so.6')
+
+            x11.XOpenDisplay.restype = ctypes.c_void_p
+            dpy = x11.XOpenDisplay(None)
+            if not dpy:
+                return
+
+            x11.XStringToKeysym.restype = ctypes.c_ulong
+            keysym  = x11.XStringToKeysym(keyStr.encode())
+            keycode = x11.XKeysymToKeycode(ctypes.c_void_p(dpy), keysym)
+
+            # Focus nsxiv's plug window so it receives the key event
+            x11.XSetInputFocus(ctypes.c_void_p(dpy), xid, 1, 0)  # RevertToPointerRoot=1
+
+            # 'plus' is a shifted keysym — fake Shift_L around it so nsxiv sees '+'
+            needShift = (keyStr == 'plus')
+            if needShift:
+                shiftSym  = x11.XStringToKeysym(b'Shift_L')
+                shiftCode = x11.XKeysymToKeycode(ctypes.c_void_p(dpy), shiftSym)
+                xtst.XTestFakeKeyEvent(ctypes.c_void_p(dpy), shiftCode, True, 0)
+
+            xtst.XTestFakeKeyEvent(ctypes.c_void_p(dpy), keycode, True,  0)  # press
+            xtst.XTestFakeKeyEvent(ctypes.c_void_p(dpy), keycode, False, 0)  # release
+
+            if needShift:
+                xtst.XTestFakeKeyEvent(ctypes.c_void_p(dpy), shiftCode, False, 0)
+            x11.XFlush(ctypes.c_void_p(dpy))
+            x11.XCloseDisplay(ctypes.c_void_p(dpy))
+        except Exception:
+            pass
+
+    # ── navigation ────────────────────────────────────────────────────────────
 
     def _update_nav_buttons(self):
         if self.active is None:
@@ -223,19 +364,19 @@ class FileViewer(Gtk.Window):
             self.active['index'] -= 1
             self._update_tab_label(self.active)
             self._update_nav_buttons()
-            self._launch_nsxiv(self.active)
+            self._launchViewer(self.active)
 
     def _on_next(self, *_):
         if self.active and self.active['index'] < len(self.active['files']) - 1:
             self.active['index'] += 1
             self._update_tab_label(self.active)
             self._update_nav_buttons()
-            self._launch_nsxiv(self.active)
+            self._launchViewer(self.active)
 
-    #  cleanup 
+    # ── cleanup ───────────────────────────────────────────────────────────────
 
     def _on_destroy(self, *_):
-        self._kill_nsxiv()
+        self._killViewer()
         for p in (self._pid_file, self._json_file):
             try:
                 os.remove(p)
@@ -277,6 +418,19 @@ def main():
         .tab_close:hover label { color: #E8E8E8; }
         label           { color: #E8E8E8; }
         #viewer_socket  { background-color: #1A1A1A; }
+        .svgScroll, .svgScroll viewport { background-color: #1A1A1A; }
+        .zoomOverlay button {
+            background-image: none;
+            background-color: rgba(40, 40, 40, 0.55);
+            color: #E8E8E8; border: none; border-radius: 2px;
+            padding: 2px 8px; font-size: 13px; font-weight: bold;
+            min-width: 0; box-shadow: none; text-shadow: none;
+            -gtk-icon-shadow: none; }
+        .zoomOverlay button:hover  { background-image: none;
+                                     background-color: rgba(74, 74, 74, 0.90); }
+        .zoomOverlay button:active { background-image: none;
+                                     background-color: rgba(26, 26, 26, 0.90); }
+        .zoomOverlay button label  { color: #E8E8E8; }
     """
 
     provider = Gtk.CssProvider()
