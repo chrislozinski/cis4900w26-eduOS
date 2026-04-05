@@ -24,6 +24,14 @@ for_window [title="AppWindow"] floating disable
 for_window [instance="folder_viewer"] floating disable
 for_window [instance="folder_viewer"] move container to mark viewer_tabs
 
+# zathura PDF viewer, opened from folder view
+for_window [class="Zathura"] floating disable
+for_window [class="Zathura"] move container to mark viewer_tabs
+
+# fileViewer.py image viewer (nsxiv embedded inside GTK window)
+for_window [instance="file_viewer"] floating disable
+for_window [instance="file_viewer"] move container to mark viewer_tabs
+
 # classroom manager, teacher widget for enabling apps
 for_window [title="Classroom Manager"] floating disable
 for_window [title="Classroom Manager"] move container to mark viewer_tabs

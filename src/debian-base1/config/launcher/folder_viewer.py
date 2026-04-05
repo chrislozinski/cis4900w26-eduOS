@@ -6,18 +6,29 @@ import gi
 import os
 import sys
 import json
+import signal
 import getpass
+import subprocess
 
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk, GdkPixbuf, GLib
 
-# file type handlers that will map extensions to a command template, using {path} as placeholder atm
-# basically will be used so that specific apps run different file types
-# add those entries here when apps become available.
+# Temp dir shared with launcher.py so it can show open-viewer widgets
+VIEWER_DIR = os.path.expanduser('~/.cache/launcher_viewers')
+
+_SCRIPT_DIR  = os.path.dirname(os.path.abspath(__file__))
+_FILE_VIEWER = os.path.join(_SCRIPT_DIR, 'fileViewer.py')
+
+# file type handlers: extension -> argv prefix (path appended at open time)
 FILE_HANDLERS = {
-    # '.pdf':  'evince {path}',
-    # '.txt':  'xterm -e nano {path}',
-    # '.png':  'eog {path}',
+    '.pdf':  ['zathura'],
+    '.png':  ['python3', _FILE_VIEWER],
+    '.jpg':  ['python3', _FILE_VIEWER],
+    '.jpeg': ['python3', _FILE_VIEWER],
+    '.gif':  ['python3', _FILE_VIEWER],
+    '.bmp':  ['python3', _FILE_VIEWER],
+    '.svg':  ['python3', _FILE_VIEWER],
+    '.webp': ['python3', _FILE_VIEWER],
 }
 
 # map extensions to icon filenames under ~/.config/launcher/icons/
@@ -293,11 +304,41 @@ class FolderViewer(Gtk.Window):
         return False
 
     def open_file(self, path):
-        ext     = os.path.splitext(path)[1].lower()
-        handler = FILE_HANDLERS.get(ext)
-        if handler:
-            import subprocess
-            subprocess.Popen(handler.replace('{path}', path), shell=True)
+        ext = os.path.splitext(path)[1].lower()
+        cmd = FILE_HANDLERS.get(ext)
+        if not cmd:
+            return
+
+        if ext == '.pdf':
+            proc = subprocess.Popen(cmd + [path])
+            os.makedirs(VIEWER_DIR, exist_ok=True)
+            info_path = os.path.join(VIEWER_DIR, f'{proc.pid}.json')
+            with open(info_path, 'w') as f:
+                json.dump({'name': os.path.basename(path), 'pid': proc.pid}, f)
+            GLib.child_watch_add(
+                proc.pid,
+                lambda *_, p=info_path: os.path.exists(p) and os.remove(p)
+            )
+        else:
+            # images: signal running FileViewer or launch fresh
+            pid_file = os.path.join(VIEWER_DIR, 'fv.pid')
+            running = False
+            pid = None
+            if os.path.exists(pid_file):
+                try:
+                    pid = int(open(pid_file).read().strip())
+                    os.kill(pid, 0)
+                    running = True
+                except Exception:
+                    pass
+            if running:
+                pending = os.path.join(VIEWER_DIR, 'fv_pending')
+                with open(pending, 'w') as f:
+                    f.write(path)
+                os.kill(pid, signal.SIGUSR1)
+                subprocess.Popen(['i3-msg', '[title="Image View"] focus'])
+            else:
+                subprocess.Popen(cmd + [path])
 
 
 def main():

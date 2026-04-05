@@ -2,12 +2,10 @@
 """
 MakeCode Offline Editor
 Serves the pre-built staticpkg from /opt/makecode/static
-and renders it inside a native GTK + WebKit2 window.
+and renders it inside a native GTK and WebKit2 window.
 
-Teacher  → opens full editor directly (unchanged behaviour).
-Student  → opens a lesson landing page filtered by their classroom config,
-           with a Home bar to return from within a lesson. Student browser
-           data lives under ~/.local/share/makecode/<classId>/<username>/makecodeProfile/.
+Teacher: opens editor directly
+Student: opens a lesson landing page filtered by their classroom config
 """
 import gi
 import grp
