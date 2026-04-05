@@ -64,6 +64,9 @@ RUN apt-get update && apt-get install -y \
     gir1.2-gtk-3.0 \
     gir1.2-webkit2-4.1 \
     vifm \
+    zathura \
+    zathura-pdf-poppler \
+    nsxiv \
     libdbus-glib-1-2 \
     libxt6 \
     bzip2 \
@@ -92,6 +95,11 @@ RUN mkdir -p /opt/waterfox/distribution/extensions \
 # add the patched i3 binary with /usr/local/bin takong priority over /usr/bin
 COPY --from=i3-builder /i3/build/i3 /usr/local/bin/i3
 
+# Lock down zathura: no GUI chrome, disable the file-open command
+RUN mkdir -p /etc/skel/.config/zathura \
+    && printf 'set guioptions ""\nunmap o\nunmap O\n' \
+       > /etc/skel/.config/zathura/zathurarc
+
 # Set up default configuration directories in /etc/skel
 RUN mkdir -p /etc/skel/.config/i3 \
              /etc/skel/.config/i3status \
@@ -113,6 +121,7 @@ COPY config/launcher/folder_viewer.py       /etc/skel/.config/launcher/folder_vi
 COPY config/launcher/app-window.py          /etc/skel/.config/launcher/app-window.py
 COPY config/launcher/classroom_manager.py   /etc/skel/.config/launcher/classroom_manager.py
 COPY widgets/makecode/makecode-app.py       /etc/skel/.config/launcher/makecode-app.py
+COPY widgets/fileNav/fileViewer.py          /etc/skel/.config/launcher/fileViewer.py
 COPY widgets/library/library.py             /etc/skel/.config/launcher/library.py
 COPY config/launcher/lesson-config.py       /etc/skel/.config/launcher/lesson-config.py
 COPY config/launcher/waterfox-launcher.sh   /etc/skel/.config/launcher/waterfox-launcher.sh
@@ -137,6 +146,7 @@ RUN chmod +x /etc/skel/.config/launcher/launcher.py \
              /etc/skel/.config/launcher/app-window.py \
              /etc/skel/.config/launcher/classroom_manager.py \
              /etc/skel/.config/launcher/makecode-app.py \
+             /etc/skel/.config/launcher/fileViewer.py \
              /etc/skel/.config/launcher/library.py \
              /etc/skel/.config/launcher/lesson-config.py \
              /etc/skel/.config/launcher/waterfox-launcher.sh

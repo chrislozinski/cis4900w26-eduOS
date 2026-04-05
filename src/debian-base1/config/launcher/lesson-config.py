@@ -15,6 +15,39 @@ from gi.repository import Gtk, Gdk, GLib
 
 CLASSROOMS_FILE = '/shared/classrooms.json'
 
+LESSON_CATALOG = [
+    {
+        "id":          "course_csintro1",
+        "type":        "Course",
+        "title":       "CS Intro 1",
+        "description": "Core intro course with guided lessons and projects.",
+    },
+    {
+        "id":          "course_csintro2",
+        "type":        "Course",
+        "title":       "CS Intro 2",
+        "description": "Functions, tilemaps, logic, arrays, and projects.",
+    },
+    {
+        "id":          "course_csintro3",
+        "type":        "Course",
+        "title":       "CS Intro 3",
+        "description": "TypeScript-focused intermediate CS content.",
+    },
+    {
+        "id":          "skillmap_beginner",
+        "type":        "Skillmap",
+        "title":       "Beginner Skillmap",
+        "description": "Step-by-step interactive coding path.",
+    },
+    {
+        "id":          "open_editor",
+        "type":        "Editor",
+        "title":       "Open Free Editor",
+        "description": "Allow students to open the full MakeCode editor.",
+    },
+]
+
 
 def load_classrooms():
     if os.path.exists(CLASSROOMS_FILE):
@@ -142,6 +175,11 @@ class LessonConfig(Gtk.Window):
             Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL), False, False, 4)
 
         self.right_box.pack_start(self._build_library_section(cls), False, False, 0)
+
+        self.right_box.pack_start(
+            Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL), False, False, 6)
+
+        self.right_box.pack_start(self._build_lessons_section(cls), False, False, 0)
         self.right_box.show_all()
 
     def _build_library_section(self, cls):
@@ -264,6 +302,76 @@ class LessonConfig(Gtk.Window):
             self._error(str(e)); return
 
         self._show_detail(cls)
+
+    def _build_lessons_section(self, cls):
+        section = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+
+        hdr = Gtk.Label()
+        hdr.set_markup("<b>MakeCode Lessons</b>")
+        hdr.set_halign(Gtk.Align.START)
+        section.pack_start(hdr, False, False, 0)
+
+        note = Gtk.Label(label="Checked lessons appear on students' MakeCode home screen.")
+        note.set_halign(Gtk.Align.START)
+        note.get_style_context().add_class("dim-label")
+        section.pack_start(note, False, False, 0)
+
+        enabled_ids = set(cls.get('enabled_lessons', []))
+
+        frame = Gtk.Frame()
+        frame.get_style_context().add_class("inner-list")
+        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+        frame.add(vbox)
+
+        type_colors = {"Skillmap": "#7c4dbd", "Tutorial": "#3d9970", "Course": "#0078d4", "Editor": "#e0791d"}
+        shown_type = None
+
+        for lesson in LESSON_CATALOG:
+            if lesson["type"] != shown_type:
+                shown_type = lesson["type"]
+                sep_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
+                sep_box.set_margin_start(10); sep_box.set_margin_end(10)
+                sep_box.set_margin_top(6);   sep_box.set_margin_bottom(2)
+                sep_lbl = Gtk.Label()
+                color = type_colors.get(lesson["type"], "#666")
+                sep_lbl.set_markup(
+                    f'<small><b><span foreground="{color}">{lesson["type"]}s</span></b></small>')
+                sep_lbl.set_halign(Gtk.Align.START)
+                sep_box.pack_start(sep_lbl, False, False, 0)
+                vbox.pack_start(sep_box, False, False, 0)
+
+            row_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+            row_box.set_margin_start(10); row_box.set_margin_end(10)
+            row_box.set_margin_top(5);   row_box.set_margin_bottom(5)
+
+            cb = Gtk.CheckButton()
+            cb.set_active(lesson["id"] in enabled_ids)
+            cb.connect("toggled", self._on_lesson_toggle, lesson["id"], cls)
+            row_box.pack_start(cb, False, False, 0)
+
+            desc = Gtk.Label()
+            desc.set_markup(
+                f'<b>{lesson["title"]}</b>  '
+                f'<small>{lesson["description"]}</small>')
+            desc.set_halign(Gtk.Align.START)
+            row_box.pack_start(desc, True, True, 0)
+
+            vbox.pack_start(row_box, False, False, 0)
+
+        section.pack_start(frame, False, False, 0)
+        return section
+
+    def _on_lesson_toggle(self, cb, lesson_id, cls):
+        ids = cls.setdefault('enabled_lessons', [])
+        if cb.get_active():
+            if lesson_id not in ids:
+                ids.append(lesson_id)
+        else:
+            cls['enabled_lessons'] = [i for i in ids if i != lesson_id]
+        try:
+            save_classrooms(self.data)
+        except RuntimeError as e:
+            self._error(str(e))
 
     def _error(self, msg):
         d = Gtk.MessageDialog(

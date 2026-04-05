@@ -12,9 +12,10 @@ import sys
 import getpass
 
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, Gdk, GdkPixbuf
+from gi.repository import Gtk, Gdk, GdkPixbuf, GLib
 
 CLASSROOMS_FILE     = '/shared/classrooms.json'
+VIEWER_DIR          = os.path.expanduser('~/.cache/launcher_viewers')
 AVAILABLE_APPS_FILE = os.path.join(
     os.path.expanduser('~/.config/launcher'), 'available-apps.json')
 
@@ -190,6 +191,13 @@ class LauncherWindow(Gtk.Window):
             button = self.create_launcher_button(item)
             self.items_box.pack_start(button, False, False, 0)
         
+        # Open-viewers section — sits directly below the last item inside the scroll area
+        self.viewer_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
+        self.viewer_box.set_margin_top(6)
+        self._viewer_widgets = {}  # pid -> (button, filename_label)
+        self.items_box.pack_start(self.viewer_box, False, False, 0)
+        GLib.timeout_add(1500, self.refresh_viewer_widgets)
+
         # Minimize or expand toggle button at the bottom of bar
         self.toggle_button = Gtk.Button()
         self.toggle_button.set_relief(Gtk.ReliefStyle.NONE)
@@ -441,6 +449,72 @@ class LauncherWindow(Gtk.Window):
         
         apply_to_children(dialog)
     
+    def refresh_viewer_widgets(self):
+        """Poll VIEWER_DIR and sync sidebar buttons with currently open viewers."""
+        try:
+            os.makedirs(VIEWER_DIR, exist_ok=True)
+            entries = {f for f in os.listdir(VIEWER_DIR) if f.endswith('.json')}
+            current_pids = {int(f[:-5]) for f in entries}
+        except Exception:
+            return True
+
+        existing_pids = set(self._viewer_widgets.keys())
+
+        for pid in existing_pids - current_pids:
+            btn, lbl = self._viewer_widgets.pop(pid)
+            if lbl in self.item_labels:
+                self.item_labels.remove(lbl)
+            self.viewer_box.remove(btn)
+
+        for pid in current_pids - existing_pids:
+            try:
+                with open(os.path.join(VIEWER_DIR, f'{pid}.json')) as f:
+                    info = json.load(f)
+                name = info.get('name', '?')
+            except Exception:
+                continue
+
+            btn = Gtk.Button()
+            btn.set_relief(Gtk.ReliefStyle.NONE)
+            btn.set_size_request(180, 50)
+
+            hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+            hbox.set_margin_start(5)
+            hbox.set_margin_end(5)
+            icon_widget = self.create_icon_widget('stylized/htmlWebFileSTYL.png')
+            hbox.pack_start(icon_widget, False, False, 0)
+            short = name if len(name) <= 16 else name[:13] + '...'
+            lbl = Gtk.Label(label=short)
+            lbl.set_halign(Gtk.Align.START)
+            hbox.pack_start(lbl, True, True, 0)
+            btn.add(hbox)
+            btn.connect('clicked', self._on_viewer_click, pid)
+
+            self.viewer_box.pack_start(btn, False, False, 0)
+            self.viewer_box.show_all()
+            self.item_labels.append(lbl)
+            if self.is_collapsed:
+                lbl.hide()
+
+            self._viewer_widgets[pid] = (btn, lbl)
+            # Instant cleanup when the viewer process exits (no poll delay)
+            GLib.child_watch_add(pid, lambda *_: self.refresh_viewer_widgets())
+
+        return True  # keep polling
+
+    def _on_viewer_click(self, button, pid):
+        """Focus the viewer tab — same lookup pattern as on_app_click."""
+        try:
+            with open(os.path.join(VIEWER_DIR, f'{pid}.json')) as f:
+                title = json.load(f).get('name', '')
+            open_tabs = self.get_open_tabs()
+            if title in open_tabs:
+                subprocess.Popen(['i3-msg', f'[con_id="{open_tabs[title]}"] focus'])
+                return
+        except Exception:
+            pass
+        subprocess.Popen(['i3-msg', f'[pid={pid}] focus'])
+
     def on_delete_event(self, widget, event):
         """Prevent Sidebar from being closed"""
         return True  # Returning True prevents the window from closing

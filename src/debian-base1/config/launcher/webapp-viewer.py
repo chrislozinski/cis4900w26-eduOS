@@ -141,7 +141,10 @@ def main():
                 if any(host == d or host.endswith('.' + d) for d in _AD_DOMAINS):
                     decision.ignore()
                     return True
-                if (host != _origin
+                # Only block when a user-initiated link click would navigate
+                # away from the original domain (redirects/forms should be allowed).
+                if (action.get_navigation_type() == WebKit2.NavigationType.LINK_CLICKED
+                        and host != _origin
                         and not host.endswith('.' + _origin)
                         and not _origin.endswith('.' + host)):
                     decision.ignore()
