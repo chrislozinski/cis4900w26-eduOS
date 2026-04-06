@@ -55,10 +55,10 @@ RUN apt-get update && apt-get install -y \
     xterm \
     curl \
     wget \
-    git \     
+    git \
     vim \
     nano \
-    python3 \ 
+    python3 \
     python3-gi \
     python3-gi-cairo \
     gir1.2-gtk-3.0 \
@@ -71,7 +71,9 @@ RUN apt-get update && apt-get install -y \
     libxt6 \
     bzip2 \
     picom \
-    gstreamer1.0-alsa \
+    && apt-get install -y --no-install-recommends \
+    pulseaudio \
+    gstreamer1.0-pulseaudio \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # MakeCode static editor using the pre built HTML/JS/CSS to avoid runtime deps 
@@ -199,8 +201,8 @@ RUN /usr/local/bin/config-launcher.sh
 # cannot list the directory (r) so file pickers get "Permission denied".
 RUN chmod 751 /opt
 
-# ALSA null sink: gives GStreamer/WebKit2 a valid audio device in the container (no hardware needed)
-RUN printf 'pcm.!default { type null }\nctl.!default { type null }\n' > /etc/asound.conf
+# Force fakesink to prevent AudioWorklet freeze. this makes the audio silent but the game effects and audio blocks work
+ENV GST_AUDIO_SINK=fakesink
 
 # dbus identity, RDP encryption keys and create the directory xrdp needs to store its process ID
 RUN mkdir -p /run/dbus && dbus-uuidgen > /etc/machine-id

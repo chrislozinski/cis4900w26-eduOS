@@ -949,6 +949,10 @@ class MakeCodeWindow(Gtk.Window):
             "else if(i&&typeof Request!=='undefined'&&i instanceof Request){"
             "var u=rw(i.url);if(u!==i.url)i=new Request(u,i);}"
             "return of.call(this,i,n);};}"
+            "var _AC=window.AudioContext||window.webkitAudioContext;"
+            "if(_AC){var _P=function(){var c=new _AC();c.resume().catch(function(){});return c;};"
+            "_P.prototype=_AC.prototype;"
+            "window.AudioContext=window.webkitAudioContext=_P;}"
             "})();"
         )
         try:

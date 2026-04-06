@@ -6,6 +6,9 @@ font pango:monospace 8
 exec --no-startup-id xsetroot -solid "#292D3E"
 exec --no-startup-id picom --config ~/.config/picom.conf --backend xrender -b
 
+# start PulseAudio with null sink fallback for RDP audio , currently not working
+exec --no-startup-id bash -c "pulseaudio --start --exit-idle-time=-1 || pulseaudio -D"
+
 # launch workspace layout 
 exec --no-startup-id "i3-msg 'workspace 1; append_layout ~/.config/i3/layout.json'"
 
