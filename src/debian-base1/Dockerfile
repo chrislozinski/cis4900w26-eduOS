@@ -70,6 +70,8 @@ RUN apt-get update && apt-get install -y \
     libdbus-glib-1-2 \
     libxt6 \
     bzip2 \
+    picom \
+    gstreamer1.0-alsa \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # MakeCode static editor using the pre built HTML/JS/CSS to avoid runtime deps 
@@ -114,6 +116,8 @@ COPY config/i3/layout.json /etc/skel/.config/i3/layout.json
 
 # Copy vifm config (kept for potential backend use)
 COPY config/interface/vifmrc /etc/skel/.config/vifm/vifmrc
+# Copy picom compositor config
+COPY config/interface/picom.conf /etc/skel/.config/picom.conf
 
 # Copy launcher scripts
 COPY config/launcher/launcher.py            /etc/skel/.config/launcher/launcher.py
@@ -156,6 +160,7 @@ COPY config/users/create-users.sh /usr/local/bin/create-users.sh
 COPY config/users/user-roles.sh /usr/local/bin/user-roles.sh
 COPY config/users/config-user-i3.sh /usr/local/bin/config-user-i3.sh
 COPY config/interface/config-vifm.sh /usr/local/bin/config-vifm.sh
+COPY config/interface/config-gtk.sh /usr/local/bin/config-gtk.sh
 COPY config/launcher/config-launcher.sh /usr/local/bin/config-launcher.sh
 COPY config/launcher/webapp-viewer.py /etc/skel/.config/launcher/webapp-viewer.py
 
@@ -163,6 +168,7 @@ RUN chmod +x /usr/local/bin/create-users.sh \
              /usr/local/bin/user-roles.sh \
              /usr/local/bin/config-user-i3.sh \
              /usr/local/bin/config-vifm.sh \
+             /usr/local/bin/config-gtk.sh \
              /etc/skel/.config/launcher/webapp-viewer.py \
              /usr/local/bin/config-launcher.sh
 
@@ -181,9 +187,20 @@ RUN /usr/local/bin/config-user-i3.sh
 # Configure vifm for all users
 RUN /usr/local/bin/config-vifm.sh
 
+# Configure GTK file chooser for all users
+RUN /usr/local/bin/config-gtk.sh
+
 # Configure launcher for all users
 # (also bootstraps /shared/classrooms.json with teacher-group write access)
 RUN /usr/local/bin/config-launcher.sh
+
+# Remove directory-listing permission from system paths for non-root users.
+# 751 = rwxr-x--x: others keep traverse (x) so known paths still work, but
+# cannot list the directory (r) so file pickers get "Permission denied".
+RUN chmod 751 /opt
+
+# ALSA null sink: gives GStreamer/WebKit2 a valid audio device in the container (no hardware needed)
+RUN printf 'pcm.!default { type null }\nctl.!default { type null }\n' > /etc/asound.conf
 
 # dbus identity, RDP encryption keys and create the directory xrdp needs to store its process ID
 RUN mkdir -p /run/dbus && dbus-uuidgen > /etc/machine-id

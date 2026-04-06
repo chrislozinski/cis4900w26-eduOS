@@ -2,8 +2,9 @@
 set $mod Mod1
 font pango:monospace 8
 
-# desktop background 
+# desktop background
 exec --no-startup-id xsetroot -solid "#292D3E"
+exec --no-startup-id picom --config ~/.config/picom.conf --backend xrender -b
 
 # launch workspace layout 
 exec --no-startup-id "i3-msg 'workspace 1; append_layout ~/.config/i3/layout.json'"

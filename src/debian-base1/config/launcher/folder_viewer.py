@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """
 Simple Folder Viewer 
+I'll eventually add more functionality to this but for now 
+this functions really cleanly and decently 
 """
 import gi
 import os
@@ -13,13 +15,13 @@ import subprocess
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk, GdkPixbuf, GLib
 
-# Temp dir shared with launcher.py so it can show open-viewer widgets
+# Temp dir shared with launcher.py so it can show open viewer widgets
 VIEWER_DIR = os.path.expanduser('~/.cache/launcher_viewers')
 
 _SCRIPT_DIR  = os.path.dirname(os.path.abspath(__file__))
 _FILE_VIEWER = os.path.join(_SCRIPT_DIR, 'fileViewer.py')
 
-# file type handlers: extension -> argv prefix (path appended at open time)
+# file type handlers, extension to argv prefix, the path appended at time of open
 FILE_HANDLERS = {
     '.pdf':  ['zathura'],
     '.png':  ['python3', _FILE_VIEWER],
@@ -43,7 +45,7 @@ FILE_TYPE_ICONS = {
     '.webp': 'stylized/photoFileSTYL.svg',
 }
 
-# central icon paths relative to ~/.config/launcher/icons/
+# icon paths relative to ~/.config/launcher/icons/
 FOLDER_ICON = 'dark/folder.svg'
 DEFAULT_FILE_ICON = 'dark/book.svg'
 

@@ -155,7 +155,7 @@ class LauncherWindow(Gtk.Window):
         self.username_label.set_halign(Gtk.Align.START)
         self.header_box.pack_start(self.username_label, True, True, 0)
         
-        # Logout button with icon instead of ">"
+        # Logout button 
         self.logout_button = Gtk.Button()
         self.logout_button.set_size_request(30, 30)
         self.logout_button.set_tooltip_text("Logout")
@@ -166,7 +166,7 @@ class LauncherWindow(Gtk.Window):
             self.logout_button.set_image(Gtk.Image.new_from_pixbuf(pixbuf))
             self.logout_button.set_always_show_image(True)
         except Exception:
-            self.logout_button.set_label(">")  # fallback
+            self.logout_button.set_label(">")  # fallback for logout to just an arrow
         self.logout_button.connect('clicked', self.on_logout_clicked)
         self.header_box.pack_end(self.logout_button, False, False, 0)
         
@@ -191,10 +191,10 @@ class LauncherWindow(Gtk.Window):
             button = self.create_launcher_button(item)
             self.items_box.pack_start(button, False, False, 0)
         
-        # Open-viewers section — sits directly below the last item inside the scroll area
+        # Open viewers section, sits below last item inside the scroll area
         self.viewer_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
         self.viewer_box.set_margin_top(6)
-        self._viewer_widgets = {}  # pid -> (button, filename_label)
+        self._viewer_widgets = {}  # pid to (button, filename_label)
         self.items_box.pack_start(self.viewer_box, False, False, 0)
         GLib.timeout_add(1500, self.refresh_viewer_widgets)
 
@@ -258,7 +258,7 @@ class LauncherWindow(Gtk.Window):
         button.set_size_request(180, 50)
         button.set_relief(Gtk.ReliefStyle.NONE)
         
-        #  container for button
+        # container for button
         hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
         hbox.set_margin_start(5)
         hbox.set_margin_end(5)
@@ -497,13 +497,15 @@ class LauncherWindow(Gtk.Window):
                 lbl.hide()
 
             self._viewer_widgets[pid] = (btn, lbl)
-            # Instant cleanup when the viewer process exits (no poll delay)
+            # cleanup when the viewer process exits to avoid poll delay
             GLib.child_watch_add(pid, lambda *_: self.refresh_viewer_widgets())
 
         return True  # keep polling
 
     def _on_viewer_click(self, button, pid):
-        """Focus the viewer tab — same lookup pattern as on_app_click."""
+        """Focus the viewer tab
+            Uses same lookup pattern as on_app_click
+        """
         try:
             with open(os.path.join(VIEWER_DIR, f'{pid}.json')) as f:
                 title = json.load(f).get('name', '')
@@ -534,7 +536,7 @@ class LauncherWindow(Gtk.Window):
             target = self.collapsed_width
             self.set_size_request(target, -1)
             self.resize(target, self.get_size()[1])
-            subprocess.Popen(['i3-msg', f'[title="Appbar"] resize shrink width {diff} px'])
+            GLib.idle_add(lambda: subprocess.Popen(['i3-msg', f'[title="Appbar"] resize shrink width {diff} px']) and False)
         else:
             self.username_label.show()
             self.logout_button.show()
@@ -545,18 +547,17 @@ class LauncherWindow(Gtk.Window):
             target = self.expanded_width
             self.set_size_request(target, -1)
             self.resize(target, self.get_size()[1])
-            subprocess.Popen(['i3-msg', f'[title="Appbar"] resize grow width {diff} px'])
+            GLib.idle_add(lambda: subprocess.Popen(['i3-msg', f'[title="Appbar"] resize grow width {diff} px']) and False)
 
 def main():
     role       = get_user_role()
     config_dir = os.path.expanduser('~/.config/launcher')
 
     if len(sys.argv) > 1:
-        # Explicit config path passed — honour it (original behaviour)
+        # Explicit config path passed 
         config_path = sys.argv[1]
     else:
-        # Resolve the role-specific config and write it to a temp file so
-        # LauncherWindow can receive a plain file path as it always has.
+        # Resolve the role specific config, write it to a temp file so LauncherWindow receives a plain file path 
         resolved    = load_config(config_dir, role)
         config_path = os.path.join(config_dir, f'appbar-config-{role}-resolved.json')
         with open(config_path, 'w') as f:

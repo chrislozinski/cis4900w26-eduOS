@@ -726,6 +726,10 @@ class MakeCodeWindow(Gtk.Window):
             settings.set_enable_html5_local_storage(True)
         except Exception:
             pass
+        try:
+            settings.set_media_playback_requires_user_gesture(False)
+        except Exception:
+            pass
         self.webview.connect("context-menu", lambda *a: True)
         self.webview.connect("decide-policy", self._on_makecode_decide_policy)
         self.webview.connect("load-changed", self._on_makecode_load_changed)
@@ -936,7 +940,7 @@ class MakeCodeWindow(Gtk.Window):
             "'https://arcade.makecode.com','http://arcade.makecode.com'];"
             "function rw(u){if(u==null||typeof u!=='string')return u;"
             "for(var i=0;i<H.length;i++){if(u.indexOf(H[i])===0){var t=u.slice(H[i].length);"
-            "if(t.indexOf('/api/')===0)return L+t;break;}}return u;}"
+            "return L+t;}}return u;}"
             "var xo=XMLHttpRequest.prototype.open;"
             "XMLHttpRequest.prototype.open=function(m,u){var r=[].slice.call(arguments,2);"
             "return xo.apply(this,[m,rw(u)].concat(r));};"
@@ -984,7 +988,7 @@ class MakeCodeWindow(Gtk.Window):
                 rewrite = False
                 if nav_url.startswith(arcade_prefixes):
                     rewrite = True
-                elif nav_url.startswith(cdn_prefixes) and path.startswith("/api/"):
+                elif nav_url.startswith(cdn_prefixes):
                     rewrite = True
                 if rewrite:
                     local = base + path

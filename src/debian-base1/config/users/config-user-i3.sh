@@ -12,6 +12,7 @@ setup_i3_for_user() {
     cp /etc/skel/.config/i3/config "$home_dir/.config/i3/config"
     cp /etc/skel/.config/i3status/config "$home_dir/.config/i3status/config"
     cp /etc/skel/.config/vifm/vifmrc "$home_dir/.config/vifm/vifmrc"
+    cp /etc/skel/.config/picom.conf "$home_dir/.config/picom.conf"
     
     chown -R "$username:$username" "$home_dir/.config"
     
