@@ -49,6 +49,7 @@ RUN apt-get update && apt-get install -y \
     xorgxrdp \
     x11-xserver-utils \
     dbus \
+    dbus-x11 \
     sudo \
     openssl \
     tini \
@@ -72,8 +73,21 @@ RUN apt-get update && apt-get install -y \
     bzip2 \
     picom \
     && apt-get install -y --no-install-recommends \
-    pulseaudio \
-    gstreamer1.0-pulseaudio \
+    pipewire \
+    pipewire-pulse \
+    wireplumber \
+    pulseaudio-utils \
+    gstreamer1.0-pipewire \
+    gstreamer1.0-libav \
+    gstreamer1.0-plugins-good \
+    gstreamer1.0-plugins-bad \
+    gstreamer1.0-tools \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# pipewire-module-xrdp is in bookworm-backports, bridges PipeWire audio to xrdp
+RUN echo "deb http://deb.debian.org/debian bookworm-backports main" >> /etc/apt/sources.list \
+    && apt-get update \
+    && apt-get install -y -t bookworm-backports pipewire-module-xrdp \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # MakeCode static editor using the pre built HTML/JS/CSS to avoid runtime deps 
@@ -131,6 +145,7 @@ COPY widgets/fileNav/fileViewer.py          /etc/skel/.config/launcher/fileViewe
 COPY widgets/library/library.py             /etc/skel/.config/launcher/library.py
 COPY config/launcher/lesson-config.py       /etc/skel/.config/launcher/lesson-config.py
 COPY config/launcher/waterfox-launcher.sh   /etc/skel/.config/launcher/waterfox-launcher.sh
+COPY config/launcher/start-audio.sh        /etc/skel/.config/launcher/start-audio.sh
 
 # Copy sidebar configs as a generic fallback + role-specific
 COPY config/launcher/appbar-config.json          /etc/skel/.config/launcher/appbar-config.json
@@ -155,7 +170,8 @@ RUN chmod +x /etc/skel/.config/launcher/launcher.py \
              /etc/skel/.config/launcher/fileViewer.py \
              /etc/skel/.config/launcher/library.py \
              /etc/skel/.config/launcher/lesson-config.py \
-             /etc/skel/.config/launcher/waterfox-launcher.sh
+             /etc/skel/.config/launcher/waterfox-launcher.sh \
+             /etc/skel/.config/launcher/start-audio.sh
 
 # Copy setup scripts
 COPY config/users/create-users.sh /usr/local/bin/create-users.sh
@@ -183,7 +199,7 @@ RUN /usr/local/bin/create-users.sh
 # Set up role-based access control 
 RUN /usr/local/bin/user-roles.sh
 
-# Configure i3 for all users 
+# Configure i3 for all users
 RUN /usr/local/bin/config-user-i3.sh
 
 # Configure vifm for all users
@@ -201,8 +217,8 @@ RUN /usr/local/bin/config-launcher.sh
 # cannot list the directory (r) so file pickers get "Permission denied".
 RUN chmod 751 /opt
 
-# Force fakesink to prevent AudioWorklet freeze. this makes the audio silent but the game effects and audio blocks work
-ENV GST_AUDIO_SINK=fakesink
+# XDG_RUNTIME_DIR parent — users mkdir their own /run/user/<uid>/ at session start
+RUN mkdir -p /run/user && chmod 1777 /run/user
 
 # dbus identity, RDP encryption keys and create the directory xrdp needs to store its process ID
 RUN mkdir -p /run/dbus && dbus-uuidgen > /etc/machine-id

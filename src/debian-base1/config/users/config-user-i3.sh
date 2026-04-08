@@ -13,8 +13,15 @@ setup_i3_for_user() {
     cp /etc/skel/.config/i3status/config "$home_dir/.config/i3status/config"
     cp /etc/skel/.config/vifm/vifmrc "$home_dir/.config/vifm/vifmrc"
     cp /etc/skel/.config/picom.conf "$home_dir/.config/picom.conf"
-    
+
     chown -R "$username:$username" "$home_dir/.config"
+
+    # write .xsession — XDG_RUNTIME_DIR and session D-Bus must be set before i3 starts
+    # so every child process (pipewire, wireplumber, webkit2, gstreamer) inherits both
+    printf '#!/bin/bash\nexport XDG_RUNTIME_DIR="/run/user/$(id -u)"\nmkdir -p "$XDG_RUNTIME_DIR"\nchmod 700 "$XDG_RUNTIME_DIR"\nexec dbus-launch --exit-with-session i3\n' \
+        > "$home_dir/.xsession"
+    chmod +x "$home_dir/.xsession"
+    chown "$username:$username" "$home_dir/.xsession"
     
     echo "configured i3 for user: $username"
 }
