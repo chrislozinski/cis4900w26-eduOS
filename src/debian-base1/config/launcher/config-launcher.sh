@@ -19,6 +19,10 @@ setup_launcher_for_user() {
     cp /etc/skel/.config/launcher/library.py               "$home_dir/.config/launcher/library.py"
     cp /etc/skel/.config/launcher/lesson-config.py         "$home_dir/.config/launcher/lesson-config.py"
     cp /etc/skel/.config/launcher/waterfox-launcher.sh     "$home_dir/.config/launcher/waterfox-launcher.sh"
+    mkdir -p "$home_dir/.config/launcher/network"
+    if [ -d "/etc/skel/.config/launcher/network" ]; then
+        cp -r /etc/skel/.config/launcher/network/* "$home_dir/.config/launcher/network/" 2>/dev/null || true
+    fi
 
     # sidebar configs, role resolved at runtime by launcher.py
     cp /etc/skel/.config/launcher/appbar-config.json          "$home_dir/.config/launcher/appbar-config.json"
@@ -44,6 +48,9 @@ setup_launcher_for_user() {
     chmod +x "$home_dir/.config/launcher/library.py"
     chmod +x "$home_dir/.config/launcher/lesson-config.py"
     chmod +x "$home_dir/.config/launcher/waterfox-launcher.sh"
+    if [ -d "$home_dir/.config/launcher/network" ]; then
+        chmod +x "$home_dir/.config/launcher/network/"*.py 2>/dev/null || true
+    fi
     
     #  Documents directory 
     mkdir -p "$home_dir/Documents"
@@ -77,3 +84,16 @@ for user in $users; do
 done
 
 echo "Sidebar configured for all users"
+
+# Optional: if state-sync units are present in the image, install and enable them.
+if [ -d /etc/skel/.config/launcher/systemd ]; then
+    cp /etc/skel/.config/launcher/systemd/*.service /etc/systemd/system/ 2>/dev/null || true
+fi
+if [ -f /etc/systemd/system/student-state-agent.service ]; then
+    mkdir -p /etc/systemd/system/multi-user.target.wants
+    ln -sf /etc/systemd/system/student-state-agent.service /etc/systemd/system/multi-user.target.wants/student-state-agent.service
+fi
+if [ -f /etc/systemd/system/teacher-state-publisher.service ]; then
+    mkdir -p /etc/systemd/system/multi-user.target.wants
+    ln -sf /etc/systemd/system/teacher-state-publisher.service /etc/systemd/system/multi-user.target.wants/teacher-state-publisher.service
+fi

@@ -27,6 +27,7 @@ from gi.repository import Gtk, Gdk, WebKit2, GLib
 
 STATIC_DIR      = "/opt/makecode/static"
 CLASSROOMS_FILE = "/shared/classrooms.json"
+LOCAL_STUDENT_STATE_FILE = os.path.expanduser("~/.cache/cis4900/student-state.json")
 
 
 def filesystem_safe_class_id(raw_id):
@@ -394,6 +395,18 @@ def get_student_classroom():
     class_id comes from classrooms.json \"id\" (e.g. class001) for the profile path.
     """
     username = getpass.getuser()
+    try:
+        with open(LOCAL_STUDENT_STATE_FILE, "r") as f:
+            state = json.load(f)
+        session = state.get("session", {})
+        env = state.get("environment", {})
+        name = session.get("classroom_name", "Your Class")
+        cid = session.get("classroom_id", "_unassigned")
+        lessons = env.get("enabled_lessons", [])
+        if isinstance(lessons, list):
+            return name, lessons, cid
+    except Exception:
+        pass
     try:
         with open(CLASSROOMS_FILE, "r") as f:
             data = json.load(f)

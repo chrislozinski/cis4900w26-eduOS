@@ -43,6 +43,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y \
     i3-wm \
     i3status \
+    py3status \
     suckless-tools \
     xrdp \
     xorg \
@@ -82,6 +83,8 @@ RUN apt-get update && apt-get install -y \
     gstreamer1.0-plugins-good \
     gstreamer1.0-plugins-bad \
     gstreamer1.0-tools \
+    dunst \
+    libnotify-bin \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # pipewire-module-xrdp is in bookworm-backports, bridges PipeWire audio to xrdp
@@ -123,7 +126,8 @@ RUN mkdir -p /etc/skel/.config/i3 \
              /etc/skel/.config/i3status \
              /etc/skel/.config/vifm \
              /etc/skel/.config/launcher \
-             /etc/skel/.config/launcher/icons
+             /etc/skel/.config/launcher/icons \ 
+             /etc/skel/.config/dunst
 
 # Copy i3 and i3status configs
 COPY config/i3/i3-config /etc/skel/.config/i3/config
@@ -147,7 +151,7 @@ COPY config/launcher/lesson-config.py       /etc/skel/.config/launcher/lesson-co
 COPY config/launcher/waterfox-launcher.sh   /etc/skel/.config/launcher/waterfox-launcher.sh
 COPY config/launcher/start-audio.sh        /etc/skel/.config/launcher/start-audio.sh
 
-# Copy sidebar configs as a generic fallback + role-specific
+# Copy sidebar configs as fallback and role specific
 COPY config/launcher/appbar-config.json          /etc/skel/.config/launcher/appbar-config.json
 COPY config/launcher/appbar-config-teacher.json  /etc/skel/.config/launcher/appbar-config-teacher.json
 COPY config/launcher/appbar-config-student.json  /etc/skel/.config/launcher/appbar-config-student.json
@@ -177,10 +181,12 @@ RUN chmod +x /etc/skel/.config/launcher/launcher.py \
 COPY config/users/create-users.sh /usr/local/bin/create-users.sh
 COPY config/users/user-roles.sh /usr/local/bin/user-roles.sh
 COPY config/users/config-user-i3.sh /usr/local/bin/config-user-i3.sh
+COPY config/interface/notifications.conf /etc/skel/.config/dunst/dunstrc
 COPY config/interface/config-vifm.sh /usr/local/bin/config-vifm.sh
 COPY config/interface/config-gtk.sh /usr/local/bin/config-gtk.sh
 COPY config/launcher/config-launcher.sh /usr/local/bin/config-launcher.sh
 COPY config/launcher/webapp-viewer.py /etc/skel/.config/launcher/webapp-viewer.py
+COPY config/launcher/wifi-connect.sh /usr/local/bin/wifi-connect.sh
 
 RUN chmod +x /usr/local/bin/create-users.sh \
              /usr/local/bin/user-roles.sh \

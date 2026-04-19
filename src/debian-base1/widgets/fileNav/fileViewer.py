@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-FileViewer — dark GTK chrome + nsxiv embedded via XEmbed (raster images)
-                              + GdkPixbuf inline viewer (SVG images).
-Single persistent instance; folder_viewer signals via SIGUSR1 to add tabs.
+FileViewer: nsxiv embedded via XEmbed (raster images)
+                              + GdkPixbuf inline viewer (SVG images)
+Single persistent instance; folder_viewer signals via SIGUSR1 to add tabs
 """
 import gi
 import os

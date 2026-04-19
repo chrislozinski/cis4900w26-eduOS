@@ -8,6 +8,7 @@ exec --no-startup-id picom --config ~/.config/picom.conf --backend xrender -b
 
 # PipeWire audio stack — sets XDG_RUNTIME_DIR, starts pipewire/wireplumber, loads xrdp sink
 exec --no-startup-id ~/.config/launcher/start-audio.sh
+exec --no-startup-id dunst
 
 # launch workspace layout 
 exec --no-startup-id "i3-msg 'workspace 1; append_layout ~/.config/i3/layout.json'"
@@ -80,8 +81,24 @@ bindsym --border button3 nop
 default_border pixel 0
 default_floating_border pixel 0
 
-# i3 status bar 
+# i3 status bar
 bar {
-    status_command i3status -c ~/.config/i3status/config
+    status_command py3status -c ~/.config/i3status/config
     position bottom
+    tray_output primary
+    colors {
+        background #262626
+        statusline #ffffff
+        separator  #444444
+        focused_workspace  #3c3c3c #3c3c3c #ffffff
+        active_workspace   #262626 #262626 #ffffff
+        inactive_workspace #262626 #262626 #888888
+        urgent_workspace   #900000 #900000 #ffffff
+    }
 }
+
+bindsym $mod+shift+n exec xterm -e nmtui
+
+bindsym XF86AudioRaiseVolume exec --no-startup-id sh -c "pactl set-sink-volume @DEFAULT_SINK@ +5% && notify-send -t 800 -h int:value:\$(pactl get-sink-volume @DEFAULT_SINK@ | grep -oP '\\d+(?=%)' | head -1) 'Volume' ''"
+bindsym XF86AudioLowerVolume exec --no-startup-id sh -c "pactl set-sink-volume @DEFAULT_SINK@ -5% && notify-send -t 800 -h int:value:\$(pactl get-sink-volume @DEFAULT_SINK@ | grep -oP '\\d+(?=%)' | head -1) 'Volume' ''"
+bindsym XF86AudioMute        exec --no-startup-id sh -c "pactl set-sink-mute @DEFAULT_SINK@ toggle && notify-send -t 800 'Volume' 'Muted'"

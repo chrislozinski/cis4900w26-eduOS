@@ -3,6 +3,7 @@ general {
     interval = 5
 }
 
+order += "wireless _first_"
 order += "disk /"
 order += "load"
 order += "memory"
@@ -24,4 +25,10 @@ memory {
 
 tztime local {
     format = "%Y-%m-%d %H:%M:%S"
+}
+
+wireless _first_ {
+    format_up   = "wifi: %essid"
+    format_down = "wifi: down"
+    on_click 1  = "exec wifi-connect.sh"
 }
