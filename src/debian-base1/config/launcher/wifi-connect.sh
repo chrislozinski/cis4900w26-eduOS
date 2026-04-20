@@ -9,9 +9,8 @@ if [ -z "$WIFI_DEV" ]; then
     exit 1
 fi
 
-# Trigger async scan, then wait for results to populate
-nmcli dev wifi rescan ifname "$WIFI_DEV" 2>/dev/null || true
-sleep 2
+# Trigger scan and block until hardware sweep completes (up to 8s)
+nmcli -w 8 dev wifi rescan ifname "$WIFI_DEV" 2>/dev/null || true
 
 # List networks from populated scan cache
 NETWORKS=$(nmcli -t -f SSID dev wifi list ifname "$WIFI_DEV" 2>/dev/null \
@@ -22,15 +21,16 @@ if [ -z "$NETWORKS" ]; then
     exit 1
 fi
 
-# Show vertical network picker at bottom of screen
-SSID=$(printf '%s\n' "$NETWORKS" | dmenu -b -l 10 -p "WiFi:")
+# Show centered network picker
+SSID=$(printf '%s\n' "$NETWORKS" | rofi -dmenu -l 10 -p "WiFi:")
 [ -z "$SSID" ] && exit 0
 
 # Try saved profile first (silent)
 nmcli dev wifi connect "$SSID" ifname "$WIFI_DEV" 2>/dev/null && exit 0
 
-# Need password
-PASSWORD=$(dmenu -b -p "Password for $SSID:" </dev/null)
+# Width adapts to SSID length: prompt chars + 40ch input room; remove -password for non-obscured input
+PASS_WIDTH=$(( ${#SSID} + 40 ))
+PASSWORD=$(rofi -dmenu -password -lines 0 -p "Password for $SSID:" -theme-str "window {width: ${PASS_WIDTH}ch;}")
 [ -z "$PASSWORD" ] && exit 0
 
 nmcli dev wifi connect "$SSID" ifname "$WIFI_DEV" password "$PASSWORD" && \

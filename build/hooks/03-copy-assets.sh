@@ -5,6 +5,7 @@ SRC_ROOT="/usr/local/share/cis4900-src/src/debian-base1"
 
 mkdir -p /etc/skel/.config/i3 /etc/skel/.config/i3status /etc/skel/.config/vifm
 mkdir -p /etc/skel/.config/launcher/icons /etc/skel/.config/launcher/network
+mkdir -p /etc/skel/.config/rofi
 
 cp "${SRC_ROOT}/config/i3/i3-config" /etc/skel/.config/i3/config
 cp "${SRC_ROOT}/config/i3/i3status-config" /etc/skel/.config/i3status/config
@@ -46,6 +47,7 @@ cp "${SRC_ROOT}/config/launcher/wifi-connect.sh"   /usr/local/bin/wifi-connect.s
 
 mkdir -p /etc/skel/.config/dunst
 cp "${SRC_ROOT}/config/interface/notifications.conf" /etc/skel/.config/dunst/dunstrc
+cp "${SRC_ROOT}/config/interface/rofi-config.rasi" /etc/skel/.config/rofi/config.rasi
 
 mkdir -p /opt/makecode
 cp -r "${SRC_ROOT}/widgets/makecode/makecode-static" /opt/makecode/static

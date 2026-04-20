@@ -42,6 +42,8 @@ libdbus-glib-1-2
 libxt6
 bzip2
 network-manager
+wpasupplicant
+rofi
 wireless-regdb
 firmware-realtek
 alsa-utils

@@ -94,6 +94,9 @@ cp "${BUILD_DIR}/inject/gpu.conf" \
 mkdir -p "${LB_WORKDIR}/config/includes.chroot/etc/NetworkManager/conf.d"
 cp "${BUILD_DIR}/inject/nm-managed.conf" \
    "${LB_WORKDIR}/config/includes.chroot/etc/NetworkManager/conf.d/10-managed.conf"
+mkdir -p "${LB_WORKDIR}/config/includes.chroot/etc/polkit-1/rules.d"
+cp "${BUILD_DIR}/inject/10-network-manager.rules" \
+   "${LB_WORKDIR}/config/includes.chroot/etc/polkit-1/rules.d/10-network-manager.rules"
 
 # hooks: live-build requires 0XXX-*.hook.chroot convention
 HOOKS_DEST="${LB_WORKDIR}/config/hooks/live"
