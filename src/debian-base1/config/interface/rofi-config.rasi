@@ -1,49 +1,49 @@
 * {
-    font:               "Monospace 10";
-    border-color:       #444444;
-    text-color:         #ffffff;
-    background-color:   #262626;
+    font:               "JetBrains Mono Medium 11";
+    border-color:       #3a3a3a;
+    text-color:         #e8e8e8;
+    background-color:   #1e1e1e;
 }
 
 window {
     border:             1px solid;
-    border-radius:      4px;
-    width:              260px;
+    border-radius:      6px;
+    width:              300px;
     padding:            0px;
 }
 
 mainbox {
-    background-color:   #262626;
+    background-color:   #1e1e1e;
     padding:            0px;
     spacing:            0px;
 }
 
 inputbar {
-    background-color:   #333333;
-    padding:            6px 8px;
+    background-color:   #2a2a2a;
+    padding:            8px 10px;
     border:             0px 0px 1px 0px solid;
-    spacing:            6px;
+    spacing:            8px;
 }
 
 prompt, entry {
     background-color:   transparent;
-    text-color:         #ffffff;
+    text-color:         #e8e8e8;
 }
 
 listview {
-    background-color:   #262626;
-    padding:            4px 0px;
+    background-color:   #1e1e1e;
+    padding:            6px 0px;
     spacing:            0px;
 }
 
 element {
-    background-color:   #262626;
-    text-color:         #ffffff;
-    padding:            4px 8px;
+    background-color:   #1e1e1e;
+    text-color:         #e8e8e8;
+    padding:            6px 10px;
 }
 
 element selected {
-    background-color:   #3c3c3c;
+    background-color:   #2e4070;
     text-color:         #ffffff;
 }
 

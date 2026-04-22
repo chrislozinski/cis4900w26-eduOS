@@ -143,12 +143,13 @@ class LauncherWindow(Gtk.Window):
 
         self.is_collapsed = False
 
-        # CSS text sizing: font_px is DPI compensated
+        # CSS text sizing: font_px compensates for changing dpi based on the system, so theres dynamic sizing
         _css = Gtk.CssProvider()
         _css.load_from_data(f"""
             #username_label     {{ font-size: {self.font_px}px; font-weight: bold; }}
             #sidebar_item_label {{ font-size: {self.font_px}px; }}
             #icon_fallback      {{ font-size: {self.font_px}px; }}
+            #toggle_label       {{ font-size: {self.font_px}px; }}
         """.encode('utf-8'))  # font_px is a float, GTK3 CSS parses as double
         Gtk.StyleContext.add_provider_for_screen(
             Gdk.Screen.get_default(), _css,
@@ -247,7 +248,10 @@ class LauncherWindow(Gtk.Window):
         self.toggle_hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
         self.toggle_hbox.set_margin_start(5)
         self.toggle_arrow = Gtk.Label(label="<")
+        self.toggle_arrow.set_name("toggle_label") 
         self.toggle_label = Gtk.Label(label="Minimize")
+        self.toggle_label.set_name("toggle_label")
+
         self.toggle_hbox.pack_start(self.toggle_arrow, False, False, 0)
         self.toggle_hbox.pack_start(self.toggle_label, False, False, 0)
         self.toggle_button.add(self.toggle_hbox)

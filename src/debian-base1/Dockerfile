@@ -130,6 +130,7 @@ RUN mkdir -p /etc/skel/.config/i3 \
              /etc/skel/.config/polybar \
              /etc/skel/.config/launcher \
              /etc/skel/.config/launcher/icons \
+             /etc/skel/.config/launcher/network \
              /etc/skel/.config/dunst
 
 # Copy i3 and i3status configs
@@ -163,6 +164,16 @@ COPY config/launcher/appbar-config-student.json  /etc/skel/.config/launcher/appb
 # Seed classroom data (written to /shared at runtime by config-launcher.sh)
 COPY config/launcher/classrooms.json     /etc/skel/.config/launcher/classrooms.json
 COPY config/launcher/available-apps.json /etc/skel/.config/launcher/available-apps.json
+
+# Network sync package
+# /etc/skel copy: flat .py files accessible to each user at ~/.config/launcher/network/
+COPY network/ /etc/skel/.config/launcher/network/
+# /opt/cis4900 copy: python3 -m network.publisher runs from here (via network.sh)
+RUN mkdir -p /opt/cis4900
+COPY network/ /opt/cis4900/network/
+COPY config/launcher/classrooms.json /opt/cis4900/classrooms.json
+COPY network/network.sh /opt/cis4900/network.sh
+RUN chmod +x /opt/cis4900/network.sh /etc/skel/.config/launcher/network/*.py
 
 # Copy launcher icons
 COPY icons/light/*.svg /etc/skel/.config/launcher/icons/light/
@@ -243,4 +254,5 @@ EXPOSE 3389
 # init process
 ENTRYPOINT ["/usr/bin/tini", "--"]
 
-CMD dbus-daemon --system --fork && /usr/sbin/xrdp-sesman && /usr/sbin/xrdp -n
+#CMD dbus-daemon --system --fork && /usr/sbin/xrdp-sesman && /usr/sbin/xrdp -n
+CMD dbus-daemon --system --fork && /usr/sbin/xrdp-sesman && (cd /opt/cis4900 && python3 -m network.publisher &) && /usr/sbin/xrdp -n

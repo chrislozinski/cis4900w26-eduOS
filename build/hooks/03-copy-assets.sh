@@ -60,6 +60,10 @@ if [ -d "${SRC_ROOT}/config/systemd" ]; then
   cp "${SRC_ROOT}/config/systemd/"*.service /etc/systemd/system/ 2>/dev/null || true
 fi
 
+if [ -d "${SRC_ROOT}/network/services" ]; then
+  cp "${SRC_ROOT}/network/services/"*.service /etc/systemd/system/ 2>/dev/null || true
+fi
+
 chmod +x /usr/local/bin/create-users.sh /usr/local/bin/user-roles.sh /usr/local/bin/config-user-i3.sh
 chmod +x /usr/local/bin/config-vifm.sh /usr/local/bin/config-gtk.sh /usr/local/bin/config-launcher.sh
 chmod +x /usr/local/bin/wifi-connect.sh

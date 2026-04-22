@@ -1,0 +1,36 @@
+[Unit]
+Description=CIS4900 Student State Agent
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+# %i = the instance name (the username after the @)
+# Enable per student: systemctl enable student-agent@studentuser.service
+User=%i
+Group=%i
+
+# Secret loaded from ~/.config/cis4900/join.json (written by: python3 -m network.agent --join)
+# Set CIS4900_STATE_SECRET here only to skip the join flow entirely.
+# Environment=CIS4900_STATE_SECRET=cis4900-dev-secret
+
+# Set TEACHER_IP to skip UDP beacon discovery (e.g. if teacher has a known static IP).
+# Leave blank to use UDP auto-discovery on the local network.
+Environment=TEACHER_IP=
+Environment=TEACHER_TCP_PORT=49002
+
+# %i = username, %U = numeric UID of that user
+Environment=DISPLAY=:0
+Environment=XDG_RUNTIME_DIR=/run/user/%U
+
+ExecStart=/usr/bin/python3 -m network.agent --student-id=%u
+WorkingDirectory=/usr/local/share/cis4900-src/src/debian-base1
+
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=student-agent
+
+[Install]
+WantedBy=multi-user.target
