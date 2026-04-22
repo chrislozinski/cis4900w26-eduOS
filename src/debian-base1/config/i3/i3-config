@@ -81,21 +81,8 @@ bindsym --border button3 nop
 default_border pixel 0
 default_floating_border pixel 0
 
-# i3 status bar
-bar {
-    status_command py3status -c ~/.config/i3status/config
-    position bottom
-    tray_output primary
-    colors {
-        background #262626
-        statusline #ffffff
-        separator  #444444
-        focused_workspace  #3c3c3c #3c3c3c #ffffff
-        active_workspace   #262626 #262626 #ffffff
-        inactive_workspace #262626 #262626 #888888
-        urgent_workspace   #900000 #900000 #ffffff
-    }
-}
+exec --no-startup-id polybar statusbar
+exec --no-startup-id python3  ~/.config/polybar/polybar-hover.py
 
 bindsym $mod+shift+n exec xterm -e nmtui
 

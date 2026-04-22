@@ -22,6 +22,7 @@ vim
 nano
 git
 picom
+polybar
 vifm
 zathura
 zathura-pdf-poppler
@@ -50,3 +51,4 @@ alsa-utils
 py3status
 dunst
 libnotify-bin
+fonts-font-awesome

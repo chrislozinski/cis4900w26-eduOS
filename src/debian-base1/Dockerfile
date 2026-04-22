@@ -73,6 +73,8 @@ RUN apt-get update && apt-get install -y \
     libxt6 \
     bzip2 \
     picom \
+    polybar \
+    fonts-font-awesome \
     && apt-get install -y --no-install-recommends \
     pipewire \
     pipewire-pulse \
@@ -125,13 +127,15 @@ RUN mkdir -p /etc/skel/.config/zathura \
 RUN mkdir -p /etc/skel/.config/i3 \
              /etc/skel/.config/i3status \
              /etc/skel/.config/vifm \
+             /etc/skel/.config/polybar \
              /etc/skel/.config/launcher \
-             /etc/skel/.config/launcher/icons \ 
+             /etc/skel/.config/launcher/icons \
              /etc/skel/.config/dunst
 
 # Copy i3 and i3status configs
 COPY config/i3/i3-config /etc/skel/.config/i3/config
 COPY config/i3/i3status-config /etc/skel/.config/i3status/config
+COPY config/i3/polybar-config /etc/skel/.config/polybar/config.ini
 COPY config/i3/layout.json /etc/skel/.config/i3/layout.json  
 
 # Copy vifm config (kept for potential backend use)
@@ -184,6 +188,7 @@ COPY config/users/config-user-i3.sh /usr/local/bin/config-user-i3.sh
 COPY config/interface/notifications.conf /etc/skel/.config/dunst/dunstrc
 COPY config/interface/config-vifm.sh /usr/local/bin/config-vifm.sh
 COPY config/interface/config-gtk.sh /usr/local/bin/config-gtk.sh
+COPY config/interface/polybar-hover.py  /etc/skel/.config/polybar/polybar-hover.py
 COPY config/launcher/config-launcher.sh /usr/local/bin/config-launcher.sh
 COPY config/launcher/webapp-viewer.py /etc/skel/.config/launcher/webapp-viewer.py
 COPY config/launcher/wifi-connect.sh /usr/local/bin/wifi-connect.sh
@@ -194,6 +199,7 @@ RUN chmod +x /usr/local/bin/create-users.sh \
              /usr/local/bin/config-vifm.sh \
              /usr/local/bin/config-gtk.sh \
              /etc/skel/.config/launcher/webapp-viewer.py \
+             /etc/skel/.config/polybar/polybar-hover.py \
              /usr/local/bin/config-launcher.sh
 
 # Create role groups 
@@ -223,7 +229,7 @@ RUN /usr/local/bin/config-launcher.sh
 # cannot list the directory (r) so file pickers get "Permission denied".
 RUN chmod 751 /opt
 
-# XDG_RUNTIME_DIR parent — users mkdir their own /run/user/<uid>/ at session start
+# XDG_RUNTIME_DIR parent, users mkdir their own /run/user/<uid>/ at session start
 RUN mkdir -p /run/user && chmod 1777 /run/user
 
 # dbus identity, RDP encryption keys and create the directory xrdp needs to store its process ID

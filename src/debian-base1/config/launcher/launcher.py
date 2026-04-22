@@ -131,35 +131,25 @@ class LauncherWindow(Gtk.Window):
         screen     = Gdk.Screen.get_default()
         screen_w   = screen.get_width()
         screen_h   = screen.get_height()
-        
-        # Mirror GTK3's own DPI priority: Xft.dpi → physical dimensions → 96 fallback
-        #screen_dpi = screen.get_resolution()
-       # if screen_dpi is None or screen_dpi <= 0:
-        #    height_mm = screen.get_height_mm()
-        #    screen_dpi = (screen_h / (height_mm / 25.4)) if height_mm and height_mm > 0 else 96.0
-        #if screen_dpi <= 0 or screen_dpi > 300:
-        #    screen_dpi = 96.0
 
         self.expanded_width  = int(screen_w * 0.11)
-        self.collapsed_width = 58
+        #self.collapsed_width = 58
         self.button_height   = int(screen_h * 0.046)
         self.icon_size = int(screen_h * 0.0223)
-
-        # target_physical_px * 96.0 / screen_dpi cancels exactly when GTK3 renders:
-        # physical_px = font_px * (screen_dpi/96) = target_physical_px * 96/dpi * dpi/96 = target_physical_px
-        #target_physical_px = screen_h * 0.015   # raw float — no int(), no max()
-       # self.font_px = target_physical_px * 96.0 / screen_dpi   # float — do not int() or round
         self.font_px = self.expanded_width * 0.065
+
+        self.hbox_margin     = max(2, int(self.expanded_width * 0.03))
+        self.collapsed_width = 20 + 2 * self.hbox_margin + self.icon_size
 
         self.is_collapsed = False
 
-        # CSS text sizing: font_px is DPI-compensated — same physical size on any screen
+        # CSS text sizing: font_px is DPI compensated
         _css = Gtk.CssProvider()
         _css.load_from_data(f"""
             #username_label     {{ font-size: {self.font_px}px; font-weight: bold; }}
             #sidebar_item_label {{ font-size: {self.font_px}px; }}
             #icon_fallback      {{ font-size: {self.font_px}px; }}
-        """.encode('utf-8'))  # font_px is a float — GTK3 CSS parses as double, exact physical size
+        """.encode('utf-8'))  # font_px is a float, GTK3 CSS parses as double
         Gtk.StyleContext.add_provider_for_screen(
             Gdk.Screen.get_default(), _css,
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
@@ -189,7 +179,8 @@ class LauncherWindow(Gtk.Window):
         home_event = Gtk.EventBox()
         home_event.add(home_icon)
         home_event.set_tooltip_text("Home")
-        home_event.set_margin_start(11)
+        #home_event.set_margin_start(11)
+        home_event.set_margin_start(self.hbox_margin)
         home_event.connect('button-release-event', self.on_home_clicked)
         self.header_box.pack_start(home_event, False, False, 0)
         
@@ -308,8 +299,9 @@ class LauncherWindow(Gtk.Window):
         button.set_hexpand(True)
         button.set_relief(Gtk.ReliefStyle.NONE)
         
-        # container for button — proportional to sidebar width
-        hbox_margin  = max(2, int(self.expanded_width * 0.03))
+        # container for button, proportional to sidebar width
+        #hbox_margin  = max(2, int(self.expanded_width * 0.03))
+        hbox_margin = self.hbox_margin
         hbox_spacing = max(4, int(self.expanded_width * 0.04))
         hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=hbox_spacing)
         hbox.set_margin_start(hbox_margin)
@@ -341,7 +333,7 @@ class LauncherWindow(Gtk.Window):
         return button
     
     def create_icon_widget(self, icon_name, size=None):
-        """Create program widget icon — supports .svg and .png"""
+        """Create program widget icon that supports .svg and .png"""
         size = size if size is not None else self.icon_size
         if icon_name.endswith('.svg') or icon_name.endswith('.png'):
             icon_path = os.path.join(self.icon_dir, icon_name)
@@ -534,7 +526,9 @@ class LauncherWindow(Gtk.Window):
             btn.set_size_request(-1, self.button_height)
             btn.set_hexpand(True)
 
-            hbox_margin  = max(2, int(self.expanded_width * 0.03))
+            #hbox_margin  = max(2, int(self.expanded_width * 0.03))
+            hbox_margin = self.hbox_margin
+
             hbox_spacing = max(4, int(self.expanded_width * 0.04))
             hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=hbox_spacing)
             hbox.set_margin_start(hbox_margin)
@@ -589,12 +583,17 @@ class LauncherWindow(Gtk.Window):
             self.logout_button.hide()
             self.toggle_label.hide()
             self.toggle_arrow.set_text(">")
+            
             for lbl in self.item_labels:
                 lbl.hide()
             target = self.collapsed_width
+            
             self.set_size_request(target, -1)
             self.resize(target, self.get_size()[1])
             GLib.idle_add(lambda: subprocess.Popen(['i3-msg', f'[title="Appbar"] resize shrink width {diff} px']) and False)
+            
+            #subprocess.Popen(['i3-msg', f'[title="Appbar"] resize shrink width {diff} px'])
+            #GLib.timeout_add(50, lambda: (self.set_size_request(target, -1),self.resize(target, self.get_size()[1]),False)[-1])
         else:
             self.username_label.show()
             self.logout_button.show()
@@ -636,6 +635,7 @@ def main():
             color: #ffffff;
             border: none;
             border-radius: 4px;
+            padding: 0;                   
         }
         button:hover {
             background-color: rgba(255, 255, 255, 0.1);

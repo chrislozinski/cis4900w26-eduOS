@@ -4,12 +4,14 @@ set -euo pipefail
 SRC_ROOT="/usr/local/share/cis4900-src/src/debian-base1"
 
 mkdir -p /etc/skel/.config/i3 /etc/skel/.config/i3status /etc/skel/.config/vifm
+mkdir -p /etc/skel/.config/polybar
 mkdir -p /etc/skel/.config/launcher/icons /etc/skel/.config/launcher/network
 mkdir -p /etc/skel/.config/rofi
 
 cp "${SRC_ROOT}/config/i3/i3-config" /etc/skel/.config/i3/config
 cp "${SRC_ROOT}/config/i3/i3status-config" /etc/skel/.config/i3status/config
 cp "${SRC_ROOT}/config/i3/layout.json" /etc/skel/.config/i3/layout.json
+cp "${SRC_ROOT}/config/i3/polybar-config" /etc/skel/.config/polybar/config.ini
 cp "${SRC_ROOT}/config/interface/vifmrc" /etc/skel/.config/vifm/vifmrc
 cp "${SRC_ROOT}/config/interface/picom.conf" /etc/skel/.config/picom.conf
 
@@ -24,6 +26,7 @@ cp "${SRC_ROOT}/config/launcher/lesson-config.py" /etc/skel/.config/launcher/les
 cp "${SRC_ROOT}/config/launcher/waterfox-launcher.sh" /etc/skel/.config/launcher/waterfox-launcher.sh
 cp "${SRC_ROOT}/config/launcher/start-audio.sh" /etc/skel/.config/launcher/start-audio.sh
 cp "${SRC_ROOT}/config/launcher/webapp-viewer.py" /etc/skel/.config/launcher/webapp-viewer.py
+cp "${SRC_ROOT}/config/interface/polybar-hover.py"   /etc/skel/.config/polybar/polybar-hover.py
 
 cp "${SRC_ROOT}/config/launcher/appbar-config.json" /etc/skel/.config/launcher/appbar-config.json
 cp "${SRC_ROOT}/config/launcher/appbar-config-teacher.json" /etc/skel/.config/launcher/appbar-config-teacher.json
