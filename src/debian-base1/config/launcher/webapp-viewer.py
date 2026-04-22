@@ -48,33 +48,34 @@ def main():
     context = WebKit2.WebContext.get_default()
     context.set_process_model(WebKit2.ProcessModel.MULTIPLE_SECONDARY_PROCESSES)
 
+    font_px = max(11, int(Gdk.Screen.get_default().get_height() * 0.015))  # 16px at 1080p, 11px at 768p
     css = Gtk.CssProvider()
-    css.load_from_data(b"""
-        window {
+    css.load_from_data(f"""
+        window {{
             background-color: #F2EEDE;
-        }
-        progressbar {
+        }}
+        progressbar {{
             padding: 4px;
             padding-bottom: 10px;
-        }
-        progressbar text {
+        }}
+        progressbar text {{
             color: #2b2b2b;
-            font-size: 16px;
+            font-size: {font_px}px;
             padding: 4px;
             margin-bottom: 6px;
-        }
-        progressbar trough {
+        }}
+        progressbar trough {{
             background-color: #e0dccf;
             border-radius: 6px;
             min-height: 10px;
             box-shadow: inset 0 1px 2px rgba(0,0,0,0.15);
-        }
-        progressbar progress {
+        }}
+        progressbar progress {{
             background-color: #12921E;
             border-radius: 6px;
             min-height: 10px;
-        }
-        """)
+        }}
+        """.encode('utf-8'))
     Gtk.StyleContext.add_provider_for_screen(
         Gdk.Screen.get_default(), css,
         Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)

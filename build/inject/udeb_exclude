@@ -1,0 +1,4 @@
+# Keep this file present (can be empty).
+# On some older live-build versions, installer_debian-installer expects
+# an `exclude` file to exist before running sed on it.
+# Having this local override guarantees that file is created.

@@ -12,12 +12,13 @@ import sys
 import getpass
 
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, Gdk, GdkPixbuf, GLib
+from gi.repository import Gtk, Gdk, GdkPixbuf, GLib, Pango
 
 CLASSROOMS_FILE     = '/shared/classrooms.json'
 VIEWER_DIR          = os.path.expanduser('~/.cache/launcher_viewers')
 AVAILABLE_APPS_FILE = os.path.join(
     os.path.expanduser('~/.config/launcher'), 'available-apps.json')
+LOCAL_STUDENT_STATE_FILE = os.path.expanduser('~/.cache/cis4900/student-state.json')
 
 # Role detection & config loading
 def get_user_role():
@@ -92,6 +93,16 @@ def _set_classroom_apps(config):
     """Replace the student item list entirely with classroom enabled_apps
     The teacher fully controls what appears, checking or unchecking add/ removesan app"""
     username = getpass.getuser()
+    # Prefer local state cache applied by student-state
+    try:
+        with open(LOCAL_STUDENT_STATE_FILE, 'r') as f:
+            state = json.load(f)
+        items = state.get('environment', {}).get('enabled_apps', [])
+        if isinstance(items, list):
+            config['items'] = list(items)
+            return config
+    except Exception:
+        pass
     try:
         with open(CLASSROOMS_FILE, 'r') as f:
             data = json.load(f)
@@ -115,16 +126,41 @@ class LauncherWindow(Gtk.Window):
         # icon directory
         self.icon_dir = os.path.join(os.path.dirname(config_path), 'icons')
         
-        # sidebar dimensions
-        self.expanded_width = 200
-        self.collapsed_width = 58
+        # sidebar dimensions proportional to the screen
+        # the original dimensions for my laptop were self.expanded_width = 200 and self.collapsed_width = 58
+        screen     = Gdk.Screen.get_default()
+        screen_w   = screen.get_width()
+        screen_h   = screen.get_height()
+
+        self.expanded_width  = int(screen_w * 0.11)
+        #self.collapsed_width = 58
+        self.button_height   = int(screen_h * 0.046)
+        self.icon_size = int(screen_h * 0.0223)
+        self.font_px = self.expanded_width * 0.065
+
+        self.hbox_margin     = max(2, int(self.expanded_width * 0.03))
+        self.collapsed_width = 20 + 2 * self.hbox_margin + self.icon_size
+
         self.is_collapsed = False
 
-        self.set_default_size(self.expanded_width, 1080)
+        # CSS text sizing: font_px compensates for changing dpi based on the system, so theres dynamic sizing
+        _css = Gtk.CssProvider()
+        _css.load_from_data(f"""
+            #username_label     {{ font-size: {self.font_px}px; font-weight: bold; }}
+            #sidebar_item_label {{ font-size: {self.font_px}px; }}
+            #icon_fallback      {{ font-size: {self.font_px}px; }}
+            #toggle_label       {{ font-size: {self.font_px}px; }}
+        """.encode('utf-8'))  # font_px is a float, GTK3 CSS parses as double
+        Gtk.StyleContext.add_provider_for_screen(
+            Gdk.Screen.get_default(), _css,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        )
+
+        self.set_default_size(self.expanded_width, Gdk.Screen.get_default().get_height())
         self.set_position(Gtk.WindowPosition.NONE)
         self.move(0, 0)
         self.set_decorated(False)  # Remove window decorations
-        
+
         # Main container
         main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
         main_box.set_margin_top(10)
@@ -140,33 +176,36 @@ class LauncherWindow(Gtk.Window):
         self.header_box.set_size_request(-1, 40)
         
         # Home icon to the left of username
-        home_icon = self.create_icon_widget('stylized/homeSTYL.png', size=24)
+        home_icon = self.create_icon_widget('stylized/homeSTYL.png', size=self.icon_size)
         home_event = Gtk.EventBox()
         home_event.add(home_icon)
         home_event.set_tooltip_text("Home")
-        home_event.set_margin_start(11)
+        #home_event.set_margin_start(11)
+        home_event.set_margin_start(self.hbox_margin)
         home_event.connect('button-release-event', self.on_home_clicked)
         self.header_box.pack_start(home_event, False, False, 0)
         
         # Username label
         username = getpass.getuser()
         self.username_label = Gtk.Label()
-        self.username_label.set_markup(f"<span size='large' weight='bold'>{username}</span>")
+        self.username_label.set_name("username_label")
+        self.username_label.set_text(username)
         self.username_label.set_halign(Gtk.Align.START)
+        self.username_label.set_ellipsize(Pango.EllipsizeMode.NONE)
         self.header_box.pack_start(self.username_label, True, True, 0)
         
-        # Logout button with icon instead of ">"
+        # Logout button 
         self.logout_button = Gtk.Button()
         self.logout_button.set_size_request(30, 30)
         self.logout_button.set_tooltip_text("Logout")
         logout_icon_path = os.path.join(self.icon_dir, 'stylized/logoutSTYL.png')
         try:
             pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(
-                logout_icon_path, 20, 20, True)
+                logout_icon_path, self.icon_size - 4, self.icon_size - 4, True)
             self.logout_button.set_image(Gtk.Image.new_from_pixbuf(pixbuf))
             self.logout_button.set_always_show_image(True)
         except Exception:
-            self.logout_button.set_label(">")  # fallback
+            self.logout_button.set_label(">")  # fallback for logout to just an arrow
         self.logout_button.connect('clicked', self.on_logout_clicked)
         self.header_box.pack_end(self.logout_button, False, False, 0)
         
@@ -179,6 +218,7 @@ class LauncherWindow(Gtk.Window):
         
         # Vertical box for launcher items
         self.items_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=5)
+        self.items_box.set_hexpand(True)
         scrolled.add(self.items_box)
         
         # Track label widgets so we can show/hide them on toggle
@@ -191,10 +231,10 @@ class LauncherWindow(Gtk.Window):
             button = self.create_launcher_button(item)
             self.items_box.pack_start(button, False, False, 0)
         
-        # Open-viewers section — sits directly below the last item inside the scroll area
+        # Open viewers section, sits below last item inside the scroll area
         self.viewer_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
         self.viewer_box.set_margin_top(6)
-        self._viewer_widgets = {}  # pid -> (button, filename_label)
+        self._viewer_widgets = {}  # pid to (button, filename_label)
         self.items_box.pack_start(self.viewer_box, False, False, 0)
         GLib.timeout_add(1500, self.refresh_viewer_widgets)
 
@@ -202,12 +242,16 @@ class LauncherWindow(Gtk.Window):
         self.toggle_button = Gtk.Button()
         self.toggle_button.set_relief(Gtk.ReliefStyle.NONE)
         # added 1234
-        self.toggle_button.set_size_request(-1, 50)
+        #self.toggle_button.set_size_request(-1, 50)
+        self.toggle_button.set_size_request(-1, self.button_height)
 
         self.toggle_hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
         self.toggle_hbox.set_margin_start(5)
         self.toggle_arrow = Gtk.Label(label="<")
+        self.toggle_arrow.set_name("toggle_label") 
         self.toggle_label = Gtk.Label(label="Minimize")
+        self.toggle_label.set_name("toggle_label")
+
         self.toggle_hbox.pack_start(self.toggle_arrow, False, False, 0)
         self.toggle_hbox.pack_start(self.toggle_label, False, False, 0)
         self.toggle_button.add(self.toggle_hbox)
@@ -255,20 +299,25 @@ class LauncherWindow(Gtk.Window):
     def create_launcher_button(self, item):
         """create button for sidebar option"""
         button = Gtk.Button()
-        button.set_size_request(180, 50)
+        button.set_size_request(-1, self.button_height)
+        button.set_hexpand(True)
         button.set_relief(Gtk.ReliefStyle.NONE)
         
-        #  container for button
-        hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
-        hbox.set_margin_start(5)
-        hbox.set_margin_end(5)
-        
+        # container for button, proportional to sidebar width
+        #hbox_margin  = max(2, int(self.expanded_width * 0.03))
+        hbox_margin = self.hbox_margin
+        hbox_spacing = max(4, int(self.expanded_width * 0.04))
+        hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=hbox_spacing)
+        hbox.set_margin_start(hbox_margin)
+        hbox.set_margin_end(hbox_margin)
+
         icon_name = item.get('icon', '')
         icon_widget = self.create_icon_widget(icon_name)
         hbox.pack_start(icon_widget, False, False, 0)
         
         # Label
         label = Gtk.Label(label=item.get('label', 'Unknown'))
+        label.set_name("sidebar_item_label")
         label.set_halign(Gtk.Align.START)
         hbox.pack_start(label, True, True, 0)
         
@@ -287,8 +336,9 @@ class LauncherWindow(Gtk.Window):
         
         return button
     
-    def create_icon_widget(self, icon_name, size=24):
-        """Create program widget icon — supports .svg and .png"""
+    def create_icon_widget(self, icon_name, size=None):
+        """Create program widget icon that supports .svg and .png"""
+        size = size if size is not None else self.icon_size
         if icon_name.endswith('.svg') or icon_name.endswith('.png'):
             icon_path = os.path.join(self.icon_dir, icon_name)
             if os.path.exists(icon_path):
@@ -302,7 +352,8 @@ class LauncherWindow(Gtk.Window):
                     print(f"Error loading icon {icon_path}: {e}")
         
         label = Gtk.Label()
-        label.set_markup(f"<span size='large'>{icon_name}</span>")
+        label.set_name("icon_fallback")
+        label.set_text(icon_name)
         return label
     
     def on_home_clicked(self, widget, event):
@@ -476,15 +527,20 @@ class LauncherWindow(Gtk.Window):
 
             btn = Gtk.Button()
             btn.set_relief(Gtk.ReliefStyle.NONE)
-            btn.set_size_request(180, 50)
+            btn.set_size_request(-1, self.button_height)
+            btn.set_hexpand(True)
 
-            hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
-            hbox.set_margin_start(5)
-            hbox.set_margin_end(5)
+            #hbox_margin  = max(2, int(self.expanded_width * 0.03))
+            hbox_margin = self.hbox_margin
+
+            hbox_spacing = max(4, int(self.expanded_width * 0.04))
+            hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=hbox_spacing)
+            hbox.set_margin_start(hbox_margin)
+            hbox.set_margin_end(hbox_margin)
             icon_widget = self.create_icon_widget('stylized/htmlWebFileSTYL.png')
             hbox.pack_start(icon_widget, False, False, 0)
-            short = name if len(name) <= 16 else name[:13] + '...'
-            lbl = Gtk.Label(label=short)
+            lbl = Gtk.Label(label=name)
+            lbl.set_name("sidebar_item_label")
             lbl.set_halign(Gtk.Align.START)
             hbox.pack_start(lbl, True, True, 0)
             btn.add(hbox)
@@ -497,13 +553,15 @@ class LauncherWindow(Gtk.Window):
                 lbl.hide()
 
             self._viewer_widgets[pid] = (btn, lbl)
-            # Instant cleanup when the viewer process exits (no poll delay)
+            # cleanup when the viewer process exits to avoid poll delay
             GLib.child_watch_add(pid, lambda *_: self.refresh_viewer_widgets())
 
         return True  # keep polling
 
     def _on_viewer_click(self, button, pid):
-        """Focus the viewer tab — same lookup pattern as on_app_click."""
+        """Focus the viewer tab
+            Uses same lookup pattern as on_app_click
+        """
         try:
             with open(os.path.join(VIEWER_DIR, f'{pid}.json')) as f:
                 title = json.load(f).get('name', '')
@@ -529,12 +587,17 @@ class LauncherWindow(Gtk.Window):
             self.logout_button.hide()
             self.toggle_label.hide()
             self.toggle_arrow.set_text(">")
+            
             for lbl in self.item_labels:
                 lbl.hide()
             target = self.collapsed_width
+            
             self.set_size_request(target, -1)
             self.resize(target, self.get_size()[1])
-            subprocess.Popen(['i3-msg', f'[title="Appbar"] resize shrink width {diff} px'])
+            GLib.idle_add(lambda: subprocess.Popen(['i3-msg', f'[title="Appbar"] resize shrink width {diff} px']) and False)
+            
+            #subprocess.Popen(['i3-msg', f'[title="Appbar"] resize shrink width {diff} px'])
+            #GLib.timeout_add(50, lambda: (self.set_size_request(target, -1),self.resize(target, self.get_size()[1]),False)[-1])
         else:
             self.username_label.show()
             self.logout_button.show()
@@ -545,18 +608,17 @@ class LauncherWindow(Gtk.Window):
             target = self.expanded_width
             self.set_size_request(target, -1)
             self.resize(target, self.get_size()[1])
-            subprocess.Popen(['i3-msg', f'[title="Appbar"] resize grow width {diff} px'])
+            GLib.idle_add(lambda: subprocess.Popen(['i3-msg', f'[title="Appbar"] resize grow width {diff} px']) and False)
 
 def main():
     role       = get_user_role()
     config_dir = os.path.expanduser('~/.config/launcher')
 
     if len(sys.argv) > 1:
-        # Explicit config path passed — honour it (original behaviour)
+        # Explicit config path passed 
         config_path = sys.argv[1]
     else:
-        # Resolve the role-specific config and write it to a temp file so
-        # LauncherWindow can receive a plain file path as it always has.
+        # Resolve the role specific config, write it to a temp file so LauncherWindow receives a plain file path 
         resolved    = load_config(config_dir, role)
         config_path = os.path.join(config_dir, f'appbar-config-{role}-resolved.json')
         with open(config_path, 'w') as f:
@@ -577,6 +639,7 @@ def main():
             color: #ffffff;
             border: none;
             border-radius: 4px;
+            padding: 0;                   
         }
         button:hover {
             background-color: rgba(255, 255, 255, 0.1);

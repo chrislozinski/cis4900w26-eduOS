@@ -19,6 +19,7 @@ from gi.repository import Gtk, Gdk, GdkPixbuf, GLib
 
 CLASSROOMS_FILE = '/shared/classrooms.json'
 FAVICON_CACHE   = os.path.expanduser('~/.config/launcher/icons/favicons/')
+LOCAL_STUDENT_STATE_FILE = os.path.expanduser('~/.cache/cis4900/student-state.json')
 
 
 def _favicon_path(url):
@@ -50,6 +51,14 @@ def load_classrooms():
         return {"classrooms": []}
 
 def get_student_sites():
+    try:
+        with open(LOCAL_STUDENT_STATE_FILE, 'r') as f:
+            state = json.load(f)
+        sites = state.get('environment', {}).get('library_sites', [])
+        if isinstance(sites, list):
+            return sites
+    except Exception:
+        pass
     username = getpass.getuser()
     data = load_classrooms()
     for classroom in data.get('classrooms', []):

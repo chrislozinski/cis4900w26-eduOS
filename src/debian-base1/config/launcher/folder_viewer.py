@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """
 Simple Folder Viewer 
+I'll eventually add more functionality to this but for now 
+this functions really cleanly and decently 
 """
 import gi
 import os
@@ -13,13 +15,13 @@ import subprocess
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk, GdkPixbuf, GLib
 
-# Temp dir shared with launcher.py so it can show open-viewer widgets
+# Temp dir shared with launcher.py so it can show open viewer widgets
 VIEWER_DIR = os.path.expanduser('~/.cache/launcher_viewers')
 
 _SCRIPT_DIR  = os.path.dirname(os.path.abspath(__file__))
 _FILE_VIEWER = os.path.join(_SCRIPT_DIR, 'fileViewer.py')
 
-# file type handlers: extension -> argv prefix (path appended at open time)
+# file type handlers, extension to argv prefix, the path appended at time of open
 FILE_HANDLERS = {
     '.pdf':  ['zathura'],
     '.png':  ['python3', _FILE_VIEWER],
@@ -43,7 +45,7 @@ FILE_TYPE_ICONS = {
     '.webp': 'stylized/photoFileSTYL.svg',
 }
 
-# central icon paths relative to ~/.config/launcher/icons/
+# icon paths relative to ~/.config/launcher/icons/
 FOLDER_ICON = 'dark/folder.svg'
 DEFAULT_FILE_ICON = 'dark/book.svg'
 
@@ -53,6 +55,7 @@ class FolderViewer(Gtk.Window):
         
         self.folder_label = folder_label
         self.set_wmclass("folder_viewer", "FolderViewer")
+        self.icon_px = max(32, int(Gdk.Screen.get_default().get_height() * 0.044))  # 48px at 1080p, 34px at 768p
 
         # read the config to get the actual path
         config_path = os.path.expanduser('~/.config/launcher/appbar-config.json')
@@ -246,7 +249,7 @@ class FolderViewer(Gtk.Window):
 
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=5)
         # slightly smaller tiles to fit one more column
-        box.set_size_request(78, 88)
+        box.set_size_request(int(self.icon_px * 1.6), int(self.icon_px * 1.8))
         box.set_halign(Gtk.Align.CENTER)
         box.set_valign(Gtk.Align.CENTER)
         
@@ -263,7 +266,7 @@ class FolderViewer(Gtk.Window):
 
         if os.path.exists(svg_path):
             try:
-                pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(svg_path, 48, 48, True)
+                pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(svg_path, self.icon_px, self.icon_px, True)
                 box.pack_start(Gtk.Image.new_from_pixbuf(pixbuf), False, False, 0)
             except Exception:
                 box.pack_start(Gtk.Label(label="!"), False, False, 0)
@@ -347,87 +350,88 @@ def main():
         sys.exit(1)
     
     folder_label = sys.argv[1]
-    
-    css = """
-        window {
-            background-color: #F2EEDE;
-        }
+    font_px = max(10, int(Gdk.Screen.get_default().get_height() * 0.012))  # 13px at 1080p, 9px at 768p
 
-        #nav_bar {
+    css = f"""
+        window {{
+            background-color: #F2EEDE;
+        }}
+
+        #nav_bar {{
             background-color: #E6E1D4;
             padding: 0;
             margin: 0;
-        }
+        }}
 
-        #nav_title {
+        #nav_title {{
             color: #262626;
-            font-size: 13px;
-        }
+            font-size: {font_px}px;
+        }}
 
-        button#nav_btn {
+        button#nav_btn {{
             background-image: none;
             background-color: #2C2C2C;
             color: #F2EEDE;
             border: none;
             border-radius: 2px;
             padding: 2px 8px;
-            font-size: 13px;
+            font-size: {font_px}px;
             font-weight: bold;
             min-width: 0;
             box-shadow: none;
             text-shadow: none;
             -gtk-icon-shadow: none;
-        }
-        button#nav_btn:hover {
+        }}
+        button#nav_btn:hover {{
             background-image: none;
             background-color: #1A1A1A;
             color: #F2EEDE;
-        }
-        button#nav_btn:active {
+        }}
+        button#nav_btn:active {{
             background-image: none;
             background-color: #0A0A0A;
             color: #F2EEDE;
-        }
-        button#nav_btn:disabled {
+        }}
+        button#nav_btn:disabled {{
             background-image: none;
             background-color: #C8C4BE;
             color: #AAAAAA;
-        }
-        button#nav_btn label {
+        }}
+        button#nav_btn label {{
             color: #F2EEDE;
-        }
-        button#nav_btn:disabled label {
+        }}
+        button#nav_btn:disabled label {{
             color: #AAAAAA;
-        }
+        }}
 
-        label {
+        label {{
             color: #262626;
-        }
+        }}
 
-        #file_item {
+        #file_item {{
             background-color: transparent;
             border-radius: 6px;
             padding: 4px;
-        }
-        #file_item_hover {
+        }}
+        #file_item_hover {{
             background-color: rgba(0, 0, 0, 0.045);
             border-radius: 6px;
             padding: 4px;
-        }
-        #file_item_active {
+        }}
+        #file_item_active {{
             background-color: rgba(0, 0, 0, 0.09);
             border-radius: 6px;
             padding: 4px;
-        }
+        }}
 
-        image, image * {
+        image, image * {{
             background-color: transparent;
             box-shadow: none;
-        }
+        }}
 
-        scrolledwindow {
+        scrolledwindow {{
             border: none;
-        }
+        }}
     """
 
     provider = Gtk.CssProvider()

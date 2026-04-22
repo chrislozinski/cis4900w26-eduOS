@@ -27,6 +27,7 @@ from gi.repository import Gtk, Gdk, WebKit2, GLib
 
 STATIC_DIR      = "/opt/makecode/static"
 CLASSROOMS_FILE = "/shared/classrooms.json"
+LOCAL_STUDENT_STATE_FILE = os.path.expanduser("~/.cache/cis4900/student-state.json")
 
 
 def filesystem_safe_class_id(raw_id):
@@ -395,6 +396,18 @@ def get_student_classroom():
     """
     username = getpass.getuser()
     try:
+        with open(LOCAL_STUDENT_STATE_FILE, "r") as f:
+            state = json.load(f)
+        session = state.get("session", {})
+        env = state.get("environment", {})
+        name = session.get("classroom_name", "Your Class")
+        cid = session.get("classroom_id", "_unassigned")
+        lessons = env.get("enabled_lessons", [])
+        if isinstance(lessons, list):
+            return name, lessons, cid
+    except Exception:
+        pass
+    try:
         with open(CLASSROOMS_FILE, "r") as f:
             data = json.load(f)
         for cls in data.get("classrooms", []):
@@ -726,6 +739,10 @@ class MakeCodeWindow(Gtk.Window):
             settings.set_enable_html5_local_storage(True)
         except Exception:
             pass
+        try:
+            settings.set_media_playback_requires_user_gesture(False)
+        except Exception:
+            pass
         self.webview.connect("context-menu", lambda *a: True)
         self.webview.connect("decide-policy", self._on_makecode_decide_policy)
         self.webview.connect("load-changed", self._on_makecode_load_changed)
@@ -935,16 +952,16 @@ class MakeCodeWindow(Gtk.Window):
             "'https://www.makecode.com','http://www.makecode.com',"
             "'https://arcade.makecode.com','http://arcade.makecode.com'];"
             "function rw(u){if(u==null||typeof u!=='string')return u;"
-            "for(var i=0;i<H.length;i++){if(u.indexOf(H[i])===0){var t=u.slice(H[i].length);"
-            "if(t.indexOf('/api/')===0)return L+t;break;}}return u;}"
+            "for(var i=0;i<H.length;i++){if(u.indexOf(H[i])===0){"
+            "return L+u.slice(H[i].length);}}return u;}"
             "var xo=XMLHttpRequest.prototype.open;"
-            "XMLHttpRequest.prototype.open=function(m,u){var r=[].slice.call(arguments,2);"
-            "return xo.apply(this,[m,rw(u)].concat(r));};"
-            "if(window.fetch){var of=window.fetch;window.fetch=function(i,n){"
+            "XMLHttpRequest.prototype.open=function(m,u){"
+            "return xo.apply(this,[m,rw(u)].concat([].slice.call(arguments,2)));};"
+            "if(window.fetch){var _of=window.fetch;window.fetch=function(i,n){"
             "if(typeof i==='string')i=rw(i);"
             "else if(i&&typeof Request!=='undefined'&&i instanceof Request){"
             "var u=rw(i.url);if(u!==i.url)i=new Request(u,i);}"
-            "return of.call(this,i,n);};}"
+            "return _of.call(this,i,n);}}"
             "})();"
         )
         try:
@@ -984,7 +1001,7 @@ class MakeCodeWindow(Gtk.Window):
                 rewrite = False
                 if nav_url.startswith(arcade_prefixes):
                     rewrite = True
-                elif nav_url.startswith(cdn_prefixes) and path.startswith("/api/"):
+                elif nav_url.startswith(cdn_prefixes):
                     rewrite = True
                 if rewrite:
                     local = base + path

@@ -760,7 +760,10 @@ function isChrome() {
 function isSafari() {
     //Could also check isMac but I don't want to risk excluding iOS
     //Checking for iPhone, iPod or iPad as well as Safari in order to detect home screen browsers on iOS
-    return !isChrome() && !isEdge() && !!navigator && /(Macintosh|Safari|iPod|iPhone|iPad)/i.test(navigator.userAgent);
+    // Removed "Safari" from the pattern: WebKit2GTK on Linux includes "Safari" in its UA
+    // but is not mobile/macOS Safari and does not need the autoplay mute workaround.
+    // Real Safari on Mac matches via "Macintosh"; iOS Safari matches via iPhone/iPod/iPad.
+    return !isChrome() && !isEdge() && !!navigator && /(Macintosh|iPod|iPhone|iPad)/i.test(navigator.userAgent);
 }
 (function (pxsim) {
     var pxtcore;

@@ -43,22 +43,24 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y \
     i3-wm \
     i3status \
+    py3status \
     suckless-tools \
     xrdp \
     xorg \
     xorgxrdp \
     x11-xserver-utils \
     dbus \
+    dbus-x11 \
     sudo \
     openssl \
     tini \
     xterm \
     curl \
     wget \
-    git \     
+    git \
     vim \
     nano \
-    python3 \ 
+    python3 \
     python3-gi \
     python3-gi-cairo \
     gir1.2-gtk-3.0 \
@@ -70,6 +72,27 @@ RUN apt-get update && apt-get install -y \
     libdbus-glib-1-2 \
     libxt6 \
     bzip2 \
+    picom \
+    polybar \
+    fonts-font-awesome \
+    && apt-get install -y --no-install-recommends \
+    pipewire \
+    pipewire-pulse \
+    wireplumber \
+    pulseaudio-utils \
+    gstreamer1.0-pipewire \
+    gstreamer1.0-libav \
+    gstreamer1.0-plugins-good \
+    gstreamer1.0-plugins-bad \
+    gstreamer1.0-tools \
+    dunst \
+    libnotify-bin \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# pipewire-module-xrdp is in bookworm-backports, bridges PipeWire audio to xrdp
+RUN echo "deb http://deb.debian.org/debian bookworm-backports main" >> /etc/apt/sources.list \
+    && apt-get update \
+    && apt-get install -y -t bookworm-backports pipewire-module-xrdp \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # MakeCode static editor using the pre built HTML/JS/CSS to avoid runtime deps 
@@ -104,16 +127,22 @@ RUN mkdir -p /etc/skel/.config/zathura \
 RUN mkdir -p /etc/skel/.config/i3 \
              /etc/skel/.config/i3status \
              /etc/skel/.config/vifm \
+             /etc/skel/.config/polybar \
              /etc/skel/.config/launcher \
-             /etc/skel/.config/launcher/icons
+             /etc/skel/.config/launcher/icons \
+             /etc/skel/.config/launcher/network \
+             /etc/skel/.config/dunst
 
 # Copy i3 and i3status configs
 COPY config/i3/i3-config /etc/skel/.config/i3/config
 COPY config/i3/i3status-config /etc/skel/.config/i3status/config
+COPY config/i3/polybar-config /etc/skel/.config/polybar/config.ini
 COPY config/i3/layout.json /etc/skel/.config/i3/layout.json  
 
 # Copy vifm config (kept for potential backend use)
 COPY config/interface/vifmrc /etc/skel/.config/vifm/vifmrc
+# Copy picom compositor config
+COPY config/interface/picom.conf /etc/skel/.config/picom.conf
 
 # Copy launcher scripts
 COPY config/launcher/launcher.py            /etc/skel/.config/launcher/launcher.py
@@ -125,8 +154,9 @@ COPY widgets/fileNav/fileViewer.py          /etc/skel/.config/launcher/fileViewe
 COPY widgets/library/library.py             /etc/skel/.config/launcher/library.py
 COPY config/launcher/lesson-config.py       /etc/skel/.config/launcher/lesson-config.py
 COPY config/launcher/waterfox-launcher.sh   /etc/skel/.config/launcher/waterfox-launcher.sh
+COPY config/launcher/start-audio.sh        /etc/skel/.config/launcher/start-audio.sh
 
-# Copy sidebar configs as a generic fallback + role-specific
+# Copy sidebar configs as fallback and role specific
 COPY config/launcher/appbar-config.json          /etc/skel/.config/launcher/appbar-config.json
 COPY config/launcher/appbar-config-teacher.json  /etc/skel/.config/launcher/appbar-config-teacher.json
 COPY config/launcher/appbar-config-student.json  /etc/skel/.config/launcher/appbar-config-student.json
@@ -134,6 +164,16 @@ COPY config/launcher/appbar-config-student.json  /etc/skel/.config/launcher/appb
 # Seed classroom data (written to /shared at runtime by config-launcher.sh)
 COPY config/launcher/classrooms.json     /etc/skel/.config/launcher/classrooms.json
 COPY config/launcher/available-apps.json /etc/skel/.config/launcher/available-apps.json
+
+# Network sync package
+# /etc/skel copy: flat .py files accessible to each user at ~/.config/launcher/network/
+COPY network/ /etc/skel/.config/launcher/network/
+# /opt/cis4900 copy: python3 -m network.publisher runs from here (via network.sh)
+RUN mkdir -p /opt/cis4900
+COPY network/ /opt/cis4900/network/
+COPY config/launcher/classrooms.json /opt/cis4900/classrooms.json
+COPY network/network.sh /opt/cis4900/network.sh
+RUN chmod +x /opt/cis4900/network.sh /etc/skel/.config/launcher/network/*.py
 
 # Copy launcher icons
 COPY icons/light/*.svg /etc/skel/.config/launcher/icons/light/
@@ -149,21 +189,28 @@ RUN chmod +x /etc/skel/.config/launcher/launcher.py \
              /etc/skel/.config/launcher/fileViewer.py \
              /etc/skel/.config/launcher/library.py \
              /etc/skel/.config/launcher/lesson-config.py \
-             /etc/skel/.config/launcher/waterfox-launcher.sh
+             /etc/skel/.config/launcher/waterfox-launcher.sh \
+             /etc/skel/.config/launcher/start-audio.sh
 
 # Copy setup scripts
 COPY config/users/create-users.sh /usr/local/bin/create-users.sh
 COPY config/users/user-roles.sh /usr/local/bin/user-roles.sh
 COPY config/users/config-user-i3.sh /usr/local/bin/config-user-i3.sh
+COPY config/interface/notifications.conf /etc/skel/.config/dunst/dunstrc
 COPY config/interface/config-vifm.sh /usr/local/bin/config-vifm.sh
+COPY config/interface/config-gtk.sh /usr/local/bin/config-gtk.sh
+COPY config/interface/polybar-hover.py  /etc/skel/.config/polybar/polybar-hover.py
 COPY config/launcher/config-launcher.sh /usr/local/bin/config-launcher.sh
 COPY config/launcher/webapp-viewer.py /etc/skel/.config/launcher/webapp-viewer.py
+COPY config/launcher/wifi-connect.sh /usr/local/bin/wifi-connect.sh
 
 RUN chmod +x /usr/local/bin/create-users.sh \
              /usr/local/bin/user-roles.sh \
              /usr/local/bin/config-user-i3.sh \
              /usr/local/bin/config-vifm.sh \
+             /usr/local/bin/config-gtk.sh \
              /etc/skel/.config/launcher/webapp-viewer.py \
+             /etc/skel/.config/polybar/polybar-hover.py \
              /usr/local/bin/config-launcher.sh
 
 # Create role groups 
@@ -175,15 +222,26 @@ RUN /usr/local/bin/create-users.sh
 # Set up role-based access control 
 RUN /usr/local/bin/user-roles.sh
 
-# Configure i3 for all users 
+# Configure i3 for all users
 RUN /usr/local/bin/config-user-i3.sh
 
 # Configure vifm for all users
 RUN /usr/local/bin/config-vifm.sh
 
+# Configure GTK file chooser for all users
+RUN /usr/local/bin/config-gtk.sh
+
 # Configure launcher for all users
 # (also bootstraps /shared/classrooms.json with teacher-group write access)
 RUN /usr/local/bin/config-launcher.sh
+
+# Remove directory-listing permission from system paths for non-root users.
+# 751 = rwxr-x--x: others keep traverse (x) so known paths still work, but
+# cannot list the directory (r) so file pickers get "Permission denied".
+RUN chmod 751 /opt
+
+# XDG_RUNTIME_DIR parent, users mkdir their own /run/user/<uid>/ at session start
+RUN mkdir -p /run/user && chmod 1777 /run/user
 
 # dbus identity, RDP encryption keys and create the directory xrdp needs to store its process ID
 RUN mkdir -p /run/dbus && dbus-uuidgen > /etc/machine-id
@@ -196,4 +254,5 @@ EXPOSE 3389
 # init process
 ENTRYPOINT ["/usr/bin/tini", "--"]
 
-CMD dbus-daemon --system --fork && /usr/sbin/xrdp-sesman && /usr/sbin/xrdp -n
+#CMD dbus-daemon --system --fork && /usr/sbin/xrdp-sesman && /usr/sbin/xrdp -n
+CMD dbus-daemon --system --fork && /usr/sbin/xrdp-sesman && (cd /opt/cis4900 && python3 -m network.publisher &) && /usr/sbin/xrdp -n

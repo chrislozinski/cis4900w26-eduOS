@@ -14,8 +14,8 @@ create_user() {
     echo "exec i3" > "/home/$username/.xsession"
     chown "$username:$username" "/home/$username/.xsession"
     
-    # Add to role group
-    usermod -aG "$role" "$username"
+    # Add to role group and audio group
+    usermod -aG "$role",audio "$username"
     
     echo "Created user: $username with role: $role"
 }
