@@ -364,7 +364,7 @@ class LessonBuilderWindow(Gtk.Window):
         self._paned.pack1(self._ui_webview, resize=True, shrink=False)
 
         self._makecode_webview = self._create_webview(
-            os.path.join("/shared", "makecode", "profiles", self._username, "webkit")
+            os.path.join("/shared", "makecode", "profiles", self._username, "webkit-sandbox")
         )
         self._makecode_box = Gtk.Box()
         self._makecode_box.pack_start(self._makecode_webview, True, True, 0)
@@ -485,29 +485,24 @@ class LessonBuilderWindow(Gtk.Window):
     def _inject_autosave_script(self, content_manager):
         js = r"""
 (function() {
-    // Open a blank sandbox project immediately so MakeCode never shows the home/picker page.
-    // importproject is processed by MakeCode's app-level message handler (before Monaco).
-    window.postMessage({ type: "importproject", project: { text: { "main.ts": "" } } }, "*");
-
-    if (window.postMessage) {
-        window.postMessage({ type: "switchjavascript" }, "*");
-    }
-
     var debounce = null;
-    function waitForEditor() {
-        if (window.monaco && monaco.editor.getEditors().length > 0) {
-            var ed = monaco.editor.getEditors()[0];
-            ed.onDidChangeModelContent(function() {
-                clearTimeout(debounce);
-                debounce = setTimeout(function() {
-                    window.webkit.messageHandlers.editorChanged.postMessage(ed.getValue());
-                }, 1500);
-            });
-        } else {
-            setTimeout(waitForEditor, 500);
-        }
+
+    function attachIfNeeded() {
+        if (!window.monaco || monaco.editor.getEditors().length === 0) return;
+        var ed = monaco.editor.getEditors()[0];
+        if (ed.__lessonListenerAttached) return;
+        ed.__lessonListenerAttached = true;
+        ed.onDidChangeModelContent(function() {
+            clearTimeout(debounce);
+            debounce = setTimeout(function() {
+                window.webkit.messageHandlers.editorChanged.postMessage(ed.getValue());
+            }, 1500);
+        });
     }
-    waitForEditor();
+
+    // Re-checks every 800ms so the listener re-attaches after importproject
+    // replaces the Monaco instance.
+    setInterval(attachIfNeeded, 800);
 })();
 """
         try:
@@ -701,13 +696,33 @@ class LessonBuilderWindow(Gtk.Window):
     def _handle_set_editor_code(self, data):
         self._do_import_project(data.get("code") or "")
 
+    _PXT_JSON = json.dumps({
+        "name": "Lesson Sandbox",
+        "dependencies": {"core": "*"},
+        "description": "",
+        "files": ["main.blocks", "main.ts"],
+    })
+    _EMPTY_BLOCKS = '<xml xmlns="http://www.w3.org/1999/xhtml"></xml>'
+
     def _do_import_project(self, code):
-        payload = json.dumps({
-            "type":    "importproject",
-            "project": {"text": {"main.ts": code}},
+        msg = json.dumps({
+            "type":   "pxteditor",
+            "action": "importproject",
+            "id":     "lesson-step",
+            "project": {
+                "text": {
+                    "main.ts":     code or "",
+                    "main.blocks": self._EMPTY_BLOCKS,
+                    "pxt.json":    self._PXT_JSON,
+                }
+            },
         })
         self._makecode_webview.run_javascript(
-            f"window.postMessage({payload}, '*')",
+            f"window.postMessage({msg}, '*')",
+            None, None, None,
+        )
+        self._makecode_webview.run_javascript(
+            'window.postMessage({type:"pxteditor",action:"switchjavascript",id:"sw-js"}, "*")',
             None, None, None,
         )
 
@@ -765,10 +780,20 @@ class LessonBuilderWindow(Gtk.Window):
         return False
 
     def _load_webviews(self):
-        base = f"http://127.0.0.1:{server_port}"
+        base         = f"http://127.0.0.1:{server_port}"
+        profile_data = os.path.join(
+            "/shared", "makecode", "profiles", self._username, "webkit-sandbox", "data"
+        )
         self._apply_cdn_rewrite(self._makecode_webview)
         self._ui_webview.load_uri(f"{base}/lessonbuilder/index.html")
-        self._makecode_webview.load_uri(f"{base}/")
+        try:
+            has_data = os.path.isdir(profile_data) and any(os.scandir(profile_data))
+        except Exception:
+            has_data = False
+        if has_data:
+            self._makecode_webview.load_uri(f"{base}/")
+        else:
+            self._makecode_webview.load_uri(f"{base}/#newproject")
         return False
 
 
