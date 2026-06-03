@@ -175,6 +175,11 @@ COPY config/launcher/classrooms.json /opt/cis4900/classrooms.json
 COPY network/network.sh /opt/cis4900/network.sh
 RUN chmod +x /opt/cis4900/network.sh /etc/skel/.config/launcher/network/*.py
 
+# Lesson Builder app (teacher-only)
+RUN mkdir -p /opt/cis4900/widgets/lessonBuilder
+COPY widgets/lessonBuilder/ /opt/cis4900/widgets/lessonBuilder/
+RUN chmod +x /opt/cis4900/widgets/lessonBuilder/lesson-builder.py
+
 # Copy launcher icons
 COPY icons/light/*.svg /etc/skel/.config/launcher/icons/light/
 COPY icons/dark/*.svg /etc/skel/.config/launcher/icons/dark/

@@ -32,6 +32,13 @@
       "window_title": "Lesson Config",
       "icon": "stylized/resourcesSTYL.png",
       "command": "python3 /home/USER/.config/launcher/lesson-config.py"
+    },
+    {
+      "type": "app",
+      "label": "Lesson Builder",
+      "window_title": "Lesson Builder",
+      "icon": "stylized/resourcesSTYL.png",
+      "command": "python3 /opt/cis4900/widgets/lessonBuilder/lesson-builder.py"
     }
   ]
 }

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Lesson Builder</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- Home screen -->
+<div id="screen-home" class="screen">
+  <div class="topbar">
+    <div class="topbar-title">Lesson <span>Builder</span></div>
+    <div class="topbar-actions">
+      <button class="btn btn-primary btn-sm" onclick="NewLessonDialog.show(null)">+ New Lesson</button>
+    </div>
+  </div>
+  <div class="content" id="home-content">
+    <p style="color:#555;text-align:center;padding:60px 0;">Loading…</p>
+  </div>
+</div>
+
+
+<!-- Classroom screen -->
+<div id="screen-classroom" class="screen">
+  <div class="topbar">
+    <button class="back-btn" onclick="navigate('home',{})">← Back</button>
+    <div class="topbar-title" id="classroom-name"></div>
+    <div class="topbar-actions">
+      <button class="btn btn-primary btn-sm" onclick="NewLessonDialog.show(State.activeClassroom && State.activeClassroom.id)">+ New Lesson</button>
+    </div>
+  </div>
+  <div class="classroom-toolbar">
+    <div id="classroom-tabs" style="display:flex;gap:6px;"></div>
+  </div>
+  <div class="content" id="classroom-lesson-list"></div>
+</div>
+
+
+<!-- Editor screen -->
+<div id="screen-editor" class="screen">
+  <div class="topbar">
+    <button class="back-btn" onclick="EditorScreen._saveDraft();navigate('classroom',{classroomId: State.activeClassroom && State.activeClassroom.id})">← Back</button>
+    <div class="topbar-title" id="editor-lesson-title">Lesson Editor</div>
+    <div class="topbar-actions">
+      <button class="btn btn-secondary btn-sm" onclick="EditorScreen._saveDraft()">Save Draft</button>
+      <button class="btn btn-secondary btn-sm" onclick="EditorScreen._previewLesson()">Preview</button>
+      <button class="btn btn-success btn-sm" onclick="EditorScreen._publishDialog()">Publish</button>
+    </div>
+  </div>
+
+  <div class="editor-layout">
+    <!-- Left panel -->
+    <div class="editor-panel">
+      <div class="editor-panel-inner">
+
+        <!-- Lessons section -->
+        <div class="section" id="section-lessons">
+          <div class="section-header" onclick="EditorScreen._toggleSection('section-lessons')">
+            <span class="section-toggle">▼</span> Lessons
+          </div>
+          <div class="section-body">
+            <div id="editor-lesson-list"></div>
+            <div style="margin-top:6px;display:flex;gap:6px;">
+              <button class="btn btn-secondary btn-sm" style="flex:1" onclick="NewLessonDialog.show(State.activeClassroom && State.activeClassroom.id)">+ New Lesson</button>
+              <button class="btn btn-danger btn-sm" onclick="EditorScreen._deleteLesson()">Delete</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Steps section -->
+        <div class="section" id="section-steps">
+          <div class="section-header" onclick="EditorScreen._toggleSection('section-steps')">
+            <span class="section-toggle">▼</span> Steps
+          </div>
+          <div class="section-body">
+            <div id="editor-step-list"></div>
+            <div class="step-controls" style="margin-top:6px;">
+              <button class="step-icon-btn" title="Add step" onclick="EditorScreen._addStep()">+</button>
+              <button class="step-icon-btn" title="Move up" onclick="EditorScreen._moveStep(EditorScreen._stepIdx,-1)">↑</button>
+              <button class="step-icon-btn" title="Move down" onclick="EditorScreen._moveStep(EditorScreen._stepIdx,1)">↓</button>
+              <button class="step-icon-btn danger" title="Delete step" onclick="EditorScreen._deleteStep(EditorScreen._stepIdx)">✕</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step Editor section -->
+        <div class="section" id="section-step-editor">
+          <div class="section-header" onclick="EditorScreen._toggleSection('section-step-editor')">
+            <span class="section-toggle">▼</span> Step Editor
+          </div>
+          <div class="section-body">
+            <div id="no-step-msg" style="color:#555;font-size:13px;padding:8px 0;">Add a step to start editing.</div>
+            <div id="step-editor-fields" style="display:none">
+              <div class="field-group">
+                <div class="field-label">Title</div>
+                <input id="step-title" class="field-input" type="text" placeholder="Step title…"
+                  onchange="EditorScreen._flushCurrentStepFields();EditorScreen._saveDraft();EditorScreen._renderStepList()">
+              </div>
+              <div class="field-group">
+                <div class="field-label">Instructions</div>
+                <textarea id="step-instructions" class="field-input" rows="4" placeholder="Markdown instructions shown in the tutorial sidebar…"
+                  onchange="EditorScreen._flushCurrentStepFields();EditorScreen._saveDraft()"></textarea>
+              </div>
+              <div class="field-group">
+                <div class="field-label">Hint (optional)</div>
+                <textarea id="step-hint" class="field-input" rows="2" placeholder="Collapsible hint text…"
+                  onchange="EditorScreen._flushCurrentStepFields();EditorScreen._saveDraft()"></textarea>
+              </div>
+              <div class="field-group">
+                <div class="field-label">Captured code</div>
+                <div id="step-code-preview" class="code-preview">(auto-saved as you type)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <!-- MakeCode WebView is injected here by GTK as the right pane of the Paned widget -->
+  </div>
+</div>
+
+
+<!-- New Lesson dialog -->
+<div id="dialog-new-lesson" class="dialog-overlay hidden" onclick="if(event.target===this)NewLessonDialog.hide()">
+  <div class="dialog">
+    <div class="dialog-title">New Lesson</div>
+    <div class="field-group">
+      <div class="field-label">Title</div>
+      <input id="new-lesson-title" class="field-input" type="text" placeholder="Lesson title…"
+        onkeydown="if(event.key==='Enter')NewLessonDialog.confirm()">
+    </div>
+    <div class="field-group">
+      <div class="field-label">Description (optional)</div>
+      <input id="new-lesson-description" class="field-input" type="text" placeholder="Brief description…">
+    </div>
+    <div class="checkbox-group">
+      <div class="field-label">Applications</div>
+      <label class="checkbox-row">
+        <input type="checkbox" checked disabled> MakeCode
+      </label>
+    </div>
+    <div class="dialog-actions">
+      <button class="btn btn-secondary" onclick="NewLessonDialog.hide()">Cancel</button>
+      <button class="btn btn-primary" onclick="NewLessonDialog.confirm()">Create</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- Toast notification -->
+<div id="toast" style="
+  position:fixed;bottom:24px;right:24px;
+  background:#3d9970;color:#fff;
+  padding:8px 16px;border-radius:6px;
+  font-size:13px;font-weight:600;
+  opacity:0;transition:opacity 0.3s;
+  pointer-events:none;z-index:200;
+"></div>
+
+
+<script src="bridge.js"></script>
+<script src="home.js"></script>
+<script src="classroom.js"></script>
+<script src="editor.js"></script>
+</body>
+</html>
