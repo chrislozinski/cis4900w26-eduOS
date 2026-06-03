@@ -12,7 +12,6 @@ import threading
 import time
 import http.server
 import socketserver
-import urllib.request
 from urllib.parse import urlsplit, urlunsplit, unquote
 
 gi.require_version('Gtk', '3.0')
@@ -288,7 +287,7 @@ def start_server():
             os.makedirs(root, exist_ok=True)
         except Exception:
             return None
-        return os.path.join(root, f"{getpass.getuser()}.json")
+        return os.path.join(root, f"{getpass.getuser()}-builder.json")
 
     def _load_saved_port():
         pth = _port_state_path()
@@ -316,18 +315,6 @@ def start_server():
         except Exception:
             pass
 
-    def _port_serves_makecode(p):
-        url = f"http://127.0.0.1:{p}/api/config/arcade/targetconfig"
-        try:
-            with urllib.request.urlopen(url, timeout=0.4) as resp:
-                if resp.status != 200:
-                    return False
-                if "json" not in (resp.headers.get("Content-Type") or "").lower():
-                    return False
-                return (resp.read(5120) or b"").lstrip().startswith(b"{")
-        except Exception:
-            return False
-
     candidates = []
     saved = _load_saved_port()
     if saved:
@@ -348,10 +335,6 @@ def start_server():
             httpd.serve_forever()
             return
         except OSError:
-            if _port_serves_makecode(p):
-                server_port = p
-                _save_port(server_port)
-                return
             continue
 
     server_port = 0
@@ -368,6 +351,9 @@ class LessonBuilderWindow(Gtk.Window):
         self._username          = getpass.getuser()
         self._current_lesson_id = None
         self._current_step_idx  = None
+        self._classrooms_cache  = None
+
+        self.connect("focus-in-event", lambda w, e: self._refresh_classrooms() or False)
 
         self._paned = Gtk.Paned(orientation=Gtk.Orientation.HORIZONTAL)
         self.add(self._paned)
@@ -509,6 +495,9 @@ class LessonBuilderWindow(Gtk.Window):
                     window.webkit.messageHandlers.editorChanged.postMessage(ed.getValue());
                 }, 1500);
             });
+            window.setEditorCode = function(code) {
+                ed.setValue(code || "");
+            };
         } else {
             setTimeout(waitForEditor, 500);
         }
@@ -580,6 +569,7 @@ class LessonBuilderWindow(Gtk.Window):
                 "hideEditor":      lambda d: self._set_editor_visible(False),
                 "setCurrentStep":  self._handle_set_current_step,
                 "setCurrentLesson": self._handle_set_current_lesson,
+                "setEditorCode":   self._handle_set_editor_code,
             }.get(action, lambda d: None)(data)
         except Exception as e:
             self._send_to_ui({"action": "error", "source": action, "error": str(e)})
@@ -614,8 +604,6 @@ class LessonBuilderWindow(Gtk.Window):
         self._current_lesson_id = lesson_id
         self._current_step_idx  = 0
         self._send_to_ui({"action": "draftLoaded", "lessonId": lesson_id, "draft": draft})
-        if draft and server_port != 0:
-            self._makecode_webview.load_uri(f"http://127.0.0.1:{server_port}/")
 
     def _handle_save_draft(self, data):
         lesson_id  = data.get("lessonId")
@@ -638,6 +626,15 @@ class LessonBuilderWindow(Gtk.Window):
             classroom_id,
         )
         self._send_to_ui({"action": "lessonPublished", "lessonId": lesson_id, "classroomId": classroom_id})
+        try:
+            with open(CLASSROOMS_FILE, "r") as f:
+                cls_data = json.load(f)
+            classrooms = cls_data.get("classrooms", [])
+            serialized = json.dumps(classrooms, sort_keys=True)
+            self._classrooms_cache = serialized
+            self._send_to_ui({"action": "classroomsUpdated", "classrooms": classrooms})
+        except Exception:
+            pass
 
     def _handle_unpublish(self, data):
         _lesson_storage.unpublish_lesson(data.get("lessonId"), data.get("classroomId"))
@@ -696,6 +693,26 @@ class LessonBuilderWindow(Gtk.Window):
     def _handle_set_current_lesson(self, data):
         self._current_lesson_id = data.get("lessonId")
         self._current_step_idx  = int(data.get("stepIndex", 0))
+
+    def _handle_set_editor_code(self, data):
+        code = data.get("code") or ""
+        self._makecode_webview.run_javascript(
+            f"if(window.setEditorCode)window.setEditorCode({json.dumps(code)})",
+            None, None, None,
+        )
+
+    def _refresh_classrooms(self):
+        try:
+            with open(CLASSROOMS_FILE, "r") as f:
+                cls_data = json.load(f)
+            classrooms = cls_data.get("classrooms", [])
+            serialized = json.dumps(classrooms, sort_keys=True)
+            if serialized == self._classrooms_cache:
+                return
+            self._classrooms_cache = serialized
+            self._send_to_ui({"action": "classroomsUpdated", "classrooms": classrooms})
+        except Exception:
+            pass
 
     def _set_editor_visible(self, visible):
         def _update():

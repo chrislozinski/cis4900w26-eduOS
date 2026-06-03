@@ -18,9 +18,11 @@ var EditorScreen = {
 
     onDraftLoaded: function(lessonId, draft) {
         this._lessonId = lessonId;
-        this._draft    = draft;
-        this._stepIdx  = Math.min(this._stepIdx, Math.max(0, (draft.steps || []).length - 1));
+        this._draft    = draft || { id: lessonId, title: "", steps: [], solution_code: "" };
+        this._stepIdx  = Math.min(this._stepIdx, Math.max(0, (this._draft.steps || []).length - 1));
         sendToPython("setCurrentLesson", { lessonId: lessonId, stepIndex: this._stepIdx });
+        var firstStep = (this._draft.steps || [])[this._stepIdx];
+        sendToPython("setEditorCode", { code: firstStep ? (firstStep.captured_code || "") : "" });
         this._render();
     },
 
@@ -94,9 +96,7 @@ var EditorScreen = {
         this._renderStepList();
         this._renderStepFields();
         var step = (this._draft.steps || [])[idx];
-        if (step && step.captured_code) {
-            this._setEditorCode(step.captured_code);
-        }
+        sendToPython("setEditorCode", { code: step ? (step.captured_code || "") : "" });
     },
 
     _addStep: function() {
@@ -109,9 +109,7 @@ var EditorScreen = {
         sendToPython("setCurrentStep", { stepIndex: this._stepIdx });
         this._saveDraft();
         this._render();
-        if (prevCode) {
-            this._setEditorCode(prevCode);
-        }
+        sendToPython("setEditorCode", { code: prevCode });
     },
 
     _deleteStep: function(idx) {
@@ -135,6 +133,7 @@ var EditorScreen = {
         steps[target] = tmp;
         this._draft.steps = steps;
         this._stepIdx     = target;
+        sendToPython("setCurrentStep", { stepIndex: target });
         this._saveDraft();
         this._render();
     },
@@ -197,17 +196,6 @@ var EditorScreen = {
         if (!this._lessonId || !this._draft) return;
         this._flushCurrentStepFields();
         sendToPython("previewLesson", { lessonId: this._lessonId, draft: this._draft });
-    },
-
-    _setEditorCode: function(code) {
-        // Load code into Monaco editor in the MakeCode WebView
-        // Python listens for editorChanged; here we push code back into Monaco
-        try {
-            var encoded = JSON.stringify(code);
-            // Attempt to set value via Monaco API inside the MakeCode webview
-            // This only works if the webview is on the same page — in practice
-            // the message is handled by the autosave bridge on the other WebView
-        } catch (e) {}
     },
 
     _toggleSection: function(id) {

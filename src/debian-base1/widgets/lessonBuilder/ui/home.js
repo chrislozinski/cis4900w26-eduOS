@@ -42,10 +42,10 @@ var HomeScreen = {
             }
 
             html += [
-                '<div class="classroom-card">',
-                '<div class="classroom-header" onclick="HomeScreen._openClassroom(' + JSON.stringify(cls.id) + ')">',
+                '<div class="classroom-card" onclick="HomeScreen._openClassroom(' + JSON.stringify(cls.id) + ')">',
+                '<div class="classroom-header">',
                 '<div class="classroom-name">' + HomeScreen._esc(cls.name || cls.id) + "</div>",
-                '<button class="btn btn-primary btn-sm" onclick="event.stopPropagation();HomeScreen._newLesson(' + JSON.stringify(cls.id) + ')">+ New</button>',
+                '<div class="classroom-chevron">›</div>',
                 "</div>",
                 '<div class="classroom-lessons">' + lessonRows + "</div>",
                 "</div>",
@@ -60,17 +60,9 @@ var HomeScreen = {
         var drafts     = State.drafts;
         var result     = [];
 
-        // Published lessons for this classroom first
         enabledIds.forEach(function(id) {
             var d = drafts.find(function(x) { return x.id === id; });
             if (d) result.push(d);
-        });
-
-        // Then drafts not yet published to this classroom
-        drafts.forEach(function(d) {
-            if (enabledIds.indexOf(d.id) === -1) {
-                result.push(d);
-            }
         });
 
         return result;
@@ -78,11 +70,6 @@ var HomeScreen = {
 
     _openClassroom: function(classroomId) {
         navigate("classroom", { classroomId: classroomId });
-    },
-
-    _newLesson: function(classroomId) {
-        State.activeClassroom = State.classrooms.find(function(c) { return c.id === classroomId; }) || null;
-        NewLessonDialog.show(classroomId);
     },
 
     _esc: function(str) {

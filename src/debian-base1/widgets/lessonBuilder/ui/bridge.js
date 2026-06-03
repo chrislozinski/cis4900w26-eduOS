@@ -49,6 +49,14 @@ window.receiveFromPython = function(payload) {
         return;
     }
 
+    if (action === "classroomsUpdated") {
+        State.classrooms = payload.classrooms || [];
+        if (document.getElementById("screen-home").classList.contains("active")) {
+            HomeScreen._render();
+        }
+        return;
+    }
+
     if (action === "lessonCreated") {
         State.drafts.push({ id: payload.lessonId, title: payload.draft.title, lesson_type: payload.draft.lesson_type, published_to: [] });
         EditorScreen.onDraftLoaded(payload.lessonId, payload.draft);

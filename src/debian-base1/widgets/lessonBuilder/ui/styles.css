@@ -29,7 +29,7 @@ body {
 
 .topbar {
   background: #111;
-  border-bottom: 3px solid #e0791d;
+  border-bottom: 3px solid #4a9eff;
   padding: 0 20px;
   height: 48px;
   display: flex;
@@ -41,7 +41,7 @@ body {
 .topbar-title {
   font-size: 16px;
   font-weight: 700;
-  color: #e0791d;
+  color: #4a9eff;
 }
 
 .topbar-title span {
@@ -91,7 +91,7 @@ body {
 }
 
 .btn-primary {
-  background: #e0791d;
+  background: #4a9eff;
   color: #fff;
 }
 
@@ -147,6 +147,11 @@ body {
   border-radius: 10px;
   margin-bottom: 18px;
   overflow: hidden;
+  cursor: pointer;
+}
+
+.classroom-card:hover {
+  border-color: #444;
 }
 
 .classroom-header {
@@ -154,12 +159,18 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  cursor: pointer;
   border-bottom: 1px solid #333;
 }
 
-.classroom-header:hover {
+.classroom-card:hover .classroom-header {
   background: #2c2c2c;
+}
+
+.classroom-chevron {
+  color: #555;
+  font-size: 20px;
+  line-height: 1;
+  flex-shrink: 0;
 }
 
 .classroom-name {
@@ -242,8 +253,8 @@ body {
 }
 
 .filter-tab.active {
-  color: #e0791d;
-  border-bottom-color: #e0791d;
+  color: #4a9eff;
+  border-bottom-color: #4a9eff;
 }
 
 .filter-tab:hover:not(.active) {
@@ -317,7 +328,8 @@ body {
 }
 
 .editor-panel {
-  width: 380px;
+  width: 100%;
+  min-width: 320px;
   flex-shrink: 0;
   background: #222;
   border-right: 1px solid #333;
@@ -483,7 +495,7 @@ body {
 }
 
 .field-input:focus {
-  border-color: #e0791d;
+  border-color: #4a9eff;
 }
 
 .code-preview {
