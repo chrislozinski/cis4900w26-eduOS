@@ -4,6 +4,7 @@ var ClassroomScreen = {
     _filter:    "all",
     _classroom: null,
     _trashItems: [],
+    _activeCardId: null,
 
     onEnter: function(data) {
         if (data && data.classroomId) {
@@ -66,10 +67,12 @@ var ClassroomScreen = {
                 list.innerHTML = this._trashItems.map(function(item) {
                     var id = item.id || "";
                     return [
-                        '<div class="lesson-list-row">',
-                        '<div class="lesson-list-name">' + ClassroomScreen._esc(item.title || "Untitled") + "</div>",
-                        '<button class="btn btn-secondary btn-sm" onclick="ClassroomScreen._recover(' + JSON.stringify(id) + ')">Recover</button>',
-                        '<button class="btn btn-danger btn-sm" onclick="ClassroomScreen._permDelete(' + JSON.stringify(id) + ')">Delete</button>',
+                        '<div class="lesson-bin-card">',
+                        '<div class="lesson-bin-name">' + ClassroomScreen._esc(item.title || "Untitled") + "</div>",
+                        '<div class="lesson-bin-actions">',
+                        '<button class="btn btn-secondary btn-sm" onclick="ClassroomScreen._recover(' + _attr(id) + ')">Recover</button>',
+                        '<button class="btn btn-danger btn-sm" onclick="ClassroomScreen._confirmPermDelete(' + _attr(id) + ')">Delete Permanently</button>',
+                        "</div>",
                         "</div>",
                     ].join("");
                 }).join("");
@@ -82,11 +85,15 @@ var ClassroomScreen = {
         var items      = [];
 
         if (this._filter === "all") {
-            items = drafts;
+            items = drafts.filter(function(d) {
+                return enabledIds.indexOf(d.id) !== -1 || d.classroom_id === cls.id;
+            });
         } else if (this._filter === "published") {
             items = drafts.filter(function(d) { return enabledIds.indexOf(d.id) !== -1; });
         } else if (this._filter === "drafts") {
-            items = drafts.filter(function(d) { return enabledIds.indexOf(d.id) === -1; });
+            items = drafts.filter(function(d) {
+                return d.classroom_id === cls.id && enabledIds.indexOf(d.id) === -1;
+            });
         }
 
         if (items.length === 0) {
@@ -95,15 +102,22 @@ var ClassroomScreen = {
         }
 
         list.innerHTML = items.map(function(lesson) {
-            var id         = lesson.id || "";
+            var id          = lesson.id || "";
             var isPublished = enabledIds.indexOf(id) !== -1;
-            var status     = isPublished ? "published" : "draft";
+            var status      = isPublished ? "published" : "draft";
             return [
                 '<div class="lesson-list-row">',
-                '<div class="lesson-list-name">' + ClassroomScreen._esc(lesson.title || "Untitled") + "</div>",
-                '<span class="lesson-list-status ' + status + '">' + status + "</span>",
-                '<button class="btn btn-secondary btn-sm" onclick="ClassroomScreen._openLesson(' + JSON.stringify(id) + ')">Open</button>',
-                "</div>",
+                '<div class="lesson-card-head">',
+                '<div class="lesson-list-name">' + ClassroomScreen._esc(lesson.title || "Untitled"),
+                ' <span class="rename-pencil" onclick="ClassroomScreen._renameLesson(' + _attr(id) + ')">✎</span>',
+                '</div>',
+                '<span class="lesson-list-status ' + status + '">' + status + '</span>',
+                '</div>',
+                '<div class="lesson-card-actions">',
+                '<button class="btn btn-primary btn-sm" onclick="ClassroomScreen._openLesson(' + _attr(id) + ')">Open</button>',
+                '<button class="btn btn-danger btn-sm" onclick="ClassroomScreen._trashLesson(' + _attr(id) + ')">→ Bin</button>',
+                '</div>',
+                '</div>',
             ].join("");
         }).join("");
     },
@@ -114,13 +128,28 @@ var ClassroomScreen = {
         navigate("editor", { lessonId: lessonId });
     },
 
+    _trashLesson: function(lessonId) {
+        ConfirmDialog.show("Move this lesson to the recycle bin?", "Move to Bin", "btn-danger", function(ok) {
+            if (ok) sendToPython("deleteLesson", { lessonId: lessonId });
+        });
+    },
+
     _recover: function(lessonId) {
         sendToPython("recoverLesson", { lessonId: lessonId });
     },
 
-    _permDelete: function(lessonId) {
-        if (!confirm("Permanently delete this lesson? This cannot be undone.")) return;
-        sendToPython("permanentDelete", { lessonId: lessonId });
+    _confirmPermDelete: function(lessonId) {
+        ConfirmDialog.show("Permanently delete this lesson? This cannot be undone.", "Delete Forever", "btn-danger", function(ok) {
+            if (ok) sendToPython("permanentDelete", { lessonId: lessonId });
+        });
+    },
+
+    _renameLesson: function(lessonId) {
+        var lesson = State.drafts.find(function(d) { return d.id === lessonId; });
+        if (!lesson) return;
+        var newTitle = prompt("Rename lesson:", lesson.title || "");
+        if (newTitle === null || newTitle.trim() === "") return;
+        sendToPython("renameLesson", { lessonId: lessonId, title: newTitle.trim() });
     },
 
     _esc: function(str) {

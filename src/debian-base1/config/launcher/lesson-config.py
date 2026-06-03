@@ -126,6 +126,7 @@ class LessonConfig(Gtk.Window):
         self.right_box.set_margin_start(6); self.right_box.set_margin_end(12)
         right_sw.add(self.right_box)
 
+        self.connect("focus-in-event", self._on_focus)
         self._show_placeholder("Select a classroom to configure its lesson resources.")
         self._refresh_cls_list()
 
@@ -167,6 +168,15 @@ class LessonConfig(Gtk.Window):
             if c['id'] == cls_id:
                 return c
         return None
+
+    def _on_focus(self, widget, event):
+        if not self.selected_cls_id:
+            return False
+        self.data = load_classrooms()
+        cls = self._get_cls(self.selected_cls_id)
+        if cls:
+            self._show_detail(cls)
+        return False
 
     def _on_cls_selected(self, _lb, row):
         if row is None:

@@ -37,7 +37,7 @@
 <!-- Editor screen -->
 <div id="screen-editor" class="screen">
   <div class="topbar">
-    <button class="back-btn" onclick="EditorScreen._saveDraft();navigate('classroom',{classroomId: State.activeClassroom && State.activeClassroom.id})">← Back</button>
+    <button class="back-btn" onclick="EditorScreen._promptBack()">← Back</button>
     <div class="topbar-title" id="editor-lesson-title">Lesson Editor</div>
     <div class="topbar-actions">
       <button class="btn btn-secondary btn-sm" onclick="EditorScreen._saveDraft()">Save Draft</button>
@@ -115,6 +115,30 @@
       </div>
     </div>
     <!-- MakeCode WebView is injected here by GTK as the right pane of the Paned widget -->
+  </div>
+</div>
+
+
+<!-- Generic confirm dialog -->
+<div id="dialog-confirm" class="dialog-overlay hidden" onclick="if(event.target===this)ConfirmDialog._cancel()">
+  <div class="dialog">
+    <div class="dialog-title" id="dialog-confirm-title"></div>
+    <div class="dialog-actions">
+      <button class="btn btn-secondary" onclick="ConfirmDialog._cancel()">Cancel</button>
+      <button class="btn btn-danger" id="dialog-confirm-ok" onclick="ConfirmDialog._ok()">Confirm</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- Save / discard dialog (back button) -->
+<div id="dialog-save-back" class="dialog-overlay hidden">
+  <div class="dialog">
+    <div class="dialog-title">Save draft before leaving?</div>
+    <div class="dialog-actions">
+      <button class="btn btn-secondary" onclick="EditorScreen._confirmBack(false)">Discard</button>
+      <button class="btn btn-primary"   onclick="EditorScreen._confirmBack(true)">Save</button>
+    </div>
   </div>
 </div>
 

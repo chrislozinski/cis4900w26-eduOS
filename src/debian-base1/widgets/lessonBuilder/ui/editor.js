@@ -43,7 +43,7 @@ var EditorScreen = {
         el.innerHTML = State.drafts.map(function(d) {
             var active = d.id === current ? " active" : "";
             return [
-                '<div class="step-item' + active + '" onclick="EditorScreen._switchLesson(' + JSON.stringify(d.id) + ')">',
+                '<div class="step-item' + active + '" onclick="EditorScreen._switchLesson(' + _attr(d.id) + ')">',
                 '<div class="step-number"></div>',
                 '<div style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + EditorScreen._esc(d.title || "Untitled") + "</div>",
                 "</div>",
@@ -105,9 +105,9 @@ var EditorScreen = {
         var prevCode = steps.length > 0 ? (steps[steps.length - 1].captured_code || "") : "";
         steps.push({ title: "", instructions: "", hint: "", captured_code: prevCode });
         this._draft.steps = steps;
-        this._stepIdx     = steps.length - 1;
-        sendToPython("setCurrentStep", { stepIndex: this._stepIdx });
         this._saveDraft();
+        this._stepIdx = steps.length - 1;
+        sendToPython("setCurrentStep", { stepIndex: this._stepIdx });
         this._render();
         sendToPython("setEditorCode", { code: prevCode });
     },
@@ -168,28 +168,46 @@ var EditorScreen = {
 
     _publishDialog: function() {
         if (!this._lessonId || !this._draft) return;
-        var classroom = State.activeClassroom;
+        var classroom = State.activeClassroom || State.classrooms[0];
         if (!classroom) {
-            if (State.classrooms.length > 0) {
-                classroom = State.classrooms[0];
-            } else {
-                alert("No classrooms available.");
-                return;
+            ConfirmDialog.show("No classrooms available.", "OK", "btn-secondary", null);
+            return;
+        }
+        var self = this;
+        ConfirmDialog.show(
+            'Publish "' + this._esc(this._draft.title || "this lesson") + '" to ' + this._esc(classroom.name || classroom.id) + "?",
+            "Publish", "btn-success",
+            function(ok) {
+                if (!ok) return;
+                self._flushCurrentStepFields();
+                var steps = self._draft.steps || [];
+                if (steps.length > 0)
+                    self._draft.solution_code = steps[steps.length - 1].captured_code || "";
+                sendToPython("publishLesson", {
+                    lessonId:    self._lessonId,
+                    classroomId: classroom.id,
+                    draft:       self._draft,
+                });
             }
-        }
-        if (!confirm("Publish \"" + (this._draft.title || "this lesson") + "\" to " + (classroom.name || classroom.id) + "?")) return;
-        this._flushCurrentStepFields();
-        var steps = this._draft.steps || [];
-        if (steps.length > 0) {
-            this._draft.solution_code = steps[steps.length - 1].captured_code || "";
-        }
-        sendToPython("publishLesson", { lessonId: this._lessonId, classroomId: classroom.id });
+        );
     },
 
     _deleteLesson: function() {
         if (!this._lessonId) return;
-        if (!confirm("Move this lesson to the recycle bin?")) return;
-        sendToPython("deleteLesson", { lessonId: this._lessonId });
+        ConfirmDialog.show("Move this lesson to the recycle bin?", "Move to Bin", "btn-danger", function(ok) {
+            if (ok) sendToPython("deleteLesson", { lessonId: EditorScreen._lessonId });
+        });
+    },
+
+    _promptBack: function() {
+        if (!this._draft) { navigate("classroom", { classroomId: State.activeClassroom && State.activeClassroom.id }); return; }
+        document.getElementById("dialog-save-back").classList.remove("hidden");
+    },
+
+    _confirmBack: function(save) {
+        document.getElementById("dialog-save-back").classList.add("hidden");
+        if (save) this._saveDraft();
+        navigate("classroom", { classroomId: State.activeClassroom && State.activeClassroom.id });
     },
 
     _previewLesson: function() {

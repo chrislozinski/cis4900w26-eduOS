@@ -20,8 +20,9 @@ var HomeScreen = {
             var lessonRows = "";
 
             var visible = lessons.slice(0, 3);
+            var enabledIds = cls.enabled_lessons || [];
             visible.forEach(function(lesson) {
-                var isPublished = (lesson.published_to || []).indexOf(cls.id) !== -1;
+                var isPublished = enabledIds.indexOf(lesson.id) !== -1;
                 var dotClass    = isPublished ? "published" : "draft";
                 var statusText  = isPublished ? "published" : "draft";
                 lessonRows += [
@@ -42,7 +43,7 @@ var HomeScreen = {
             }
 
             html += [
-                '<div class="classroom-card" onclick="HomeScreen._openClassroom(' + JSON.stringify(cls.id) + ')">',
+                '<div class="classroom-card" onclick="HomeScreen._openClassroom(' + _attr(cls.id) + ')">',
                 '<div class="classroom-header">',
                 '<div class="classroom-name">' + HomeScreen._esc(cls.name || cls.id) + "</div>",
                 '<div class="classroom-chevron">›</div>',
@@ -57,12 +58,15 @@ var HomeScreen = {
 
     _lessonsForClassroom: function(cls) {
         var enabledIds = cls.enabled_lessons || [];
-        var drafts     = State.drafts;
         var result     = [];
 
         enabledIds.forEach(function(id) {
-            var d = drafts.find(function(x) { return x.id === id; });
+            var d = State.drafts.find(function(x) { return x.id === id; });
             if (d) result.push(d);
+        });
+
+        State.drafts.forEach(function(d) {
+            if (enabledIds.indexOf(d.id) === -1 && d.classroom_id === cls.id) result.push(d);
         });
 
         return result;

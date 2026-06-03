@@ -98,7 +98,7 @@ def _remove_index_entry(lesson_id):
 
 # Draft CRUD
 
-def create_draft(title, lesson_type="makecode", description=""):
+def create_draft(title, lesson_type="makecode", description="", classroom_id=""):
     """
     Generate a new UUID, create the draft directory and blank files.
     Returns the lesson_id string ("teacher_<uuid>").
@@ -118,6 +118,7 @@ def create_draft(title, lesson_type="makecode", description=""):
         "created_at":   now,
         "author":       _get_username(),
         "published_to": [],
+        "classroom_id": classroom_id,
     }
     draft = {
         "id":            lesson_id,
@@ -127,6 +128,7 @@ def create_draft(title, lesson_type="makecode", description=""):
         "applications":  [lesson_type],
         "steps":         [],
         "solution_code": "",
+        "classroom_id":  classroom_id,
     }
 
     _atomic_write(os.path.join(draft_dir, "meta.json"), json.dumps(meta, indent=2))
@@ -136,6 +138,7 @@ def create_draft(title, lesson_type="makecode", description=""):
         "lesson_type":  lesson_type,
         "published_to": [],
         "created_at":   now,
+        "classroom_id": classroom_id,
     })
     return lesson_id
 
@@ -295,6 +298,7 @@ def recover_draft(lesson_id):
         "title":        meta.get("title", ""),
         "lesson_type":  meta.get("lesson_type", "makecode"),
         "published_to": meta.get("published_to", []),
+        "classroom_id": meta.get("classroom_id", ""),
     })
 
 

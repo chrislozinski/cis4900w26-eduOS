@@ -1,5 +1,26 @@
 "use strict";
 
+// Reusable dark-theme confirmation dialog
+var ConfirmDialog = {
+    _cb: null,
+    show: function(title, okLabel, okClass, cb) {
+        this._cb = cb;
+        document.getElementById("dialog-confirm-title").textContent = title;
+        var ok = document.getElementById("dialog-confirm-ok");
+        ok.textContent = okLabel || "OK";
+        ok.className = "btn " + (okClass || "btn-primary");
+        document.getElementById("dialog-confirm").classList.remove("hidden");
+    },
+    _ok: function() {
+        document.getElementById("dialog-confirm").classList.add("hidden");
+        if (this._cb) this._cb(true);
+    },
+    _cancel: function() {
+        document.getElementById("dialog-confirm").classList.add("hidden");
+        if (this._cb) this._cb(false);
+    },
+};
+
 // State shared across screens
 var State = {
     classrooms:       [],
@@ -8,6 +29,12 @@ var State = {
     activeLesson:     null,
     draft:            null,
 };
+
+// JSON-stringify a value for use inside an HTML double-quoted attribute.
+// JSON.stringify produces surrounding " chars that would break the attribute.
+function _attr(val) {
+    return JSON.stringify(val).replace(/"/g, '&quot;');
+}
 
 // Send an action to Python
 function sendToPython(action, data) {
@@ -58,7 +85,7 @@ window.receiveFromPython = function(payload) {
     }
 
     if (action === "lessonCreated") {
-        State.drafts.push({ id: payload.lessonId, title: payload.draft.title, lesson_type: payload.draft.lesson_type, published_to: [] });
+        State.drafts.push({ id: payload.lessonId, title: payload.draft.title, lesson_type: payload.draft.lesson_type, published_to: [], classroom_id: payload.draft.classroom_id || "" });
         EditorScreen.onDraftLoaded(payload.lessonId, payload.draft);
         navigate("editor", { lessonId: payload.lessonId });
         return;
@@ -70,7 +97,7 @@ window.receiveFromPython = function(payload) {
     }
 
     if (action === "draftSaved") {
-        // no UI update needed
+        EditorScreen._showToast("Saved.");
         return;
     }
 
@@ -118,7 +145,14 @@ window.receiveFromPython = function(payload) {
     }
 
     if (action === "lessonRecovered") {
-        State.drafts.push({ id: payload.lessonId, title: (payload.draft || {}).title || "", published_to: [] });
+        State.drafts.push({ id: payload.lessonId, title: (payload.draft || {}).title || "", published_to: [], classroom_id: (payload.draft || {}).classroom_id || "" });
+        ClassroomScreen._filter = "all";
+        ClassroomScreen._render();
+        return;
+    }
+
+    if (action === "lessonRenamed") {
+        State.drafts.forEach(function(d) { if (d.id === payload.lessonId) d.title = payload.title; });
         ClassroomScreen.refresh();
         return;
     }

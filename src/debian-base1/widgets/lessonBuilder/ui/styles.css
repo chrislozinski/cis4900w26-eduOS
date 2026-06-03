@@ -261,47 +261,113 @@ body {
   color: #ccc;
 }
 
-.lesson-list-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 0;
-  border-bottom: 1px solid #2a2a2a;
-}
-
-.lesson-list-row:last-child {
-  border-bottom: none;
-}
-
-.lesson-list-name {
-  flex: 1;
-  font-size: 14px;
-  color: #ddd;
-}
-
-.lesson-list-status {
-  font-size: 11px;
-  font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 10px;
-}
-
-.lesson-list-status.published {
-  background: rgba(61, 153, 112, 0.2);
-  color: #3d9970;
-}
-
-.lesson-list-status.draft {
-  background: rgba(100, 100, 100, 0.15);
-  color: #888;
+#classroom-lesson-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 0;
 }
 
 .no-lessons {
+  grid-column: 1 / -1;
   color: #555;
   font-size: 13px;
   padding: 20px 0;
   text-align: center;
 }
+
+.lesson-list-row {
+  background: #2a2a2a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 7px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.lesson-list-row:hover {
+  border-color: #555;
+  background: #2e2e2e;
+}
+
+.lesson-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.lesson-list-name {
+  font-size: 13px;
+  color: #ddd;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rename-pencil {
+  font-size: 15px;
+  color: #555;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.rename-pencil:hover { color: #aaa; }
+
+.lesson-list-status {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  flex-shrink: 0;
+}
+
+.lesson-list-status.published {
+  background: rgba(61, 153, 112, 0.2);
+  border-color: #3d9970;
+  color: #3d9970;
+}
+
+.lesson-list-status.draft {
+  background: rgba(100, 100, 100, 0.15);
+  border-color: #555;
+  color: #888;
+}
+
+.lesson-card-actions {
+  display: flex;
+  gap: 5px;
+  padding-top: 5px;
+  margin-top: 2px;
+  border-top: 1px solid #2a2a2a;
+}
+
+.lesson-bin-card {
+  background: #2a2a2a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 7px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.lesson-bin-name {
+  font-size: 13px;
+  color: #ccc;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lesson-bin-actions {
+  display: flex;
+  gap: 5px;
+}
+
 
 .classroom-toolbar {
   padding: 14px 28px;

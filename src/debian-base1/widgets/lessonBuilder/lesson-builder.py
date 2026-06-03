@@ -348,11 +348,11 @@ class LessonBuilderWindow(Gtk.Window):
         self.set_default_size(1400, 900)
         self.connect("destroy", Gtk.main_quit)
 
+        self.set_size_request(900, 600)
         self._username          = getpass.getuser()
         self._current_lesson_id = None
         self._current_step_idx  = None
         self._classrooms_cache  = None
-
         self.connect("focus-in-event", lambda w, e: self._refresh_classrooms() or False)
 
         self._paned = Gtk.Paned(orientation=Gtk.Orientation.HORIZONTAL)
@@ -485,6 +485,14 @@ class LessonBuilderWindow(Gtk.Window):
     def _inject_autosave_script(self, content_manager):
         js = r"""
 (function() {
+    // Open a blank sandbox project immediately so MakeCode never shows the home/picker page.
+    // importproject is processed by MakeCode's app-level message handler (before Monaco).
+    window.postMessage({ type: "importproject", project: { text: { "main.ts": "" } } }, "*");
+
+    if (window.postMessage) {
+        window.postMessage({ type: "switchjavascript" }, "*");
+    }
+
     var debounce = null;
     function waitForEditor() {
         if (window.monaco && monaco.editor.getEditors().length > 0) {
@@ -495,15 +503,9 @@ class LessonBuilderWindow(Gtk.Window):
                     window.webkit.messageHandlers.editorChanged.postMessage(ed.getValue());
                 }, 1500);
             });
-            window.setEditorCode = function(code) {
-                ed.setValue(code || "");
-            };
         } else {
             setTimeout(waitForEditor, 500);
         }
-    }
-    if (window.postMessage) {
-        window.postMessage({ type: "switchjavascript" }, "*");
     }
     waitForEditor();
 })();
@@ -570,6 +572,7 @@ class LessonBuilderWindow(Gtk.Window):
                 "setCurrentStep":  self._handle_set_current_step,
                 "setCurrentLesson": self._handle_set_current_lesson,
                 "setEditorCode":   self._handle_set_editor_code,
+                "renameLesson":    self._handle_rename,
             }.get(action, lambda d: None)(data)
         except Exception as e:
             self._send_to_ui({"action": "error", "source": action, "error": str(e)})
@@ -591,6 +594,7 @@ class LessonBuilderWindow(Gtk.Window):
             data.get("title", "Untitled Lesson"),
             "makecode",
             data.get("description", ""),
+            data.get("classroomId", ""),
         )
         self._send_to_ui({
             "action":   "lessonCreated",
@@ -615,7 +619,7 @@ class LessonBuilderWindow(Gtk.Window):
     def _handle_publish(self, data):
         lesson_id    = data.get("lessonId")
         classroom_id = data.get("classroomId")
-        draft        = _lesson_storage.load_draft(lesson_id)
+        draft        = data.get("draft") or _lesson_storage.load_draft(lesson_id)
         if not draft:
             self._send_to_ui({"action": "error", "source": "publishLesson", "error": "Draft not found"})
             return
@@ -695,11 +699,29 @@ class LessonBuilderWindow(Gtk.Window):
         self._current_step_idx  = int(data.get("stepIndex", 0))
 
     def _handle_set_editor_code(self, data):
-        code = data.get("code") or ""
+        self._do_import_project(data.get("code") or "")
+
+    def _do_import_project(self, code):
+        payload = json.dumps({
+            "type":    "importproject",
+            "project": {"text": {"main.ts": code}},
+        })
         self._makecode_webview.run_javascript(
-            f"if(window.setEditorCode)window.setEditorCode({json.dumps(code)})",
+            f"window.postMessage({payload}, '*')",
             None, None, None,
         )
+
+    def _handle_rename(self, data):
+        lesson_id = data.get("lessonId")
+        title     = (data.get("title") or "").strip()
+        if not lesson_id or not title:
+            return
+        draft = _lesson_storage.load_draft(lesson_id)
+        if draft:
+            draft["title"] = title
+            _lesson_storage.save_draft(lesson_id, draft)
+        _lesson_storage._update_index_entry(lesson_id, {"title": title})
+        self._send_to_ui({"action": "lessonRenamed", "lessonId": lesson_id, "title": title})
 
     def _refresh_classrooms(self):
         try:
@@ -723,7 +745,7 @@ class LessonBuilderWindow(Gtk.Window):
         GLib.idle_add(_update)
 
     def _open_preview_window(self, url, lesson_id):
-        win = Gtk.Window(title="Preview")
+        win = Gtk.Window(title="Lesson Preview")
         win.set_default_size(1280, 900)
         win.connect("destroy", lambda w: _lesson_storage.cleanup_preview(lesson_id))
 
@@ -732,8 +754,8 @@ class LessonBuilderWindow(Gtk.Window):
         )
         self._apply_cdn_rewrite(preview)
         win.add(preview)
-        preview.load_uri(url)
         win.show_all()
+        preview.load_uri(url)
         return False
 
     def _wait_for_server(self):
