@@ -264,8 +264,8 @@ body {
 #classroom-lesson-list {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  align-items: start;
   gap: 8px;
-  padding: 0;
 }
 
 .no-lessons {

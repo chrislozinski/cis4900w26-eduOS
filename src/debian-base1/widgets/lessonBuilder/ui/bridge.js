@@ -80,6 +80,8 @@ window.receiveFromPython = function(payload) {
         State.classrooms = payload.classrooms || [];
         if (document.getElementById("screen-home").classList.contains("active")) {
             HomeScreen._render();
+        } else if (document.getElementById("screen-classroom").classList.contains("active")) {
+            ClassroomScreen.refresh();
         }
         return;
     }

@@ -22,7 +22,10 @@ var EditorScreen = {
         this._stepIdx  = Math.min(this._stepIdx, Math.max(0, (this._draft.steps || []).length - 1));
         sendToPython("setCurrentLesson", { lessonId: lessonId, stepIndex: this._stepIdx });
         var firstStep = (this._draft.steps || [])[this._stepIdx];
-        sendToPython("setEditorCode", { code: firstStep ? (firstStep.captured_code || "") : "" });
+        sendToPython("setEditorCode", {
+            code:  firstStep ? (firstStep.captured_code || "") : "",
+            title: this._draft.title || "Lesson",
+        });
         this._render();
     },
 
@@ -96,7 +99,10 @@ var EditorScreen = {
         this._renderStepList();
         this._renderStepFields();
         var step = (this._draft.steps || [])[idx];
-        sendToPython("setEditorCode", { code: step ? (step.captured_code || "") : "" });
+        sendToPython("setEditorCode", {
+            code:  step ? (step.captured_code || "") : "",
+            title: this._draft ? (this._draft.title || "Lesson") : "Lesson",
+        });
     },
 
     _addStep: function() {
@@ -109,7 +115,10 @@ var EditorScreen = {
         this._stepIdx = steps.length - 1;
         sendToPython("setCurrentStep", { stepIndex: this._stepIdx });
         this._render();
-        sendToPython("setEditorCode", { code: prevCode });
+        sendToPython("setEditorCode", {
+            code:  prevCode,
+            title: this._draft.title || "Lesson",
+        });
     },
 
     _deleteStep: function(idx) {
@@ -201,6 +210,16 @@ var EditorScreen = {
 
     _promptBack: function() {
         if (!this._draft) { navigate("classroom", { classroomId: State.activeClassroom && State.activeClassroom.id }); return; }
+        var lessonId = this._lessonId;
+        var entry = State.drafts.find(function(d) { return d.id === lessonId; });
+        var publishedInDraft = entry && entry.published_to && entry.published_to.length > 0;
+        var publishedInClassroom = State.classrooms.some(function(c) {
+            return (c.enabled_lessons || []).indexOf(lessonId) !== -1;
+        });
+        if (publishedInDraft || publishedInClassroom) {
+            navigate("classroom", { classroomId: State.activeClassroom && State.activeClassroom.id });
+            return;
+        }
         document.getElementById("dialog-save-back").classList.remove("hidden");
     },
 

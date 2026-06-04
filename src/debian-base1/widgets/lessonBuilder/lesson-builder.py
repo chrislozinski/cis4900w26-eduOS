@@ -486,12 +486,13 @@ class LessonBuilderWindow(Gtk.Window):
         js = r"""
 (function() {
     var debounce = null;
+    var currentEd = null;
 
     function attachIfNeeded() {
         if (!window.monaco || monaco.editor.getEditors().length === 0) return;
         var ed = monaco.editor.getEditors()[0];
-        if (ed.__lessonListenerAttached) return;
-        ed.__lessonListenerAttached = true;
+        if (ed === currentEd) return;
+        currentEd = ed;
         ed.onDidChangeModelContent(function() {
             clearTimeout(debounce);
             debounce = setTimeout(function() {
@@ -500,15 +501,13 @@ class LessonBuilderWindow(Gtk.Window):
         });
     }
 
-    // Re-checks every 800ms so the listener re-attaches after importproject
-    // replaces the Monaco instance.
     setInterval(attachIfNeeded, 800);
 })();
 """
         try:
             script = WebKit2.UserScript.new(
                 js,
-                WebKit2.UserContentInjectedFrames.MAIN_FRAME,
+                WebKit2.UserContentInjectedFrames.ALL_FRAMES,
                 WebKit2.UserScriptInjectionTime.END,
                 None, None,
             )
@@ -694,35 +693,32 @@ class LessonBuilderWindow(Gtk.Window):
         self._current_step_idx  = int(data.get("stepIndex", 0))
 
     def _handle_set_editor_code(self, data):
-        self._do_import_project(data.get("code") or "")
+        self._do_import_project(data.get("code") or "", data.get("title") or "Lesson Sandbox")
 
-    _PXT_JSON = json.dumps({
-        "name": "Lesson Sandbox",
-        "dependencies": {"core": "*"},
-        "description": "",
-        "files": ["main.blocks", "main.ts"],
-    })
     _EMPTY_BLOCKS = '<xml xmlns="http://www.w3.org/1999/xhtml"></xml>'
 
-    def _do_import_project(self, code):
+    def _do_import_project(self, code, title="Lesson Sandbox"):
+        uid     = int(time.time() * 1000)
+        pxt_json = json.dumps({
+            "name":         title,
+            "dependencies": {"core": "*"},
+            "description":  "",
+            "files":        ["main.blocks", "main.ts"],
+        })
         msg = json.dumps({
-            "type":   "pxteditor",
-            "action": "importproject",
-            "id":     "lesson-step",
+            "type":    "pxteditor",
+            "action":  "importproject",
+            "id":      f"lesson-{uid}",
             "project": {
                 "text": {
                     "main.ts":     code or "",
                     "main.blocks": self._EMPTY_BLOCKS,
-                    "pxt.json":    self._PXT_JSON,
+                    "pxt.json":    pxt_json,
                 }
             },
         })
         self._makecode_webview.run_javascript(
             f"window.postMessage({msg}, '*')",
-            None, None, None,
-        )
-        self._makecode_webview.run_javascript(
-            'window.postMessage({type:"pxteditor",action:"switchjavascript",id:"sw-js"}, "*")',
             None, None, None,
         )
 
@@ -760,17 +756,21 @@ class LessonBuilderWindow(Gtk.Window):
         GLib.idle_add(_update)
 
     def _open_preview_window(self, url, lesson_id):
-        win = Gtk.Window(title="Lesson Preview")
-        win.set_default_size(1280, 900)
-        win.connect("destroy", lambda w: _lesson_storage.cleanup_preview(lesson_id))
+        try:
+            win = Gtk.Window(title="Lesson Preview")
+            win.set_default_size(1280, 900)
+            win.connect("destroy", lambda w: _lesson_storage.cleanup_preview(lesson_id))
 
-        preview = self._create_webview(
-            os.path.join("/shared", "makecode", "profiles", self._username, "webkit-preview")
-        )
-        self._apply_cdn_rewrite(preview)
-        win.add(preview)
-        win.show_all()
-        preview.load_uri(url)
+            preview = self._create_webview(
+                os.path.join("/shared", "makecode", "profiles", self._username, "webkit-preview")
+            )
+            self._apply_cdn_rewrite(preview)
+            win.add(preview)
+            win.show_all()
+            win.present()
+            preview.load_uri(url)
+        except Exception as e:
+            self._send_to_ui({"action": "error", "source": "openPreview", "error": str(e)})
         return False
 
     def _wait_for_server(self):
@@ -779,21 +779,41 @@ class LessonBuilderWindow(Gtk.Window):
         GLib.idle_add(self._load_webviews)
         return False
 
+    def _apply_sandbox_ui_tweaks(self, webview):
+        css = """
+        .ui.item.logo.brand,
+        .ui.item.logo.organization,
+        #multiplayer-share-button,
+        .menubar-name,
+        .shareButton { display: none !important; }
+        """
+        cm = webview.get_user_content_manager()
+        if not cm:
+            return
+        try:
+            sheet = WebKit2.UserStyleSheet.new(
+                css,
+                WebKit2.UserContentInjectedFrames.ALL_FRAMES,
+                WebKit2.UserStyleLevel.USER,
+                None, None,
+            )
+            cm.add_style_sheet(sheet)
+        except Exception:
+            pass
+
     def _load_webviews(self):
         base         = f"http://127.0.0.1:{server_port}"
         profile_data = os.path.join(
             "/shared", "makecode", "profiles", self._username, "webkit-sandbox", "data"
         )
         self._apply_cdn_rewrite(self._makecode_webview)
+        self._apply_sandbox_ui_tweaks(self._makecode_webview)
         self._ui_webview.load_uri(f"{base}/lessonbuilder/index.html")
         try:
             has_data = os.path.isdir(profile_data) and any(os.scandir(profile_data))
         except Exception:
             has_data = False
-        if has_data:
-            self._makecode_webview.load_uri(f"{base}/")
-        else:
-            self._makecode_webview.load_uri(f"{base}/#newproject")
+        self._makecode_webview.load_uri(f"{base}/" if has_data else f"{base}/#newproject")
         return False
 
 
