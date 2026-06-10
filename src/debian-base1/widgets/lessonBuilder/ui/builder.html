@@ -17,39 +17,59 @@
     var pendingSaveStepId = null;
     var currentLessonTitle = "Lesson Sandbox";
 
+    // ?edit=1 prevents isReadOnly() in sandbox/iframe mode so the editor
+    // stays editable and the Blockly toolbox is rendered.
+    // Sandbox+iframe mode uses the "iframe" workspace which routes
+    // workspacesave back to us via pxthost — exactly what we need.
     document.getElementById("makecode-frame").src =
-        window.location.origin + "/";
+        window.location.origin + "/?edit=1";
 
-    // No origin filter — the offline MakeCode build may send pxthost with a
-    // hardcoded targetOrigin of "https://arcade.makecode.com" which the browser
-    // drops when the parent is on localhost.  In this sandboxed GTK WebView
-    // there are no untrusted frames, so accepting all origins is safe.
     window.addEventListener("message", function(ev) {
       var msg = ev.data;
       if (!msg || !msg.type) return;
 
-      if (msg.type === "pxthost") {
-        if (!editorReady) {
-          editorReady = true;
-          // MakeCode is ready — flush any step that was queued before ready
-          if (pendingLoad) {
-            _sendImportProject(pendingLoad);
-            pendingLoad = null;
-          }
-        }
+      if (msg.type !== "pxthost") return;
 
-        if (msg.action === "workspacesave" && msg.project) {
-          var ts  = (msg.project.text && msg.project.text["main.ts"])     || "";
-          var xml = (msg.project.text && msg.project.text["main.blocks"]) || "";
-          var saveId = pendingSaveStepId || currentStepId;
-          pendingSaveStepId = null;
-          if (window.webkit && window.webkit.messageHandlers.workspaceSave) {
-            window.webkit.messageHandlers.workspaceSave.postMessage({
-              step_id:    saveId,
-              raw_ts:     ts,
-              cached_xml: xml
-            });
-          }
+      var iframe = document.getElementById("makecode-frame");
+
+      // iframe workspace sends workspacesync on startup — respond with empty
+      // project list so the workspace initialises, but don't mark ready yet
+      // (importproject must arrive after the workspace is fully set up).
+      if (msg.action === "workspacesync") {
+        iframe.contentWindow.postMessage(
+          { type: "pxthost", id: msg.id, projects: [], editor: "blocksprj" },
+          "*"
+        );
+        return;
+      }
+
+      // workspaceloaded fires after workspacesync resolves — acknowledge it
+      // so MakeCode can continue, then fall through to set editorReady.
+      if (msg.action === "workspaceloaded") {
+        iframe.contentWindow.postMessage({ type: "pxthost", id: msg.id }, "*");
+      }
+
+      // First pxthost message after workspacesync (pxt.controller tick,
+      // workspaceloaded, editor.loaded, etc.) means the editor is ready.
+      if (!editorReady) {
+        editorReady = true;
+        if (pendingLoad) {
+          _sendImportProject(pendingLoad);
+          pendingLoad = null;
+        }
+      }
+
+      if (msg.action === "workspacesave" && msg.project) {
+        var ts  = (msg.project.text && msg.project.text["main.ts"])     || "";
+        var xml = (msg.project.text && msg.project.text["main.blocks"]) || "";
+        var saveId = pendingSaveStepId || currentStepId;
+        pendingSaveStepId = null;
+        if (window.webkit && window.webkit.messageHandlers.workspaceSave) {
+          window.webkit.messageHandlers.workspaceSave.postMessage({
+            step_id:    saveId,
+            raw_ts:     ts,
+            cached_xml: xml
+          });
         }
       }
     });
