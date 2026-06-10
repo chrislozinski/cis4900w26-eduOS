@@ -22,7 +22,7 @@
     // Sandbox+iframe mode uses the "iframe" workspace which routes
     // workspacesave back to us via pxthost — exactly what we need.
     document.getElementById("makecode-frame").src =
-        window.location.origin + "/?edit=1";
+        window.location.origin + "/?controller=1";
 
     window.addEventListener("message", function(ev) {
       var msg = ev.data;
