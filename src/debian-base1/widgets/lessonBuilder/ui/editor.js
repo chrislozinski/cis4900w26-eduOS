@@ -22,10 +22,22 @@ var EditorScreen = {
         this._stepIdx  = Math.min(this._stepIdx, Math.max(0, (this._draft.steps || []).length - 1));
         sendToPython("setCurrentLesson", { lessonId: lessonId, stepIndex: this._stepIdx });
         var firstStep = (this._draft.steps || [])[this._stepIdx];
-        sendToPython("setEditorCode", {
-            code:  firstStep ? (firstStep.captured_code || "") : "",
-            title: this._draft.title || "Lesson",
-        });
+        if (firstStep) {
+            sendToPython("setEditorStep", {
+                stepId:      firstStep.id,
+                rawTs:       firstStep.raw_ts    || "",
+                cachedXml:   firstStep.cached_xml || "",
+                lessonTitle: this._draft.title || "Lesson",
+            });
+        } else {
+            // No steps yet — still open MakeCode with the correct lesson name
+            sendToPython("setEditorStep", {
+                stepId:      "_blank_",
+                rawTs:       "",
+                cachedXml:   "",
+                lessonTitle: this._draft.title || "Lesson",
+            });
+        }
         this._render();
     },
 
@@ -64,7 +76,7 @@ var EditorScreen = {
             return [
                 '<div class="step-item' + active + '" onclick="EditorScreen._selectStep(' + i + ')">',
                 '<div class="step-number">' + (i + 1) + "</div>",
-                '<div style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + EditorScreen._esc(step.title || "Step " + (i + 1)) + "</div>",
+                '<div style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + EditorScreen._esc(step.name || "Step " + (i + 1)) + "</div>",
                 "</div>",
             ].join("");
         }).join("");
@@ -81,10 +93,10 @@ var EditorScreen = {
         var hintEl         = document.getElementById("step-hint");
         var codePreviewEl  = document.getElementById("step-code-preview");
 
-        if (titleEl)        titleEl.value        = step ? (step.title        || "") : "";
-        if (instructionsEl) instructionsEl.value = step ? (step.instructions || "") : "";
-        if (hintEl)         hintEl.value         = step ? (step.hint         || "") : "";
-        if (codePreviewEl)  codePreviewEl.textContent = step ? (step.captured_code || "(auto-saved as you type)") : "";
+        if (titleEl)        titleEl.value        = step ? (step.name        || "") : "";
+        if (instructionsEl) instructionsEl.value = step ? (step.description || "") : "";
+        if (hintEl)         hintEl.value         = step ? (step.hint        || "") : "";
+        if (codePreviewEl)  codePreviewEl.textContent = step ? (step.raw_ts || "(auto-saved as you type)") : "";
 
         var noStepMsg = document.getElementById("no-step-msg");
         var stepEditor = document.getElementById("step-editor-fields");
@@ -95,29 +107,42 @@ var EditorScreen = {
     _selectStep: function(idx) {
         this._flushCurrentStepFields();
         this._stepIdx = idx;
-        sendToPython("setCurrentStep", { stepIndex: idx });
         this._renderStepList();
         this._renderStepFields();
         var step = (this._draft.steps || [])[idx];
-        sendToPython("setEditorCode", {
-            code:  step ? (step.captured_code || "") : "",
-            title: this._draft ? (this._draft.title || "Lesson") : "Lesson",
-        });
+        if (step) {
+            sendToPython("setEditorStep", {
+                stepId:      step.id,
+                rawTs:       step.raw_ts    || "",
+                cachedXml:   step.cached_xml || "",
+                lessonTitle: this._draft ? (this._draft.title || "Lesson") : "Lesson",
+            });
+        }
     },
 
     _addStep: function() {
         if (!this._draft) return;
-        var steps    = this._draft.steps || [];
-        var prevCode = steps.length > 0 ? (steps[steps.length - 1].captured_code || "") : "";
-        steps.push({ title: "", instructions: "", hint: "", captured_code: prevCode });
+        var steps       = this._draft.steps || [];
+        var prevRawTs   = steps.length > 0 ? (steps[steps.length - 1].raw_ts || "") : "";
+        var newIdx      = steps.length;
+        steps.push({
+            id:          "step_" + (newIdx + 1),
+            order:       newIdx + 1,
+            name:        "",
+            description: "",
+            hint:        "",
+            raw_ts:      prevRawTs,
+            cached_xml:  "",
+        });
         this._draft.steps = steps;
         this._saveDraft();
-        this._stepIdx = steps.length - 1;
-        sendToPython("setCurrentStep", { stepIndex: this._stepIdx });
+        this._stepIdx = newIdx;
         this._render();
-        sendToPython("setEditorCode", {
-            code:  prevCode,
-            title: this._draft.title || "Lesson",
+        sendToPython("setEditorStep", {
+            stepId:      steps[newIdx].id,
+            rawTs:       prevRawTs,
+            cachedXml:   "",
+            lessonTitle: this._draft.title || "Lesson",
         });
     },
 
@@ -126,11 +151,20 @@ var EditorScreen = {
         var steps = this._draft.steps || [];
         if (steps.length === 0) return;
         steps.splice(idx, 1);
+        steps.forEach(function(s, i) { s.order = i + 1; });
         this._draft.steps = steps;
         this._stepIdx     = Math.min(this._stepIdx, Math.max(0, steps.length - 1));
-        sendToPython("setCurrentStep", { stepIndex: this._stepIdx });
         this._saveDraft();
         this._render();
+        var step = steps[this._stepIdx];
+        if (step) {
+            sendToPython("setEditorStep", {
+                stepId:      step.id,
+                rawTs:       step.raw_ts    || "",
+                cachedXml:   step.cached_xml || "",
+                lessonTitle: this._draft ? (this._draft.title || "Lesson") : "Lesson",
+            });
+        }
     },
 
     _moveStep: function(idx, direction) {
@@ -140,9 +174,9 @@ var EditorScreen = {
         var tmp       = steps[idx];
         steps[idx]    = steps[target];
         steps[target] = tmp;
+        steps.forEach(function(s, i) { s.order = i + 1; });
         this._draft.steps = steps;
         this._stepIdx     = target;
-        sendToPython("setCurrentStep", { stepIndex: target });
         this._saveDraft();
         this._render();
     },
@@ -164,9 +198,9 @@ var EditorScreen = {
         var titleEl        = document.getElementById("step-title");
         var instructionsEl = document.getElementById("step-instructions");
         var hintEl         = document.getElementById("step-hint");
-        if (titleEl)        step.title        = titleEl.value;
-        if (instructionsEl) step.instructions = instructionsEl.value;
-        if (hintEl)         step.hint         = hintEl.value;
+        if (titleEl)        step.name        = titleEl.value;
+        if (instructionsEl) step.description = instructionsEl.value;
+        if (hintEl)         step.hint        = hintEl.value;
     },
 
     _saveDraft: function() {
@@ -191,7 +225,7 @@ var EditorScreen = {
                 self._flushCurrentStepFields();
                 var steps = self._draft.steps || [];
                 if (steps.length > 0)
-                    self._draft.solution_code = steps[steps.length - 1].captured_code || "";
+                    self._draft.solution_code = steps[steps.length - 1].raw_ts || "";
                 sendToPython("publishLesson", {
                     lessonId:    self._lessonId,
                     classroomId: classroom.id,
@@ -209,14 +243,18 @@ var EditorScreen = {
     },
 
     _promptBack: function() {
-        if (!this._draft) { navigate("classroom", { classroomId: State.activeClassroom && State.activeClassroom.id }); return; }
+        if (!this._draft) {
+            navigate("classroom", { classroomId: State.activeClassroom && State.activeClassroom.id });
+            return;
+        }
         var lessonId = this._lessonId;
         var entry = State.drafts.find(function(d) { return d.id === lessonId; });
-        var publishedInDraft = entry && entry.published_to && entry.published_to.length > 0;
-        var publishedInClassroom = State.classrooms.some(function(c) {
-            return (c.enabled_lessons || []).indexOf(lessonId) !== -1;
-        });
-        if (publishedInDraft || publishedInClassroom) {
+        var isPublished =
+            (entry && Array.isArray(entry.published_to) && entry.published_to.length > 0) ||
+            State.classrooms.some(function(c) {
+                return (c.enabled_lessons || []).indexOf(lessonId) !== -1;
+            });
+        if (isPublished) {
             navigate("classroom", { classroomId: State.activeClassroom && State.activeClassroom.id });
             return;
         }

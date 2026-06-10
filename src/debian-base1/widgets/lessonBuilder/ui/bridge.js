@@ -169,13 +169,26 @@ window.receiveFromPython = function(payload) {
         return;
     }
 
+    if (action === "stepCodeUpdated") {
+        if (EditorScreen._draft && EditorScreen._draft.steps) {
+            var step = EditorScreen._draft.steps.find(function(s) {
+                return s.id === payload.stepId;
+            });
+            if (step) {
+                step.raw_ts     = payload.rawTs;
+                step.cached_xml = payload.cachedXml;
+            }
+        }
+        return;
+    }
+
     if (action === "previewReady") {
-        // Preview window opened by Python — nothing to update in the UI
         return;
     }
 
     if (action === "error") {
         console.error("Python error [" + payload.source + "]:", payload.error);
+        EditorScreen._showToast("Error (" + (payload.source || "?") + "): " + payload.error);
         return;
     }
 };

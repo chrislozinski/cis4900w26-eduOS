@@ -29,10 +29,10 @@ def convert_lesson(draft):
     ]
 
     for step in steps:
-        step_title    = step.get("title", "Step")
-        instructions  = (step.get("instructions") or "").strip()
+        step_title    = step.get("name") or step.get("title", "Step")
+        instructions  = (step.get("description") or step.get("instructions") or "").strip()
         hint          = (step.get("hint") or "").strip()
-        captured_code = (step.get("captured_code") or "").strip()
+        captured_code = (step.get("raw_ts") or step.get("captured_code") or "").strip()
 
         lines.append(f"## {{{step_title}}}")
         lines.append("")

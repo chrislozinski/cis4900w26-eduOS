@@ -146,6 +146,11 @@ class LessonBuilderHandler(http.server.SimpleHTTPRequestHandler):
         parts = urlsplit(self.path)
         path  = unquote(parts.path or "/")
 
+        if path == "/builder":
+            local = os.path.join(_THIS_DIR, "ui", "builder.html")
+            self._send_file(local, "text/html; charset=utf-8")
+            return
+
         if path.startswith("/lessonbuilder/"):
             rel   = path[len("/lessonbuilder/"):].lstrip("/") or "index.html"
             local = os.path.normpath(os.path.join(_THIS_DIR, "ui", rel.replace("..", "")))
@@ -191,6 +196,20 @@ class LessonBuilderHandler(http.server.SimpleHTTPRequestHandler):
     def do_HEAD(self):
         parts = urlsplit(self.path)
         path  = unquote(parts.path or "/")
+
+        if path == "/builder":
+            local = os.path.join(_THIS_DIR, "ui", "builder.html")
+            try:
+                length = os.path.getsize(local)
+            except Exception:
+                self.send_error(404)
+                return
+            self.send_response(200)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.send_header("Content-Length", str(length))
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            return
 
         if path.startswith("/lessonbuilder/"):
             rel   = path[len("/lessonbuilder/"):].lstrip("/") or "index.html"
@@ -478,58 +497,34 @@ class LessonBuilderWindow(Gtk.Window):
 
         mc_cm = self._makecode_webview.get_user_content_manager()
         if mc_cm:
-            mc_cm.register_script_message_handler("editorChanged")
-            mc_cm.connect("script-message-received::editorChanged", self._on_code_autosave)
-            self._inject_autosave_script(mc_cm)
+            mc_cm.register_script_message_handler("workspaceSave")
+            mc_cm.connect("script-message-received::workspaceSave", self._on_workspace_save)
 
-    def _inject_autosave_script(self, content_manager):
-        js = r"""
-(function() {
-    var debounce = null;
-    var currentEd = null;
-
-    function attachIfNeeded() {
-        if (!window.monaco || monaco.editor.getEditors().length === 0) return;
-        var ed = monaco.editor.getEditors()[0];
-        if (ed === currentEd) return;
-        currentEd = ed;
-        ed.onDidChangeModelContent(function() {
-            clearTimeout(debounce);
-            debounce = setTimeout(function() {
-                window.webkit.messageHandlers.editorChanged.postMessage(ed.getValue());
-            }, 1500);
-        });
-    }
-
-    setInterval(attachIfNeeded, 800);
-})();
-"""
+    def _on_workspace_save(self, manager, result):
         try:
-            script = WebKit2.UserScript.new(
-                js,
-                WebKit2.UserContentInjectedFrames.ALL_FRAMES,
-                WebKit2.UserScriptInjectionTime.END,
-                None, None,
-            )
-            content_manager.add_script(script)
-        except Exception:
-            pass
-
-    def _on_code_autosave(self, manager, result):
-        try:
-            code = result.get_js_value().to_string()
+            data       = json.loads(result.get_js_value().to_string())
+            step_id    = data.get("step_id")
+            raw_ts     = data.get("raw_ts", "")
+            cached_xml = data.get("cached_xml", "")
         except Exception:
             return
-        if not code or self._current_lesson_id is None or self._current_step_idx is None:
+        if not step_id or not self._current_lesson_id:
             return
         draft = _lesson_storage.load_draft(self._current_lesson_id)
         if not draft:
             return
-        steps = draft.get("steps", [])
-        if self._current_step_idx < len(steps):
-            steps[self._current_step_idx]["captured_code"] = code
-            draft["steps"] = steps
-            _lesson_storage.save_draft(self._current_lesson_id, draft)
+        for step in draft.get("steps", []):
+            if step.get("id") == step_id:
+                step["raw_ts"]     = raw_ts
+                step["cached_xml"] = cached_xml
+                break
+        _lesson_storage.save_draft(self._current_lesson_id, draft)
+        self._send_to_ui({
+            "action":    "stepCodeUpdated",
+            "stepId":    step_id,
+            "rawTs":     raw_ts,
+            "cachedXml": cached_xml,
+        })
 
     def _send_to_ui(self, payload):
         try:
@@ -563,9 +558,8 @@ class LessonBuilderWindow(Gtk.Window):
                 "cleanupPreview":  self._handle_cleanup_preview,
                 "showEditor":      lambda d: self._set_editor_visible(True),
                 "hideEditor":      lambda d: self._set_editor_visible(False),
-                "setCurrentStep":  self._handle_set_current_step,
                 "setCurrentLesson": self._handle_set_current_lesson,
-                "setEditorCode":   self._handle_set_editor_code,
+                "setEditorStep":   self._handle_set_editor_step,
                 "renameLesson":    self._handle_rename,
             }.get(action, lambda d: None)(data)
         except Exception as e:
@@ -683,42 +677,19 @@ class LessonBuilderWindow(Gtk.Window):
     def _handle_cleanup_preview(self, data):
         _lesson_storage.cleanup_preview(data.get("lessonId"))
 
-    def _handle_set_current_step(self, data):
-        idx = data.get("stepIndex")
-        if idx is not None:
-            self._current_step_idx = int(idx)
-
     def _handle_set_current_lesson(self, data):
         self._current_lesson_id = data.get("lessonId")
         self._current_step_idx  = int(data.get("stepIndex", 0))
 
-    def _handle_set_editor_code(self, data):
-        self._do_import_project(data.get("code") or "", data.get("title") or "Lesson Sandbox")
-
-    _EMPTY_BLOCKS = '<xml xmlns="http://www.w3.org/1999/xhtml"></xml>'
-
-    def _do_import_project(self, code, title="Lesson Sandbox"):
-        uid     = int(time.time() * 1000)
-        pxt_json = json.dumps({
-            "name":         title,
-            "dependencies": {"core": "*"},
-            "description":  "",
-            "files":        ["main.blocks", "main.ts"],
-        })
-        msg = json.dumps({
-            "type":    "pxteditor",
-            "action":  "importproject",
-            "id":      f"lesson-{uid}",
-            "project": {
-                "text": {
-                    "main.ts":     code or "",
-                    "main.blocks": self._EMPTY_BLOCKS,
-                    "pxt.json":    pxt_json,
-                }
-            },
-        })
+    def _handle_set_editor_step(self, data):
+        step_id      = json.dumps(data.get("stepId", ""))
+        raw_ts       = json.dumps(data.get("rawTs", ""))
+        cached_xml   = json.dumps(data.get("cachedXml", ""))
+        lesson_title = json.dumps(data.get("lessonTitle", "Lesson Sandbox"))
+        # requestSave() snapshots currentStepId before loadStep() updates it,
+        # so the outgoing workspacesave is attributed to the correct (old) step.
         self._makecode_webview.run_javascript(
-            f"window.postMessage({msg}, '*')",
+            f"requestSave(); loadStep({step_id}, {raw_ts}, {cached_xml}, {lesson_title});",
             None, None, None,
         )
 
@@ -802,18 +773,11 @@ class LessonBuilderWindow(Gtk.Window):
             pass
 
     def _load_webviews(self):
-        base         = f"http://127.0.0.1:{server_port}"
-        profile_data = os.path.join(
-            "/shared", "makecode", "profiles", self._username, "webkit-sandbox", "data"
-        )
+        base = f"http://127.0.0.1:{server_port}"
         self._apply_cdn_rewrite(self._makecode_webview)
         self._apply_sandbox_ui_tweaks(self._makecode_webview)
         self._ui_webview.load_uri(f"{base}/lessonbuilder/index.html")
-        try:
-            has_data = os.path.isdir(profile_data) and any(os.scandir(profile_data))
-        except Exception:
-            has_data = False
-        self._makecode_webview.load_uri(f"{base}/" if has_data else f"{base}/#newproject")
+        self._makecode_webview.load_uri(f"{base}/builder")
         return False
 
 
