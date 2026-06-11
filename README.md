@@ -1,7 +1,8 @@
-# Lozinski CIS*4900, W26
+# Lozinski CIS*4900/4910 W26/S26
+## Ychitsa OS
 
 ## Project Overview
-This repository is for my CIS*4900 Project Course in W26, supervised by Prof. Stefan Kremer.  
+This repository is for my CIS*4900 Project Course in W26, and CIS*4910 in S26, supervised by Prof. Stefan Kremer.  
 The goal of the project is to use a minimal Linux net install and light weight window manager ​to create a tailored OS for teaching primary and secondary school children programming and STEM concepts. 
 By using only learning applications specified by the admin, the OS will effectively boot into a distraction free, “locked down” mode on startup, allowing for more focused learning and greater retention of programming concepts. 
 The goal of this project is to demonstrate proof of concept by successfully integrating the open source application "Microsoft Makecode,” a block code editor which allows a student's code blocks to be translated into Javascript or Python, into the system. 
@@ -33,6 +34,6 @@ This will include a detailed written report of the design methodology, developme
 This project is being developed by Chris Lozinski under the supervision of Prof. Stefan Kremer
 
 ## Project status
-Development ongoing, working towards Milestone 4 and adding in proper networking features and security. 
+Development ongoing, working towards Milestone 2 of CIS4910, refining  networking features and security. 
 
-Last updated: 04/06/2026
+Last updated: 06/10/2026
