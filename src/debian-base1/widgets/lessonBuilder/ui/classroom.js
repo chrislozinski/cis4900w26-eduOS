@@ -81,17 +81,17 @@ var ClassroomScreen = {
         }
 
         var enabledIds = cls.enabled_lessons || [];
-        var drafts     = State.drafts;
+        var lessons    = State.lessons;
         var items      = [];
 
         if (this._filter === "all") {
-            items = drafts.filter(function(d) {
+            items = lessons.filter(function(d) {
                 return enabledIds.indexOf(d.id) !== -1 || d.classroom_id === cls.id;
             });
         } else if (this._filter === "published") {
-            items = drafts.filter(function(d) { return enabledIds.indexOf(d.id) !== -1; });
+            items = lessons.filter(function(d) { return enabledIds.indexOf(d.id) !== -1; });
         } else if (this._filter === "drafts") {
-            items = drafts.filter(function(d) {
+            items = lessons.filter(function(d) {
                 return d.classroom_id === cls.id && enabledIds.indexOf(d.id) === -1;
             });
         }
@@ -123,8 +123,8 @@ var ClassroomScreen = {
     },
 
     _openLesson: function(lessonId) {
-        State.activeLesson = State.drafts.find(function(d) { return d.id === lessonId; }) || { id: lessonId };
-        sendToPython("loadDraft", { lessonId: lessonId });
+        State.activeLesson = State.lessons.find(function(d) { return d.id === lessonId; }) || { id: lessonId };
+        sendToPython("loadLesson", { lessonId: lessonId });
         navigate("editor", { lessonId: lessonId });
     },
 
@@ -145,7 +145,7 @@ var ClassroomScreen = {
     },
 
     _renameLesson: function(lessonId) {
-        var lesson = State.drafts.find(function(d) { return d.id === lessonId; });
+        var lesson = State.lessons.find(function(d) { return d.id === lessonId; });
         if (!lesson) return;
         var newTitle = prompt("Rename lesson:", lesson.title || "");
         if (newTitle === null || newTitle.trim() === "") return;

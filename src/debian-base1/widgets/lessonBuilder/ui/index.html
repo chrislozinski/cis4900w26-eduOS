@@ -40,7 +40,7 @@
     <button class="back-btn" onclick="EditorScreen._promptBack()">← Back</button>
     <div class="topbar-title" id="editor-lesson-title">Lesson Editor</div>
     <div class="topbar-actions">
-      <button class="btn btn-secondary btn-sm" onclick="EditorScreen._saveDraft()">Save Draft</button>
+      <button class="btn btn-secondary btn-sm" onclick="EditorScreen._saveLesson()">Save Draft</button>
       <button class="btn btn-secondary btn-sm" onclick="EditorScreen._previewLesson()">Preview</button>
       <button class="btn btn-success btn-sm" onclick="EditorScreen._publishDialog()">Publish</button>
     </div>
@@ -92,17 +92,17 @@
               <div class="field-group">
                 <div class="field-label">Title</div>
                 <input id="step-title" class="field-input" type="text" placeholder="Step title…"
-                  onchange="EditorScreen._flushCurrentStepFields();EditorScreen._saveDraft();EditorScreen._renderStepList()">
+                  onchange="EditorScreen._flushCurrentStepFields();EditorScreen._saveLesson();EditorScreen._renderStepList()">
               </div>
               <div class="field-group">
                 <div class="field-label">Instructions</div>
                 <textarea id="step-instructions" class="field-input" rows="4" placeholder="Markdown instructions shown in the tutorial sidebar…"
-                  onchange="EditorScreen._flushCurrentStepFields();EditorScreen._saveDraft()"></textarea>
+                  onchange="EditorScreen._flushCurrentStepFields();EditorScreen._saveLesson()"></textarea>
               </div>
               <div class="field-group">
                 <div class="field-label">Hint (optional)</div>
                 <textarea id="step-hint" class="field-input" rows="2" placeholder="Collapsible hint text…"
-                  onchange="EditorScreen._flushCurrentStepFields();EditorScreen._saveDraft()"></textarea>
+                  onchange="EditorScreen._flushCurrentStepFields();EditorScreen._saveLesson()"></textarea>
               </div>
               <div class="field-group">
                 <div class="field-label">Captured code</div>

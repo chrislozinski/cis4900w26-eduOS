@@ -61,11 +61,11 @@ var HomeScreen = {
         var result     = [];
 
         enabledIds.forEach(function(id) {
-            var d = State.drafts.find(function(x) { return x.id === id; });
+            var d = State.lessons.find(function(x) { return x.id === id; });
             if (d) result.push(d);
         });
 
-        State.drafts.forEach(function(d) {
+        State.lessons.forEach(function(d) {
             if (enabledIds.indexOf(d.id) === -1 && d.classroom_id === cls.id) result.push(d);
         });
 

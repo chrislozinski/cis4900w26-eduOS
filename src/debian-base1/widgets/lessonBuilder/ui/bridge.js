@@ -24,10 +24,10 @@ var ConfirmDialog = {
 // State shared across screens
 var State = {
     classrooms:       [],
-    drafts:           [],
+    lessons:          [],
     activeClassroom:  null,
     activeLesson:     null,
-    draft:            null,
+    lesson:           null,
 };
 
 // JSON-stringify a value for use inside an HTML double-quoted attribute.
@@ -71,7 +71,7 @@ window.receiveFromPython = function(payload) {
 
     if (action === "initData") {
         State.classrooms = payload.classrooms || [];
-        State.drafts     = payload.drafts     || [];
+        State.lessons    = payload.lessons    || [];
         navigate("home", {});
         return;
     }
@@ -87,25 +87,25 @@ window.receiveFromPython = function(payload) {
     }
 
     if (action === "lessonCreated") {
-        State.drafts.push({ id: payload.lessonId, title: payload.draft.title, lesson_type: payload.draft.lesson_type, published_to: [], classroom_id: payload.draft.classroom_id || "" });
-        EditorScreen.onDraftLoaded(payload.lessonId, payload.draft);
+        State.lessons.push({ id: payload.lessonId, title: payload.lesson.title, lesson_type: payload.lesson.lesson_type, published_to: [], classroom_id: payload.lesson.classroom_id || "" });
+        EditorScreen.onLessonLoaded(payload.lessonId, payload.lesson);
         navigate("editor", { lessonId: payload.lessonId });
         return;
     }
 
-    if (action === "draftLoaded") {
-        EditorScreen.onDraftLoaded(payload.lessonId, payload.draft);
+    if (action === "lessonLoaded") {
+        EditorScreen.onLessonLoaded(payload.lessonId, payload.lesson);
         return;
     }
 
-    if (action === "draftSaved") {
+    if (action === "lessonSaved") {
         EditorScreen._showToast("Saved.");
         return;
     }
 
     if (action === "lessonPublished") {
         var classroom = payload.classroomId;
-        State.drafts.forEach(function(d) {
+        State.lessons.forEach(function(d) {
             if (d.id === payload.lessonId) {
                 if (!d.published_to) d.published_to = [];
                 if (d.published_to.indexOf(classroom) === -1) {
@@ -137,7 +137,7 @@ window.receiveFromPython = function(payload) {
     }
 
     if (action === "lessonDeleted") {
-        State.drafts = State.drafts.filter(function(d) { return d.id !== payload.lessonId; });
+        State.lessons = State.lessons.filter(function(d) { return d.id !== payload.lessonId; });
         if (State.activeClassroom) {
             navigate("classroom", { classroomId: State.activeClassroom.id });
         } else {
@@ -147,14 +147,14 @@ window.receiveFromPython = function(payload) {
     }
 
     if (action === "lessonRecovered") {
-        State.drafts.push({ id: payload.lessonId, title: (payload.draft || {}).title || "", published_to: [], classroom_id: (payload.draft || {}).classroom_id || "" });
+        State.lessons.push({ id: payload.lessonId, title: (payload.lesson || {}).title || "", published_to: [], classroom_id: (payload.lesson || {}).classroom_id || "" });
         ClassroomScreen._filter = "all";
         ClassroomScreen._render();
         return;
     }
 
     if (action === "lessonRenamed") {
-        State.drafts.forEach(function(d) { if (d.id === payload.lessonId) d.title = payload.title; });
+        State.lessons.forEach(function(d) { if (d.id === payload.lessonId) d.title = payload.title; });
         ClassroomScreen.refresh();
         return;
     }
@@ -170,8 +170,8 @@ window.receiveFromPython = function(payload) {
     }
 
     if (action === "stepCodeUpdated") {
-        if (EditorScreen._draft && EditorScreen._draft.steps) {
-            var step = EditorScreen._draft.steps.find(function(s) {
+        if (EditorScreen._lesson && EditorScreen._lesson.steps) {
+            var step = EditorScreen._lesson.steps.find(function(s) {
                 return s.id === payload.stepId;
             });
             if (step) {

@@ -5,4 +5,338 @@
 #/ home / testuser/resources -- work  and Documents too 
 
 when i pwd im in /home/testuser/
-# hello jennifer ÏØø
+# hello jennifer ï¿½ï¿½ï¿½
+
+
+[01:47:01] SET_EDITOR_STEP step='_blank_' rawTs_len=0 rawTs=''
+
+[01:47:07] SET_EDITOR_STEP step='step_1' rawTs_len=0 rawTs=''
+
+[01:47:35] SET_EDITOR_STEP step='step_2' rawTs_len=0 rawTs=''
+
+[01:47:44] SET_EDITOR_STEP step='step_1' rawTs_len=0 rawTs=''
+
+[01:47:51] SET_EDITOR_STEP step='step_2' rawTs_len=0 rawTs=''
+
+[01:48:00] SET_EDITOR_STEP step='step_1' rawTs_len=0 rawTs=''
+
+[01:49:25] SET_EDITOR_STEP step='step_2' rawTs_len=0 rawTs=''
+
+///
+
+[05:26:28] SET_EDITOR_STEP step='_blank_' rawTs_len=0 rawTs=''
+
+[05:26:37] SET_EDITOR_STEP step='step_1' rawTs_len=0 rawTs=''
+
+[05:27:00] SET_EDITOR_STEP step='step_2' rawTs_len=0 rawTs=''
+
+[05:27:16] SET_EDITOR_STEP step='step_1' rawTs_len=0 rawTs=''
+
+[05:39:56] WORKSPACE_SAVE step=None rawTs_len=1 rawTs=' '
+[05:39:57] WORKSPACE_SAVE step=None rawTs_len=1 rawTs=' '
+[05:39:58] WORKSPACE_SAVE step=None rawTs_len=1 rawTs=' '
+
+[05:40:06] SET_EDITOR_STEP step='_blank_' rawTs_len=0 rawTs=''
+[05:40:07] WORKSPACE_SAVE step='_blank_' rawTs_len=0 rawTs=''
+  LESSON: {}
+[05:40:07] WORKSPACE_SAVE step='_blank_' rawTs_len=0 rawTs=''
+  LESSON: {}
+[05:40:07] WORKSPACE_SAVE step='_blank_' rawTs_len=1 rawTs=' '
+  LESSON: {}
+[05:40:09] WORKSPACE_SAVE step='_blank_' rawTs_len=0 rawTs=''
+  LESSON: {}
+[05:40:09] WORKSPACE_SAVE step='_blank_' rawTs_len=0 rawTs=''
+  LESSON: {}
+[05:40:11] WORKSPACE_SAVE step='_blank_' rawTs_len=0 rawTs=''
+  LESSON: {}
+
+[05:40:12] SET_EDITOR_STEP step='step_1' rawTs_len=0 rawTs=''
+[05:40:12] WORKSPACE_SAVE step='step_1' rawTs_len=0 rawTs=''
+  LESSON: {'step_1': "''"}
+[05:40:12] WORKSPACE_SAVE step='step_1' rawTs_len=0 rawTs=''
+  LESSON: {'step_1': "''"}
+[05:40:14] WORKSPACE_SAVE step='step_1' rawTs_len=0 rawTs=''
+  LESSON: {'step_1': "''"}
+[05:40:14] WORKSPACE_SAVE step='step_1' rawTs_len=0 rawTs=''
+  LESSON: {'step_1': "''"}
+[05:40:17] WORKSPACE_SAVE step='step_1' rawTs_len=0 rawTs=''
+  LESSON: {'step_1': "''"}
+[05:40:19] WORKSPACE_SAVE step='step_1' rawTs_len=0 rawTs=''
+  LESSON: {'step_1': "''"}
+[05:40:19] WORKSPACE_SAVE step='step_1' rawTs_len=0 rawTs=''
+  LESSON: {'step_1': "''"}
+[05:40:20] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs='\n'
+  LESSON: {'step_1': "'\\n'"}
+[05:40:20] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs='\n'
+  LESSON: {'step_1': "'\\n'"}
+[05:40:26] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs='\n'
+  LESSON: {'step_1': "'\\n'"}
+[05:40:26] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:40:26] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:40:32] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:40:32] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:40:37] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:40:39] WORKSPACE_SAVE step='step_1' rawTs_len=680 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:40:39] WORKSPACE_SAVE step='step_1' rawTs_len=680 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+
+[05:40:40] SET_EDITOR_STEP step='step_2' rawTs_len=680 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+[05:40:40] WORKSPACE_SAVE step='step_1' rawTs_len=0 rawTs=''
+  LESSON: {'step_1': "''", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:40:40] WORKSPACE_SAVE step='step_2' rawTs_len=680 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "''", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:40:40] WORKSPACE_SAVE step='step_2' rawTs_len=680 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "''", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:40:43] WORKSPACE_SAVE step='step_2' rawTs_len=680 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "''", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:40:46] WORKSPACE_SAVE step='step_2' rawTs_len=680 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "''", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:40:51] WORKSPACE_SAVE step='step_2' rawTs_len=680 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "''", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:40:51] WORKSPACE_SAVE step='step_2' rawTs_len=680 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "''", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:40:51] WORKSPACE_SAVE step='step_2' rawTs_len=680 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "''", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:40:56] WORKSPACE_SAVE step='step_2' rawTs_len=680 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "''", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:40:57] WORKSPACE_SAVE step='step_2' rawTs_len=726 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "''", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:40:57] WORKSPACE_SAVE step='step_2' rawTs_len=726 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "''", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:41:01] WORKSPACE_SAVE step='step_2' rawTs_len=726 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "''", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:41:02] WORKSPACE_SAVE step='step_2' rawTs_len=750 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "''", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:41:02] WORKSPACE_SAVE step='step_2' rawTs_len=750 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "''", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:41:05] WORKSPACE_SAVE step='step_2' rawTs_len=751 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "''", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:41:05] WORKSPACE_SAVE step='step_2' rawTs_len=751 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "''", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:41:10] WORKSPACE_SAVE step='step_2' rawTs_len=751 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "''", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:41:12] WORKSPACE_SAVE step='step_2' rawTs_len=779 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "''", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:41:12] WORKSPACE_SAVE step='step_2' rawTs_len=779 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "''", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:41:14] WORKSPACE_SAVE step='step_2' rawTs_len=779 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "''", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:41:14] WORKSPACE_SAVE step='step_2' rawTs_len=779 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "''", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:41:19] WORKSPACE_SAVE step='step_2' rawTs_len=779 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "''", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+
+[05:41:19] SET_EDITOR_STEP step='step_1' rawTs_len=0 rawTs=''
+[05:41:19] WORKSPACE_SAVE step='step_2' rawTs_len=0 rawTs=''
+  LESSON: {'step_1': "''", 'step_2': "''"}
+[05:41:20] WORKSPACE_SAVE step='step_1' rawTs_len=0 rawTs=''
+  LESSON: {'step_1': "''", 'step_2': "''"}
+[05:41:20] WORKSPACE_SAVE step='step_1' rawTs_len=0 rawTs=''
+  LESSON: {'step_1': "''", 'step_2': "''"}
+[05:41:23] WORKSPACE_SAVE step='step_1' rawTs_len=0 rawTs=''
+  LESSON: {'step_1': "''", 'step_2': "''"}
+[05:41:23] WORKSPACE_SAVE step='step_1' rawTs_len=0 rawTs=''
+  LESSON: {'step_1': "''", 'step_2': "''"}
+[05:41:26] WORKSPACE_SAVE step='step_1' rawTs_len=0 rawTs=''
+  LESSON: {'step_1': "''", 'step_2': "''"}
+[05:41:29] WORKSPACE_SAVE step='step_1' rawTs_len=0 rawTs=''
+  LESSON: {'step_1': "''", 'step_2': "''"}
+[05:41:29] WORKSPACE_SAVE step='step_1' rawTs_len=0 rawTs=''
+  LESSON: {'step_1': "''", 'step_2': "''"}
+[05:41:29] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs='\n'
+  LESSON: {'step_1': "'\\n'", 'step_2': "''"}
+[05:41:29] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs='\n'
+  LESSON: {'step_1': "'\\n'", 'step_2': "''"}
+
+[05:41:31] SET_EDITOR_STEP step='step_2' rawTs_len=0 rawTs=''
+[05:41:31] WORKSPACE_SAVE step='step_1' rawTs_len=0 rawTs=''
+  LESSON: {'step_1': "''", 'step_2': "''"}
+[05:41:31] WORKSPACE_SAVE step='step_2' rawTs_len=0 rawTs=''
+  LESSON: {'step_1': "''", 'step_2': "''"}
+[05:41:33] WORKSPACE_SAVE step='step_2' rawTs_len=0 rawTs=''
+  LESSON: {'step_1': "''", 'step_2': "''"}
+[05:41:35] WORKSPACE_SAVE step='step_2' rawTs_len=0 rawTs=''
+  LESSON: {'step_1': "''", 'step_2': "''"}
+[05:41:35] WORKSPACE_SAVE step='step_2' rawTs_len=0 rawTs=''
+  LESSON: {'step_1': "''", 'step_2': "''"}
+[05:41:38] WORKSPACE_SAVE step='step_2' rawTs_len=0 rawTs=''
+  LESSON: {'step_1': "''", 'step_2': "''"}
+
+[05:41:55] SET_EDITOR_STEP step='step_1' rawTs_len=0 rawTs=''
+[05:41:55] WORKSPACE_SAVE step='step_2' rawTs_len=0 rawTs=''
+  LESSON: {'step_1': "''", 'step_2': "''"}
+[05:41:55] WORKSPACE_SAVE step='step_1' rawTs_len=0 rawTs=''
+  LESSON: {'step_1': "''", 'step_2': "''"}
+[05:41:55] WORKSPACE_SAVE step='step_1' rawTs_len=0 rawTs=''
+  LESSON: {'step_1': "''", 'step_2': "''"}
+[05:41:58] WORKSPACE_SAVE step='step_1' rawTs_len=0 rawTs=''
+  LESSON: {'step_1': "''", 'step_2': "''"}
+[05:41:58] WORKSPACE_SAVE step='step_1' rawTs_len=0 rawTs=''
+  LESSON: {'step_1': "''", 'step_2': "''"}
+[05:42:01] WORKSPACE_SAVE step='step_1' rawTs_len=0 rawTs=''
+  LESSON: {'step_1': "''", 'step_2': "''"}
+[05:57:47] WORKSPACE_SAVE step=None rawTs_len=1 rawTs=' '
+[05:57:48] WORKSPACE_SAVE step=None rawTs_len=1 rawTs=' '
+[05:57:49] WORKSPACE_SAVE step=None rawTs_len=1 rawTs=' '
+
+[05:57:55] SET_EDITOR_STEP step='_blank_' rawTs_len=0 rawTs=''
+[05:57:55] WORKSPACE_SAVE step='_blank_' rawTs_len=0 rawTs=''
+  LESSON: {}
+[05:57:56] WORKSPACE_SAVE step='_blank_' rawTs_len=0 rawTs=''
+  LESSON: {}
+[05:57:56] WORKSPACE_SAVE step='_blank_' rawTs_len=1 rawTs=' '
+  LESSON: {}
+[05:57:58] WORKSPACE_SAVE step='_blank_' rawTs_len=0 rawTs=''
+  LESSON: {}
+[05:57:58] WORKSPACE_SAVE step='_blank_' rawTs_len=0 rawTs=''
+  LESSON: {}
+[05:58:00] WORKSPACE_SAVE step='_blank_' rawTs_len=0 rawTs=''
+  LESSON: {}
+
+[05:58:02] SET_EDITOR_STEP step='step_1' rawTs_len=0 rawTs=''
+[05:58:02] WORKSPACE_SAVE step='step_1' rawTs_len=0 rawTs=''
+  LESSON: {'step_1': "''"}
+[05:58:02] WORKSPACE_SAVE step='step_1' rawTs_len=0 rawTs=''
+  LESSON: {'step_1': "''"}
+[05:58:04] WORKSPACE_SAVE step='step_1' rawTs_len=0 rawTs=''
+  LESSON: {'step_1': "''"}
+[05:58:04] WORKSPACE_SAVE step='step_1' rawTs_len=0 rawTs=''
+  LESSON: {'step_1': "''"}
+[05:58:05] WORKSPACE_SAVE step='step_1' rawTs_len=0 rawTs=''
+  LESSON: {'step_1': "''"}
+[05:58:06] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs='\n'
+  LESSON: {'step_1': "'\\n'"}
+[05:58:06] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs='\n'
+  LESSON: {'step_1': "'\\n'"}
+[05:58:11] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs='\n'
+  LESSON: {'step_1': "'\\n'"}
+[05:58:17] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:58:17] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:58:26] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:58:26] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+
+[05:58:27] SET_EDITOR_STEP step='step_2' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+[05:58:27] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:58:27] WORKSPACE_SAVE step='step_2' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:58:27] WORKSPACE_SAVE step='step_2' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:58:30] WORKSPACE_SAVE step='step_2' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:58:34] WORKSPACE_SAVE step='step_2' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:58:36] WORKSPACE_SAVE step='step_2' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:58:36] WORKSPACE_SAVE step='step_2' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:58:36] WORKSPACE_SAVE step='step_2' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:58:41] WORKSPACE_SAVE step='step_2' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:58:48] WORKSPACE_SAVE step='step_2' rawTs_len=681 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:58:48] WORKSPACE_SAVE step='step_2' rawTs_len=681 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:58:50] WORKSPACE_SAVE step='step_2' rawTs_len=681 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:58:51] WORKSPACE_SAVE step='step_2' rawTs_len=681 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:58:55] WORKSPACE_SAVE step='step_2' rawTs_len=681 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:58:57] WORKSPACE_SAVE step='step_2' rawTs_len=713 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:58:57] WORKSPACE_SAVE step='step_2' rawTs_len=713 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:58:59] WORKSPACE_SAVE step='step_2' rawTs_len=713 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:58:59] WORKSPACE_SAVE step='step_2' rawTs_len=713 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:59:04] WORKSPACE_SAVE step='step_2' rawTs_len=713 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+
+[05:59:05] SET_EDITOR_STEP step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+[05:59:05] WORKSPACE_SAVE step='step_2' rawTs_len=713 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:59:05] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:59:05] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:59:08] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:59:08] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:59:09] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+
+[05:59:13] SET_EDITOR_STEP step='step_2' rawTs_len=713 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+[05:59:13] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:59:13] WORKSPACE_SAVE step='step_2' rawTs_len=713 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:59:13] WORKSPACE_SAVE step='step_2' rawTs_len=713 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:59:14] WORKSPACE_SAVE step='step_2' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:59:16] WORKSPACE_SAVE step='step_2' rawTs_len=713 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:59:16] WORKSPACE_SAVE step='step_2' rawTs_len=713 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:59:16] WORKSPACE_SAVE step='step_2' rawTs_len=713 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:59:21] WORKSPACE_SAVE step='step_2' rawTs_len=713 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+
+[06:00:38] SET_EDITOR_STEP step='step_2' rawTs_len=713 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+[06:00:38] WORKSPACE_SAVE step='step_2' rawTs_len=713 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[06:00:38] WORKSPACE_SAVE step='step_2' rawTs_len=713 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[06:00:38] WORKSPACE_SAVE step='step_2' rawTs_len=713 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+
+[06:00:39] SET_EDITOR_STEP step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+[06:00:39] WORKSPACE_SAVE step='step_2' rawTs_len=713 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[06:00:39] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[06:00:42] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[06:00:45] WORKSPACE_SAVE step='step_1' rawTs_len=713 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[06:00:45] WORKSPACE_SAVE step='step_1' rawTs_len=713 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[06:00:45] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[06:00:46] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[06:00:46] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[06:00:52] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+
+[06:00:52] SET_EDITOR_STEP step='step_2' rawTs_len=713 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+[06:00:52] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[06:00:52] WORKSPACE_SAVE step='step_2' rawTs_len=713 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[06:00:52] WORKSPACE_SAVE step='step_2' rawTs_len=713 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[06:00:57] WORKSPACE_SAVE step='step_2' rawTs_len=713 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[06:00:57] WORKSPACE_SAVE step='step_2' rawTs_len=713 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[06:00:57] WORKSPACE_SAVE step='step_2' rawTs_len=713 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[06:01:02] WORKSPACE_SAVE step='step_2' rawTs_len=713 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}

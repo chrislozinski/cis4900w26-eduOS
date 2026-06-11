@@ -508,17 +508,27 @@ class LessonBuilderWindow(Gtk.Window):
             cached_xml = data.get("cached_xml", "")
         except Exception:
             return
+        _dbg = "/home/testuser/work/test_linux_file.txt"
+        with open(_dbg, "a") as _f:
+            _f.write(f"[{time.strftime('%H:%M:%S')}] WORKSPACE_SAVE "
+                     f"step={step_id!r} "
+                     f"rawTs_len={len(raw_ts)} "
+                     f"rawTs={repr(raw_ts[:80])}\n")
         if not step_id or not self._current_lesson_id:
             return
-        draft = _lesson_storage.load_draft(self._current_lesson_id)
-        if not draft:
+        lesson = _lesson_storage.load_lesson(self._current_lesson_id)
+        if not lesson:
             return
-        for step in draft.get("steps", []):
+        for step in lesson.get("steps", []):
             if step.get("id") == step_id:
                 step["raw_ts"]     = raw_ts
                 step["cached_xml"] = cached_xml
                 break
-        _lesson_storage.save_draft(self._current_lesson_id, draft)
+        _lesson_storage.save_lesson(self._current_lesson_id, lesson)
+        with open(_dbg, "a") as _f:
+            summary = {s["id"]: repr((s.get("raw_ts") or "")[:50])
+                       for s in lesson.get("steps", [])}
+            _f.write(f"  LESSON: {summary}\n")
         self._send_to_ui({
             "action":    "stepCodeUpdated",
             "stepId":    step_id,
@@ -546,8 +556,8 @@ class LessonBuilderWindow(Gtk.Window):
             {
                 "init":            self._handle_init,
                 "createLesson":    self._handle_create,
-                "loadDraft":       self._handle_load_draft,
-                "saveDraft":       self._handle_save_draft,
+                "loadLesson":      self._handle_load_lesson,
+                "saveLesson":      self._handle_save_lesson,
                 "publishLesson":   self._handle_publish,
                 "unpublishLesson": self._handle_unpublish,
                 "deleteLesson":    self._handle_delete,
@@ -574,11 +584,11 @@ class LessonBuilderWindow(Gtk.Window):
         self._send_to_ui({
             "action":     "initData",
             "classrooms": cls_data.get("classrooms", []),
-            "drafts":     _lesson_storage.load_drafts_index(),
+            "lessons":    _lesson_storage.load_all_lessons(),
         })
 
     def _handle_create(self, data):
-        lesson_id = _lesson_storage.create_draft(
+        lesson_id = _lesson_storage.create_lesson(
             data.get("title", "Untitled Lesson"),
             "makecode",
             data.get("description", ""),
@@ -587,34 +597,34 @@ class LessonBuilderWindow(Gtk.Window):
         self._send_to_ui({
             "action":   "lessonCreated",
             "lessonId": lesson_id,
-            "draft":    _lesson_storage.load_draft(lesson_id),
+            "lesson":   _lesson_storage.load_lesson(lesson_id),
         })
 
-    def _handle_load_draft(self, data):
+    def _handle_load_lesson(self, data):
         lesson_id = data.get("lessonId")
-        draft     = _lesson_storage.load_draft(lesson_id) if lesson_id else None
+        lesson    = _lesson_storage.load_lesson(lesson_id) if lesson_id else None
         self._current_lesson_id = lesson_id
         self._current_step_idx  = 0
-        self._send_to_ui({"action": "draftLoaded", "lessonId": lesson_id, "draft": draft})
+        self._send_to_ui({"action": "lessonLoaded", "lessonId": lesson_id, "lesson": lesson})
 
-    def _handle_save_draft(self, data):
-        lesson_id  = data.get("lessonId")
-        draft_data = data.get("draft")
-        if lesson_id and draft_data:
-            _lesson_storage.save_draft(lesson_id, draft_data)
-        self._send_to_ui({"action": "draftSaved", "lessonId": lesson_id})
+    def _handle_save_lesson(self, data):
+        lesson_id   = data.get("lessonId")
+        lesson_data = data.get("lesson")
+        if lesson_id and lesson_data:
+            _lesson_storage.save_lesson(lesson_id, lesson_data)
+        self._send_to_ui({"action": "lessonSaved", "lessonId": lesson_id})
 
     def _handle_publish(self, data):
         lesson_id    = data.get("lessonId")
         classroom_id = data.get("classroomId")
-        draft        = data.get("draft") or _lesson_storage.load_draft(lesson_id)
-        if not draft:
-            self._send_to_ui({"action": "error", "source": "publishLesson", "error": "Draft not found"})
+        lesson       = data.get("lesson") or _lesson_storage.load_lesson(lesson_id)
+        if not lesson:
+            self._send_to_ui({"action": "error", "source": "publishLesson", "error": "Lesson not found"})
             return
         _lesson_storage.publish_lesson(
             lesson_id,
-            _convert_lesson(draft),
-            draft.get("solution_code", ""),
+            _convert_lesson(lesson),
+            lesson.get("solution_code", ""),
             classroom_id,
         )
         self._send_to_ui({"action": "lessonPublished", "lessonId": lesson_id, "classroomId": classroom_id})
@@ -646,11 +656,11 @@ class LessonBuilderWindow(Gtk.Window):
 
     def _handle_recover(self, data):
         lesson_id = data.get("lessonId")
-        _lesson_storage.recover_draft(lesson_id)
+        _lesson_storage.recover_lesson(lesson_id)
         self._send_to_ui({
             "action":   "lessonRecovered",
             "lessonId": lesson_id,
-            "draft":    _lesson_storage.load_draft(lesson_id),
+            "lesson":   _lesson_storage.load_lesson(lesson_id),
         })
 
     def _handle_perma_delete(self, data):
@@ -659,16 +669,16 @@ class LessonBuilderWindow(Gtk.Window):
         self._send_to_ui({"action": "lessonPermanentlyDeleted", "lessonId": lesson_id})
 
     def _handle_get_trash(self, data):
-        self._send_to_ui({"action": "trashLoaded", "items": _lesson_storage.load_trash_index()})
+        self._send_to_ui({"action": "trashLoaded", "items": _lesson_storage.load_recycling()})
 
     def _handle_preview(self, data):
-        lesson_id   = data.get("lessonId")
-        draft_input = data.get("draft")
-        draft       = draft_input or _lesson_storage.load_draft(lesson_id)
-        if not draft:
-            self._send_to_ui({"action": "error", "source": "previewLesson", "error": "Draft not found"})
+        lesson_id    = data.get("lessonId")
+        lesson_input = data.get("lesson")
+        lesson       = lesson_input or _lesson_storage.load_lesson(lesson_id)
+        if not lesson:
+            self._send_to_ui({"action": "error", "source": "previewLesson", "error": "Lesson not found"})
             return
-        _lesson_storage.write_preview(lesson_id, _convert_lesson(draft))
+        _lesson_storage.write_preview(lesson_id, _convert_lesson(lesson))
         if server_port != 0:
             url = f"http://127.0.0.1:{server_port}/#tutorial:/api/md/teacher-lessons/{lesson_id}/tutorial"
             GLib.idle_add(self._open_preview_window, url, lesson_id)
@@ -682,14 +692,19 @@ class LessonBuilderWindow(Gtk.Window):
         self._current_step_idx  = int(data.get("stepIndex", 0))
 
     def _handle_set_editor_step(self, data):
-        step_id      = json.dumps(data.get("stepId", ""))
-        raw_ts       = json.dumps(data.get("rawTs", ""))
-        cached_xml   = json.dumps(data.get("cachedXml", ""))
-        lesson_title = json.dumps(data.get("lessonTitle", "Lesson Sandbox"))
-        # requestSave() snapshots currentStepId before loadStep() updates it,
-        # so the outgoing workspacesave is attributed to the correct (old) step.
+        step_id      = data.get("stepId", "")
+        raw_ts_val   = data.get("rawTs", "")
+        cached_xml   = data.get("cachedXml", "")
+        lesson_title = data.get("lessonTitle", "Lesson Sandbox")
+        _dbg = "/home/testuser/work/test_linux_file.txt"
+        with open(_dbg, "a") as _f:
+            _f.write(f"\n[{time.strftime('%H:%M:%S')}] SET_EDITOR_STEP "
+                     f"step={step_id!r} "
+                     f"rawTs_len={len(raw_ts_val)} "
+                     f"rawTs={repr(raw_ts_val[:80])}\n")
         self._makecode_webview.run_javascript(
-            f"requestSave(); loadStep({step_id}, {raw_ts}, {cached_xml}, {lesson_title});",
+            f"loadStep({json.dumps(step_id)}, {json.dumps(raw_ts_val)}, "
+            f"{json.dumps(cached_xml)}, {json.dumps(lesson_title)});",
             None, None, None,
         )
 
@@ -698,11 +713,10 @@ class LessonBuilderWindow(Gtk.Window):
         title     = (data.get("title") or "").strip()
         if not lesson_id or not title:
             return
-        draft = _lesson_storage.load_draft(lesson_id)
-        if draft:
-            draft["title"] = title
-            _lesson_storage.save_draft(lesson_id, draft)
-        _lesson_storage._update_index_entry(lesson_id, {"title": title})
+        lesson = _lesson_storage.load_lesson(lesson_id)
+        if lesson:
+            lesson["title"] = title
+            _lesson_storage.save_lesson(lesson_id, lesson)
         self._send_to_ui({"action": "lessonRenamed", "lessonId": lesson_id, "title": title})
 
     def _refresh_classrooms(self):

@@ -11,46 +11,33 @@
 <body>
   <iframe id="makecode-frame"></iframe>
   <script>
-    var editorReady       = false;
-    var pendingLoad       = null;
-    var currentStepId     = null;
-    var pendingSaveStepId = null;
+    var editorReady        = false;
+    var pendingLoad        = null;
+    var currentStepId      = null;
     var currentLessonTitle = "Lesson Sandbox";
+    var lastKnownTs        = "";
+    var lastKnownXml       = "";
 
-    // ?edit=1 prevents isReadOnly() in sandbox/iframe mode so the editor
-    // stays editable and the Blockly toolbox is rendered.
-    // Sandbox+iframe mode uses the "iframe" workspace which routes
-    // workspacesave back to us via pxthost — exactly what we need.
     document.getElementById("makecode-frame").src =
         window.location.origin + "/?controller=1";
 
     window.addEventListener("message", function(ev) {
       var msg = ev.data;
       if (!msg || !msg.type) return;
-
       if (msg.type !== "pxthost") return;
-
       var iframe = document.getElementById("makecode-frame");
 
-      // iframe workspace sends workspacesync on startup — respond with empty
-      // project list so the workspace initialises, but don't mark ready yet
-      // (importproject must arrive after the workspace is fully set up).
       if (msg.action === "workspacesync") {
         iframe.contentWindow.postMessage(
-          { type: "pxthost", id: msg.id, projects: [], editor: "blocksprj" },
-          "*"
+          { type: "pxthost", id: msg.id, projects: [], editor: "blocksprj" }, "*"
         );
         return;
       }
 
-      // workspaceloaded fires after workspacesync resolves — acknowledge it
-      // so MakeCode can continue, then fall through to set editorReady.
       if (msg.action === "workspaceloaded") {
         iframe.contentWindow.postMessage({ type: "pxthost", id: msg.id }, "*");
       }
 
-      // First pxthost message after workspacesync (pxt.controller tick,
-      // workspaceloaded, editor.loaded, etc.) means the editor is ready.
       if (!editorReady) {
         editorReady = true;
         if (pendingLoad) {
@@ -59,68 +46,59 @@
         }
       }
 
+      // Autosave: save whenever MakeCode fires it
       if (msg.action === "workspacesave" && msg.project) {
         var ts  = (msg.project.text && msg.project.text["main.ts"])     || "";
         var xml = (msg.project.text && msg.project.text["main.blocks"]) || "";
-        var saveId = pendingSaveStepId || currentStepId;
-        pendingSaveStepId = null;
+        lastKnownTs  = ts;
+        lastKnownXml = xml;
         if (window.webkit && window.webkit.messageHandlers.workspaceSave) {
-          window.webkit.messageHandlers.workspaceSave.postMessage({
-            step_id:    saveId,
-            raw_ts:     ts,
-            cached_xml: xml
-          });
+          window.webkit.messageHandlers.workspaceSave.postMessage(
+            JSON.stringify({ step_id: currentStepId, raw_ts: ts, cached_xml: xml })
+          );
         }
       }
     });
 
+    // Called from Python. Saves current step code then loads next step.
     function loadStep(stepId, rawTs, cachedXml, lessonTitle) {
-      currentStepId      = stepId;
       currentLessonTitle = lessonTitle || currentLessonTitle;
-      var payload = { step_id: stepId, raw_ts: rawTs, cached_xml: cachedXml };
       if (!editorReady) {
-        pendingLoad = payload;
+        pendingLoad = { step_id: stepId, raw_ts: rawTs, cached_xml: cachedXml };
         return;
       }
-      _sendImportProject(payload);
-    }
-
-    function requestSave() {
-      pendingSaveStepId = currentStepId;
-      var iframe = document.getElementById("makecode-frame");
-      iframe.contentWindow.postMessage({
-        type:     "pxteditor",
-        action:   "saveproject",
-        id:       "save-" + Date.now(),
-        response: false
-      }, "*");
+      if (currentStepId && currentStepId !== "_blank_" &&
+          window.webkit && window.webkit.messageHandlers.workspaceSave) {
+        window.webkit.messageHandlers.workspaceSave.postMessage(
+          JSON.stringify({ step_id: currentStepId, raw_ts: lastKnownTs, cached_xml: lastKnownXml })
+        );
+      }
+      lastKnownTs  = "";
+      lastKnownXml = "";
+      _sendImportProject({ step_id: stepId, raw_ts: rawTs, cached_xml: cachedXml });
     }
 
     function _sendImportProject(payload) {
-      var iframe  = document.getElementById("makecode-frame");
-      var name    = currentLessonTitle || "Lesson Sandbox";
+      currentStepId = payload.step_id;
+      var iframe = document.getElementById("makecode-frame");
+      var name   = currentLessonTitle || "Lesson Sandbox";
       var project = {
         editor: "blocksprj",
         text: {
-          "main.ts":     payload.raw_ts  || "",
+          "main.ts":     payload.raw_ts    || "",
           "main.blocks": payload.cached_xml || "",
-          "pxt.json":    JSON.stringify({
-            name:         name,
+          "pxt.json": JSON.stringify({
+            name: name, preferredEditor: "blocksprj",
             dependencies: { "device": "*" },
-            description:  "",
-            files:        ["main.blocks", "main.ts"]
+            description: "", files: ["main.blocks", "main.ts"]
           })
         },
         meta: {}
       };
-      // Use "*" as targetOrigin — the offline build may use a different
-      // origin than window.location.origin in its postMessage checks.
       iframe.contentWindow.postMessage({
-        type:     "pxteditor",
-        action:   "importproject",
-        id:       "step-" + (payload.step_id || "blank") + "-" + Date.now(),
-        response: false,
-        project:  project
+        type: "pxteditor", action: "importproject",
+        id: "step-" + (payload.step_id || "blank") + "-" + Date.now(),
+        response: false, project: project
       }, "*");
     }
   </script>
