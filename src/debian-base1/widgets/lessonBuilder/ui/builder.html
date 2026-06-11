@@ -75,6 +75,10 @@
       }
       lastKnownTs  = "";
       lastKnownXml = "";
+      if (!rawTs && !cachedXml) {
+        currentStepId = stepId;
+        return;
+      }
       _sendImportProject({ step_id: stepId, raw_ts: rawTs, cached_xml: cachedXml });
     }
 

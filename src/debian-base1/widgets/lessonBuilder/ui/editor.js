@@ -121,9 +121,10 @@ var EditorScreen = {
 
     _addStep: function() {
         if (!this._lesson) return;
-        var steps       = this._lesson.steps || [];
-        var prevRawTs   = steps.length > 0 ? (steps[steps.length - 1].raw_ts || "") : "";
-        var newIdx      = steps.length;
+        var steps         = this._lesson.steps || [];
+        var prevRawTs     = steps.length > 0 ? (steps[steps.length - 1].raw_ts     || "") : "";
+        var prevCachedXml = steps.length > 0 ? (steps[steps.length - 1].cached_xml || "") : "";
+        var newIdx        = steps.length;
         steps.push({
             id:          "step_" + (newIdx + 1),
             order:       newIdx + 1,
@@ -131,7 +132,7 @@ var EditorScreen = {
             description: "",
             hint:        "",
             raw_ts:      prevRawTs,
-            cached_xml:  "",
+            cached_xml:  prevCachedXml,
         });
         this._lesson.steps = steps;
         this._saveLesson();
@@ -140,7 +141,7 @@ var EditorScreen = {
         sendToPython("setEditorStep", {
             stepId:      steps[newIdx].id,
             rawTs:       prevRawTs,
-            cachedXml:   "",
+            cachedXml:   prevCachedXml,
             lessonTitle: this._lesson.title || "Lesson",
         });
     },
