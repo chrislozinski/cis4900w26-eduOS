@@ -221,13 +221,16 @@ def publish_lesson(lesson_id, tutorial_md, solution_code, classroom_id):
     _atomic_write(os.path.join(shared_dir, "meta.json"), json.dumps(shared_meta, indent=2))
 
     if classroom_id:
-        classrooms = _load_classrooms()
-        for cls in classrooms.get("classrooms", []):
-            if cls["id"] == classroom_id:
-                enabled = cls.setdefault("enabled_lessons", [])
-                if lesson_id not in enabled:
-                    enabled.append(lesson_id)
-        _save_classrooms(classrooms)
+        try:
+            classrooms = _load_classrooms()
+            for cls in classrooms.get("classrooms", []):
+                if cls["id"] == classroom_id:
+                    enabled = cls.setdefault("enabled_lessons", [])
+                    if lesson_id not in enabled:
+                        enabled.append(lesson_id)
+            _save_classrooms(classrooms)
+        except OSError:
+            pass
 
 
 def unpublish_lesson(lesson_id, classroom_id):

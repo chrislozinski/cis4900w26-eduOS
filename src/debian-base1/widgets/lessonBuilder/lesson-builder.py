@@ -90,8 +90,20 @@ def rewrite_makecode_path(raw_path):
 
 
 def _resolve_local_api_md(rel_under_docs):
-    """Map /api/md/arcade/<path> to files under STATIC_DIR/docs/."""
+    """Map /api/md/arcade/<path> to files under STATIC_DIR/docs/ or /shared/teacher-lessons/."""
     rel   = (rel_under_docs or "").split("?")[0].strip("/").replace("..", "")
+
+    if rel.startswith("teacher-lessons/"):
+        rest  = rel[len("teacher-lessons/"):].strip("/")
+        parts = rest.split("/")
+        if len(parts) >= 2:
+            lesson_id = parts[0]
+            fname     = parts[1] if parts[1].endswith(".md") else parts[1] + ".md"
+            local     = os.path.join("/shared/teacher-lessons", lesson_id, fname)
+            if os.path.isfile(local):
+                return local
+        return None
+
     alias = {
         "skillmap/beg":      "skillmap/beginner-skillmap.md",
         "skillmap/beg.md":   "skillmap/beginner-skillmap.md",
@@ -680,7 +692,7 @@ class LessonBuilderWindow(Gtk.Window):
             return
         _lesson_storage.write_preview(lesson_id, _convert_lesson(lesson))
         if server_port != 0:
-            url = f"http://127.0.0.1:{server_port}/#tutorial:/api/md/teacher-lessons/{lesson_id}/tutorial"
+            url = f"http://127.0.0.1:{server_port}/#tutorial:/api/md/arcade/teacher-lessons/{lesson_id}/tutorial"
             GLib.idle_add(self._open_preview_window, url, lesson_id)
         self._send_to_ui({"action": "previewReady", "lessonId": lesson_id})
 
@@ -744,6 +756,7 @@ class LessonBuilderWindow(Gtk.Window):
         try:
             win = Gtk.Window(title="Lesson Preview")
             win.set_default_size(1280, 900)
+            win.set_transient_for(self)
             win.connect("destroy", lambda w: _lesson_storage.cleanup_preview(lesson_id))
 
             preview = self._create_webview(
