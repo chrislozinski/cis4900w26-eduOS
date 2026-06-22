@@ -40,7 +40,9 @@ def convert_lesson(draft):
             lines.append(instructions)
             lines.append("")
         if hint:
-            lines.append(f"~hint {hint} ~")
+            lines.append(f"~hint {hint}")
+            lines.append("")
+            lines.append("hint~")
             lines.append("")
         if captured_code:
             lines.append("#### ~ tutorialhint")
@@ -48,8 +50,6 @@ def convert_lesson(draft):
             lines.append(captured_code)
             lines.append("```")
             lines.append("")
-        lines.append("---")
-        lines.append("")
 
     lines.append("## Well Done!")
     lines.append("**Great work — you finished the lesson!**")

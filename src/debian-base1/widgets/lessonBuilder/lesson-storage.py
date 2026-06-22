@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 lesson-storage.py
-Disk operations for lessons, publishing, recycling bin, and recovery.
-All lesson data lives in two flat JSON files: lessons.json and recycling.json.
+Disk operations for lessons, publishing, recycling bin, and recovery
+All lesson data is within two JSON files: lessons.json and recycling.json
 """
 import json
 import os
@@ -27,8 +27,8 @@ def _ensure_dirs():
             pass
 
 
-def _atomic_write(path, data_str):
-    """Write a string to path atomically via a .tmp sibling."""
+def _write_file(path, data_str):
+    """Write a temp file string to path via a .tmp sibling"""
     tmp = path + ".tmp"
     with open(tmp, "w", encoding="utf-8") as f:
         f.write(data_str)
@@ -48,7 +48,10 @@ def _load_classrooms():
 
 
 def _save_classrooms(data):
-    _atomic_write(CLASSROOMS_FILE, json.dumps(data, indent=2))
+    with open(CLASSROOMS_FILE, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2)
+        f.flush()
+        os.fsync(f.fileno())
 
 
 def _get_username():
@@ -93,10 +96,10 @@ def save_lesson(lesson_id, lesson_data):
     for i, l in enumerate(lessons):
         if l.get("id") == lesson_id:
             lessons[i] = lesson_data
-            _atomic_write(LOCAL_LESSONS_FILE, json.dumps(lessons, indent=2))
+            _write_file(LOCAL_LESSONS_FILE, json.dumps(lessons, indent=2))
             return
     lessons.append(lesson_data)
-    _atomic_write(LOCAL_LESSONS_FILE, json.dumps(lessons, indent=2))
+    _write_file(LOCAL_LESSONS_FILE, json.dumps(lessons, indent=2))
 
 
 def create_lesson(title, lesson_type="makecode", description="", classroom_id=""):
@@ -122,7 +125,7 @@ def create_lesson(title, lesson_type="makecode", description="", classroom_id=""
     }
     lessons = _load_json_list(LOCAL_LESSONS_FILE)
     lessons.append(lesson)
-    _atomic_write(LOCAL_LESSONS_FILE, json.dumps(lessons, indent=2))
+    _write_file(LOCAL_LESSONS_FILE, json.dumps(lessons, indent=2))
     return lesson_id
 
 
@@ -140,11 +143,11 @@ def move_to_bin(lesson_id):
     lesson  = next((l for l in lessons if l.get("id") == lesson_id), None)
     if not lesson:
         return
-    _atomic_write(LOCAL_LESSONS_FILE,
+    _write_file(LOCAL_LESSONS_FILE,
                   json.dumps([l for l in lessons if l.get("id") != lesson_id], indent=2))
     recycling = _load_json_list(LOCAL_RECYCLING_FILE)
     recycling.append(lesson)
-    _atomic_write(LOCAL_RECYCLING_FILE, json.dumps(recycling, indent=2))
+    _write_file(LOCAL_RECYCLING_FILE, json.dumps(recycling, indent=2))
     _unpublish_from_all(lesson_id)
 
 
@@ -155,17 +158,17 @@ def recover_lesson(lesson_id):
     lesson    = next((l for l in recycling if l.get("id") == lesson_id), None)
     if not lesson:
         return
-    _atomic_write(LOCAL_RECYCLING_FILE,
+    _write_file(LOCAL_RECYCLING_FILE,
                   json.dumps([l for l in recycling if l.get("id") != lesson_id], indent=2))
     lessons = _load_json_list(LOCAL_LESSONS_FILE)
     lessons.append(lesson)
-    _atomic_write(LOCAL_LESSONS_FILE, json.dumps(lessons, indent=2))
+    _write_file(LOCAL_LESSONS_FILE, json.dumps(lessons, indent=2))
 
 
 def permanent_delete(lesson_id):
     """Permanently remove from recycling.json and delete published shared files."""
     recycling = _load_json_list(LOCAL_RECYCLING_FILE)
-    _atomic_write(LOCAL_RECYCLING_FILE,
+    _write_file(LOCAL_RECYCLING_FILE,
                   json.dumps([l for l in recycling if l.get("id") != lesson_id], indent=2))
     shared_dir = os.path.join(TEACHER_LESSONS_SHARED_DIR, lesson_id)
     if os.path.isdir(shared_dir):
@@ -198,8 +201,8 @@ def publish_lesson(lesson_id, tutorial_md, solution_code, classroom_id):
     shared_dir = os.path.join(TEACHER_LESSONS_SHARED_DIR, lesson_id)
     os.makedirs(shared_dir, mode=0o775, exist_ok=True)
 
-    _atomic_write(os.path.join(shared_dir, "tutorial.md"), tutorial_md)
-    _atomic_write(os.path.join(shared_dir, "solution.ts"), solution_code or "")
+    _write_file(os.path.join(shared_dir, "tutorial.md"), tutorial_md)
+    _write_file(os.path.join(shared_dir, "solution.ts"), solution_code or "")
 
     lesson = load_lesson(lesson_id) or {}
     published_to = lesson.get("published_to", [])
@@ -218,7 +221,7 @@ def publish_lesson(lesson_id, tutorial_md, solution_code, classroom_id):
         "published_to": published_to,
         "draft":        False,
     }
-    _atomic_write(os.path.join(shared_dir, "meta.json"), json.dumps(shared_meta, indent=2))
+    _write_file(os.path.join(shared_dir, "meta.json"), json.dumps(shared_meta, indent=2))
 
     if classroom_id:
         try:
@@ -266,9 +269,9 @@ def write_preview(lesson_id, tutorial_md):
     _ensure_dirs()
     shared_dir = os.path.join(TEACHER_LESSONS_SHARED_DIR, lesson_id)
     os.makedirs(shared_dir, mode=0o775, exist_ok=True)
-    _atomic_write(os.path.join(shared_dir, "tutorial.md"), tutorial_md)
+    _write_file(os.path.join(shared_dir, "tutorial.md"), tutorial_md)
     stub_meta = {"id": lesson_id, "title": "Preview", "draft": True}
-    _atomic_write(os.path.join(shared_dir, "meta.json"), json.dumps(stub_meta))
+    _write_file(os.path.join(shared_dir, "meta.json"), json.dumps(stub_meta))
 
 
 def cleanup_preview(lesson_id):

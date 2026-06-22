@@ -78,6 +78,16 @@ window.receiveFromPython = function(payload) {
 
     if (action === "classroomsUpdated") {
         State.classrooms = payload.classrooms || [];
+        if (ClassroomScreen._classroom) {
+            ClassroomScreen._classroom = State.classrooms.find(function(c) {
+                return c.id === ClassroomScreen._classroom.id;
+            }) || ClassroomScreen._classroom;
+        }
+        if (State.activeClassroom) {
+            State.activeClassroom = State.classrooms.find(function(c) {
+                return c.id === State.activeClassroom.id;
+            }) || State.activeClassroom;
+        }
         if (document.getElementById("screen-home").classList.contains("active")) {
             HomeScreen._render();
         } else if (document.getElementById("screen-classroom").classList.contains("active")) {

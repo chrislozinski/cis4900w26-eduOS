@@ -116,10 +116,10 @@ def student_makecode_profile_root(username, class_id):
 def _build_lesson_catalog():
     """Return the full lesson catalog (builtins + teacher-published lessons)."""
     try:
-        from lesson_list import build_lesson_catalog
+        from lessonList import build_lesson_catalog
         return build_lesson_catalog()
     except Exception:
-        # Fallback: return builtins only if lesson-list.py is unavailable.
+        # return builtins only if lessonList.py is unavailable
         return [
             {"id": "course_csintro1",   "type": "Course",   "title": "CS Intro 1",        "description": "Core intro course with guided lessons and projects.", "url": "/docs/courses/csintro1.html", "thumb": "/docs/static/hero.svg"},
             {"id": "course_csintro2",   "type": "Course",   "title": "CS Intro 2",        "description": "Functions, tilemaps, logic, arrays, and projects.",  "url": "/docs/courses/csintro2.html", "thumb": "/docs/static/hero.svg"},

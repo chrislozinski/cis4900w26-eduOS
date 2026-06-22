@@ -24,27 +24,23 @@ CLASSROOMS_FILE = "/shared/classrooms.json"
 
 
 # Module imports
-
 def _import_module(name, path):
     spec = importlib.util.spec_from_file_location(name, path)
     mod  = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     return mod
 
-_lesson_list    = _import_module("lesson_list",    os.path.join(_THIS_DIR, "lesson-list.py"))
+_lesson_list    = _import_module("lesson_list",    os.path.join(_THIS_DIR, "lessonList.py"))
 _lesson_storage = _import_module("lesson_storage", os.path.join(_THIS_DIR, "lesson-storage.py"))
 _convert_lesson = _import_module("convert_lesson", os.path.join(_THIS_DIR, "convert-lesson.py")).convert_lesson
 
 
 # HTTP server
-
 server_port = 0
-
 
 def get_preferred_port():
     uid = os.getuid()
     return 7700 + (uid % 300)
-
 
 def rewrite_makecode_path(raw_path):
     """Rewrite MakeCode clean routes to static files present in the offline package."""
@@ -387,7 +383,10 @@ class LessonBuilderWindow(Gtk.Window):
         self.connect("focus-in-event", lambda w, e: self._refresh_classrooms() or False)
 
         self._paned = Gtk.Paned(orientation=Gtk.Orientation.HORIZONTAL)
-        self.add(self._paned)
+
+        self._overlay_root = Gtk.Overlay()
+        self._overlay_root.add(self._paned)
+        self.add(self._overlay_root)
 
         self._ui_webview = self._create_webview(
             os.path.join("/shared", "makecode", "profiles", self._username, "webkit-builder-ui")
@@ -401,6 +400,54 @@ class LessonBuilderWindow(Gtk.Window):
         self._makecode_box.pack_start(self._makecode_webview, True, True, 0)
         self._paned.pack2(self._makecode_box, resize=True, shrink=False)
         self._makecode_box.set_visible(False)
+
+        # Preview window
+        self._current_preview_lesson_id = None
+        self._preview_container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+
+        self._preview_container.set_halign(Gtk.Align.FILL)
+        self._preview_container.set_valign(Gtk.Align.FILL)
+        self._preview_container.set_hexpand(True)
+        self._preview_container.set_vexpand(True)
+        self._preview_container.set_margin_top(40)
+        self._preview_container.set_margin_start(50)
+        self._preview_container.set_margin_end(50)
+        self._preview_container.set_margin_bottom(40)
+
+        _preview_css = Gtk.CssProvider()
+        _preview_css.load_from_data(b"""
+.preview-panel {
+    background-color: #1a1a1a;
+    border: 2px solid #555555;
+    border-radius: 4px;
+}
+.preview-bar {
+    background-color: #2b2b2b;
+    padding: 4px 4px;
+    border-bottom: 1px solid #555555;
+}
+""")
+        Gtk.StyleContext.add_provider_for_screen(
+            self.get_screen(), _preview_css,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        )
+        self._preview_container.get_style_context().add_class("preview-panel")
+
+        preview_bar = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        preview_bar.get_style_context().add_class("preview-bar")
+        close_btn = Gtk.Button(label="X  Close Preview")
+        close_btn.connect("clicked", self._close_preview_overlay)
+        preview_bar.pack_end(close_btn, False, False, 8)
+
+        self._preview_webview = self._create_webview(
+            os.path.join("/shared", "makecode", "profiles", self._username, "webkit-preview")
+        )
+        self._preview_container.pack_start(preview_bar, False, False, 0)
+        self._preview_container.pack_start(self._preview_webview, True, True, 0)
+        self._overlay_root.add_overlay(self._preview_container)
+
+        self._preview_container.set_no_show_all(True)
+        self._preview_container.hide()
 
         self._setup_bridges()
         GLib.timeout_add(200, self._wait_for_server)
@@ -692,8 +739,8 @@ class LessonBuilderWindow(Gtk.Window):
             return
         _lesson_storage.write_preview(lesson_id, _convert_lesson(lesson))
         if server_port != 0:
-            url = f"http://127.0.0.1:{server_port}/#tutorial:/api/md/arcade/teacher-lessons/{lesson_id}/tutorial"
-            GLib.idle_add(self._open_preview_window, url, lesson_id)
+            url = f"http://127.0.0.1:{server_port}/#tutorial:/api/md/teacher-lessons/{lesson_id}/tutorial"
+            GLib.idle_add(self._show_preview_overlay, url, lesson_id)
         self._send_to_ui({"action": "previewReady", "lessonId": lesson_id})
 
     def _handle_cleanup_preview(self, data):
@@ -752,24 +799,19 @@ class LessonBuilderWindow(Gtk.Window):
             return False
         GLib.idle_add(_update)
 
-    def _open_preview_window(self, url, lesson_id):
-        try:
-            win = Gtk.Window(title="Lesson Preview")
-            win.set_default_size(1280, 900)
-            win.set_transient_for(self)
-            win.connect("destroy", lambda w: _lesson_storage.cleanup_preview(lesson_id))
-
-            preview = self._create_webview(
-                os.path.join("/shared", "makecode", "profiles", self._username, "webkit-preview")
-            )
-            self._apply_cdn_rewrite(preview)
-            win.add(preview)
-            win.show_all()
-            win.present()
-            preview.load_uri(url)
-        except Exception as e:
-            self._send_to_ui({"action": "error", "source": "openPreview", "error": str(e)})
+    def _show_preview_overlay(self, url, lesson_id):
+        self._current_preview_lesson_id = lesson_id
+        self._preview_container.set_no_show_all(False)
+        self._preview_container.show_all()
+        self._preview_container.set_no_show_all(True)
+        self._preview_webview.load_uri(url)
         return False
+
+    def _close_preview_overlay(self, _btn=None):
+        self._preview_container.hide()
+        if self._current_preview_lesson_id:
+            _lesson_storage.cleanup_preview(self._current_preview_lesson_id)
+            self._current_preview_lesson_id = None
 
     def _wait_for_server(self):
         if server_port == 0:
@@ -802,6 +844,7 @@ class LessonBuilderWindow(Gtk.Window):
     def _load_webviews(self):
         base = f"http://127.0.0.1:{server_port}"
         self._apply_cdn_rewrite(self._makecode_webview)
+        self._apply_cdn_rewrite(self._preview_webview)
         self._apply_sandbox_ui_tweaks(self._makecode_webview)
         self._ui_webview.load_uri(f"{base}/lessonbuilder/index.html")
         self._makecode_webview.load_uri(f"{base}/builder")

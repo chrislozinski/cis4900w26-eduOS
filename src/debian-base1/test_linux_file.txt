@@ -742,3 +742,825 @@ when i pwd im in /home/testuser/
   LESSON: {'step_1': "'\\n'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
 [20:23:32] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs='\n'
   LESSON: {'step_1': "'\\n'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:29:40] WORKSPACE_SAVE step=None rawTs_len=1 rawTs=' '
+[21:29:41] WORKSPACE_SAVE step=None rawTs_len=1 rawTs=' '
+[21:29:41] WORKSPACE_SAVE step=None rawTs_len=1 rawTs=' '
+
+[21:29:45] SET_EDITOR_STEP step='_blank_' rawTs_len=0 rawTs=''
+[21:29:46] WORKSPACE_SAVE step='_blank_' rawTs_len=1 rawTs='\n'
+  LESSON: {}
+[21:29:46] WORKSPACE_SAVE step='_blank_' rawTs_len=1 rawTs='\n'
+  LESSON: {}
+
+[21:29:50] SET_EDITOR_STEP step='step_1' rawTs_len=0 rawTs=''
+[21:29:50] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs='\n'
+  LESSON: {'step_1': "'\\n'"}
+[21:29:53] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs='\n'
+  LESSON: {'step_1': "'\\n'"}
+[21:29:57] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:29:57] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:30:01] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:30:01] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:30:02] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+
+[21:30:02] SET_EDITOR_STEP step='step_2' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+[21:30:02] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:30:03] WORKSPACE_SAVE step='step_2' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:30:03] WORKSPACE_SAVE step='step_2' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:30:05] WORKSPACE_SAVE step='step_2' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:30:05] WORKSPACE_SAVE step='step_2' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:30:05] WORKSPACE_SAVE step='step_2' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:30:10] WORKSPACE_SAVE step='step_2' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:30:16] WORKSPACE_SAVE step='step_2' rawTs_len=685 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:30:16] WORKSPACE_SAVE step='step_2' rawTs_len=685 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:30:16] WORKSPACE_SAVE step='step_2' rawTs_len=695 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:30:16] WORKSPACE_SAVE step='step_2' rawTs_len=695 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+
+[21:30:18] SET_EDITOR_STEP step='step_3' rawTs_len=695 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+[21:30:18] WORKSPACE_SAVE step='step_2' rawTs_len=695 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:30:18] WORKSPACE_SAVE step='step_3' rawTs_len=695 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:30:18] WORKSPACE_SAVE step='step_3' rawTs_len=695 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:30:21] WORKSPACE_SAVE step='step_3' rawTs_len=695 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:30:21] WORKSPACE_SAVE step='step_3' rawTs_len=695 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:30:21] WORKSPACE_SAVE step='step_3' rawTs_len=695 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:30:26] WORKSPACE_SAVE step='step_3' rawTs_len=695 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:30:30] WORKSPACE_SAVE step='step_3' rawTs_len=723 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:30:30] WORKSPACE_SAVE step='step_3' rawTs_len=723 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:30:32] WORKSPACE_SAVE step='step_3' rawTs_len=723 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:30:32] WORKSPACE_SAVE step='step_3' rawTs_len=723 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+
+[21:30:34] SET_EDITOR_STEP step='step_2' rawTs_len=695 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+[21:30:34] WORKSPACE_SAVE step='step_3' rawTs_len=723 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:30:35] WORKSPACE_SAVE step='step_2' rawTs_len=695 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:30:35] WORKSPACE_SAVE step='step_2' rawTs_len=695 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:30:36] WORKSPACE_SAVE step='step_2' rawTs_len=723 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:30:37] WORKSPACE_SAVE step='step_2' rawTs_len=695 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:30:37] WORKSPACE_SAVE step='step_2' rawTs_len=695 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:30:37] WORKSPACE_SAVE step='step_2' rawTs_len=695 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:30:42] WORKSPACE_SAVE step='step_2' rawTs_len=695 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+
+[21:30:47] SET_EDITOR_STEP step='step_3' rawTs_len=723 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+[21:30:47] WORKSPACE_SAVE step='step_2' rawTs_len=695 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:30:47] WORKSPACE_SAVE step='step_3' rawTs_len=723 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:30:47] WORKSPACE_SAVE step='step_3' rawTs_len=723 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:30:49] WORKSPACE_SAVE step='step_3' rawTs_len=723 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:30:50] WORKSPACE_SAVE step='step_3' rawTs_len=723 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:30:50] WORKSPACE_SAVE step='step_3' rawTs_len=723 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:30:55] WORKSPACE_SAVE step='step_3' rawTs_len=723 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:30:57] WORKSPACE_SAVE step='step_3' rawTs_len=723 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:30:57] WORKSPACE_SAVE step='step_3' rawTs_len=723 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+
+[21:31:00] SET_EDITOR_STEP step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+[21:31:00] WORKSPACE_SAVE step='step_3' rawTs_len=723 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:31:00] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:31:00] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:31:01] WORKSPACE_SAVE step='step_1' rawTs_len=723 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:31:02] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:31:03] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:31:03] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:31:08] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:31:18] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:31:52] WORKSPACE_SAVE step=None rawTs_len=1 rawTs=' '
+[21:31:52] WORKSPACE_SAVE step=None rawTs_len=1 rawTs=' '
+[21:31:52] WORKSPACE_SAVE step=None rawTs_len=1 rawTs=' '
+
+[21:31:53] SET_EDITOR_STEP step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+
+[21:31:53] SET_EDITOR_STEP step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+[21:31:53] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:31:54] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:31:54] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:31:54] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:31:54] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:31:54] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs=' '
+  LESSON: {'step_1': "' '", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+
+[21:31:55] SET_EDITOR_STEP step='step_1' rawTs_len=1 rawTs=' '
+[21:31:55] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs=' '
+  LESSON: {'step_1': "' '", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:31:55] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs=' '
+  LESSON: {'step_1': "' '", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:31:57] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs=' '
+  LESSON: {'step_1': "' '", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+
+[21:31:58] SET_EDITOR_STEP step='step_2' rawTs_len=695 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+[21:31:58] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs=' '
+  LESSON: {'step_1': "' '", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:31:58] WORKSPACE_SAVE step='step_2' rawTs_len=695 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "' '", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:32:00] WORKSPACE_SAVE step='step_2' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "' '", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:32:00] WORKSPACE_SAVE step='step_2' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "' '", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:32:00] WORKSPACE_SAVE step='step_2' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "' '", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:32:00] WORKSPACE_SAVE step='step_2' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "' '", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:32:00] WORKSPACE_SAVE step='step_2' rawTs_len=695 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "' '", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:32:02] WORKSPACE_SAVE step='step_2' rawTs_len=1 rawTs='\n'
+  LESSON: {'step_1': "' '", 'step_2': "'\\n'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:32:02] WORKSPACE_SAVE step='step_2' rawTs_len=1 rawTs='\n'
+  LESSON: {'step_1': "' '", 'step_2': "'\\n'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:32:02] WORKSPACE_SAVE step='step_2' rawTs_len=695 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "' '", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:32:02] WORKSPACE_SAVE step='step_2' rawTs_len=695 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "' '", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:32:03] WORKSPACE_SAVE step='step_2' rawTs_len=695 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "' '", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+
+[21:32:04] SET_EDITOR_STEP step='step_1' rawTs_len=1 rawTs=' '
+[21:32:04] WORKSPACE_SAVE step='step_2' rawTs_len=695 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . 3 3 . . . . . \n    . . '
+  LESSON: {'step_1': "' '", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:32:04] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs=' '
+  LESSON: {'step_1': "' '", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:32:04] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs=' '
+  LESSON: {'step_1': "' '", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:32:07] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs='\n'
+  LESSON: {'step_1': "'\\n'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:32:07] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs='\n'
+  LESSON: {'step_1': "'\\n'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:32:07] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs='\n'
+  LESSON: {'step_1': "'\\n'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:32:12] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs='\n'
+  LESSON: {'step_1': "'\\n'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:32:18] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs='\n'
+  LESSON: {'step_1': "'\\n'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:32:22] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs='\n'
+  LESSON: {'step_1': "'\\n'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:33:20] WORKSPACE_SAVE step=None rawTs_len=1 rawTs=' '
+[21:33:20] WORKSPACE_SAVE step=None rawTs_len=1 rawTs=' '
+[21:33:20] WORKSPACE_SAVE step=None rawTs_len=1 rawTs=' '
+
+[21:33:22] SET_EDITOR_STEP step='step_1' rawTs_len=1 rawTs='\n'
+
+[21:33:22] SET_EDITOR_STEP step='step_1' rawTs_len=1 rawTs='\n'
+[21:33:22] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs='\n'
+  LESSON: {'step_1': "'\\n'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:33:22] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs='\n'
+  LESSON: {'step_1': "'\\n'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:33:23] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs='\n'
+  LESSON: {'step_1': "'\\n'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:33:23] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs='\n'
+  LESSON: {'step_1': "'\\n'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:33:23] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs='\n'
+  LESSON: {'step_1': "'\\n'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:33:23] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs=' '
+  LESSON: {'step_1': "' '", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:33:26] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs='\n'
+  LESSON: {'step_1': "'\\n'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:33:26] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs='\n'
+  LESSON: {'step_1': "'\\n'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:33:26] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs='\n'
+  LESSON: {'step_1': "'\\n'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:33:26] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs='\n'
+  LESSON: {'step_1': "'\\n'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[21:33:27] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs='\n'
+  LESSON: {'step_1': "'\\n'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[22:10:27] WORKSPACE_SAVE step=None rawTs_len=1 rawTs=' '
+[22:10:28] WORKSPACE_SAVE step=None rawTs_len=1 rawTs=' '
+[22:10:28] WORKSPACE_SAVE step=None rawTs_len=1 rawTs=' '
+
+[22:11:37] SET_EDITOR_STEP step='_blank_' rawTs_len=0 rawTs=''
+[22:11:38] WORKSPACE_SAVE step='_blank_' rawTs_len=1 rawTs='\n'
+  LESSON: {}
+[22:11:38] WORKSPACE_SAVE step='_blank_' rawTs_len=1 rawTs='\n'
+  LESSON: {}
+
+[22:11:41] SET_EDITOR_STEP step='step_1' rawTs_len=0 rawTs=''
+[22:11:43] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs='\n'
+  LESSON: {'step_1': "'\\n'"}
+[22:11:45] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs='\n'
+  LESSON: {'step_1': "'\\n'"}
+[22:11:49] WORKSPACE_SAVE step='step_1' rawTs_len=46 rawTs='for (let index = 0; index < 4; index++) {\n\t\n}\n'
+  LESSON: {'step_1': "'for (let index = 0; index < 4; index++) {\\n\\t\\n}\\n'"}
+[22:11:50] WORKSPACE_SAVE step='step_1' rawTs_len=46 rawTs='for (let index = 0; index < 4; index++) {\n\t\n}\n'
+  LESSON: {'step_1': "'for (let index = 0; index < 4; index++) {\\n\\t\\n}\\n'"}
+[22:11:54] WORKSPACE_SAVE step='step_1' rawTs_len=46 rawTs='for (let index = 0; index < 4; index++) {\n\t\n}\n'
+  LESSON: {'step_1': "'for (let index = 0; index < 4; index++) {\\n\\t\\n}\\n'"}
+[22:12:01] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:12:01] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:12:06] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:12:09] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:12:09] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:12:14] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+
+[22:12:15] SET_EDITOR_STEP step='step_2' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+[22:12:15] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:12:15] WORKSPACE_SAVE step='step_2' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:12:15] WORKSPACE_SAVE step='step_2' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:12:17] WORKSPACE_SAVE step='step_2' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:12:18] WORKSPACE_SAVE step='step_2' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:12:18] WORKSPACE_SAVE step='step_2' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:12:23] WORKSPACE_SAVE step='step_2' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:12:34] WORKSPACE_SAVE step='step_2' rawTs_len=863 rawTs='let mySprite: Sprite = null\nlet projectile: Sprite = null\nfor (let index = 0; in'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let mySprite: Sprite = null\\nlet projectile: Sprite'"}
+[22:12:34] WORKSPACE_SAVE step='step_2' rawTs_len=863 rawTs='let mySprite: Sprite = null\nlet projectile: Sprite = null\nfor (let index = 0; in'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let mySprite: Sprite = null\\nlet projectile: Sprite'"}
+[22:12:37] WORKSPACE_SAVE step='step_2' rawTs_len=837 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:12:37] WORKSPACE_SAVE step='step_2' rawTs_len=837 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:12:39] WORKSPACE_SAVE step='step_2' rawTs_len=841 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:12:39] WORKSPACE_SAVE step='step_2' rawTs_len=841 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:12:43] WORKSPACE_SAVE step='step_2' rawTs_len=841 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:13:04] WORKSPACE_SAVE step='step_2' rawTs_len=856 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:13:04] WORKSPACE_SAVE step='step_2' rawTs_len=856 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:13:09] WORKSPACE_SAVE step='step_2' rawTs_len=856 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:13:11] WORKSPACE_SAVE step='step_2' rawTs_len=857 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:13:11] WORKSPACE_SAVE step='step_2' rawTs_len=857 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:13:16] WORKSPACE_SAVE step='step_2' rawTs_len=857 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+
+[22:13:18] SET_EDITOR_STEP step='step_3' rawTs_len=857 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+[22:13:18] WORKSPACE_SAVE step='step_2' rawTs_len=857 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:13:18] WORKSPACE_SAVE step='step_3' rawTs_len=857 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:13:18] WORKSPACE_SAVE step='step_3' rawTs_len=857 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:13:20] WORKSPACE_SAVE step='step_3' rawTs_len=857 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:13:20] WORKSPACE_SAVE step='step_3' rawTs_len=857 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:13:21] WORKSPACE_SAVE step='step_3' rawTs_len=857 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:13:26] WORKSPACE_SAVE step='step_3' rawTs_len=857 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:13:28] WORKSPACE_SAVE step='step_3' rawTs_len=885 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:13:28] WORKSPACE_SAVE step='step_3' rawTs_len=885 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:13:29] WORKSPACE_SAVE step='step_3' rawTs_len=885 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:13:30] WORKSPACE_SAVE step='step_3' rawTs_len=885 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:13:32] WORKSPACE_SAVE step='step_3' rawTs_len=885 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:13:33] WORKSPACE_SAVE step='step_3' rawTs_len=885 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:13:37] WORKSPACE_SAVE step='step_3' rawTs_len=885 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+
+[22:13:39] SET_EDITOR_STEP step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+[22:13:39] WORKSPACE_SAVE step='step_3' rawTs_len=885 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:13:39] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:13:39] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:13:43] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:13:43] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:13:43] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+
+[22:13:46] SET_EDITOR_STEP step='step_2' rawTs_len=857 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+[22:13:46] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:13:46] WORKSPACE_SAVE step='step_2' rawTs_len=857 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:13:46] WORKSPACE_SAVE step='step_2' rawTs_len=857 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:13:48] WORKSPACE_SAVE step='step_2' rawTs_len=857 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:13:48] WORKSPACE_SAVE step='step_2' rawTs_len=857 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:13:49] WORKSPACE_SAVE step='step_2' rawTs_len=857 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+
+[22:13:50] SET_EDITOR_STEP step='step_3' rawTs_len=885 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+[22:13:50] WORKSPACE_SAVE step='step_2' rawTs_len=857 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:13:50] WORKSPACE_SAVE step='step_3' rawTs_len=885 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:13:50] WORKSPACE_SAVE step='step_3' rawTs_len=885 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:13:53] WORKSPACE_SAVE step='step_3' rawTs_len=885 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:13:53] WORKSPACE_SAVE step='step_3' rawTs_len=885 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:13:53] WORKSPACE_SAVE step='step_3' rawTs_len=885 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:13:58] WORKSPACE_SAVE step='step_3' rawTs_len=885 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:17:18] WORKSPACE_SAVE step=None rawTs_len=1 rawTs=' '
+[22:17:18] WORKSPACE_SAVE step=None rawTs_len=1 rawTs=' '
+[22:17:18] WORKSPACE_SAVE step=None rawTs_len=1 rawTs=' '
+
+[22:17:24] SET_EDITOR_STEP step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+
+[22:17:24] SET_EDITOR_STEP step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+[22:17:25] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:17:25] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:17:25] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:17:25] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:17:25] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:17:25] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs=' '
+  LESSON: {'step_1': "' '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:17:30] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:17:30] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:17:30] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:17:30] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:17:31] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+
+[22:17:35] SET_EDITOR_STEP step='step_2' rawTs_len=857 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+[22:17:35] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:17:35] WORKSPACE_SAVE step='step_2' rawTs_len=857 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:17:35] WORKSPACE_SAVE step='step_2' rawTs_len=857 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:17:36] WORKSPACE_SAVE step='step_2' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:17:37] WORKSPACE_SAVE step='step_2' rawTs_len=857 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:17:37] WORKSPACE_SAVE step='step_2' rawTs_len=857 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:17:38] WORKSPACE_SAVE step='step_2' rawTs_len=857 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+
+[22:17:40] SET_EDITOR_STEP step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+[22:17:40] WORKSPACE_SAVE step='step_2' rawTs_len=857 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:17:40] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:17:41] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:17:43] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:17:43] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:17:43] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:17:44] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:17:48] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+
+[22:18:33] SET_EDITOR_STEP step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+[22:18:33] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:18:33] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:18:33] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:18:35] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:18:36] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:18:37] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+
+[22:18:40] SET_EDITOR_STEP step='_blank_' rawTs_len=0 rawTs=''
+[22:18:41] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {}
+[22:18:41] WORKSPACE_SAVE step='_blank_' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {}
+[22:18:46] WORKSPACE_SAVE step='_blank_' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {}
+
+[22:18:47] SET_EDITOR_STEP step='step_1' rawTs_len=0 rawTs=''
+[22:19:03] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+
+[22:19:06] SET_EDITOR_STEP step='step_2' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+[22:19:06] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:19:06] WORKSPACE_SAVE step='step_2' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:19:06] WORKSPACE_SAVE step='step_2' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+
+[22:19:07] SET_EDITOR_STEP step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+[22:19:07] WORKSPACE_SAVE step='step_2' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:19:07] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:19:08] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:19:10] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:19:10] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:19:10] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:19:10] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:19:11] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:19:15] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+
+[22:20:34] SET_EDITOR_STEP step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+
+[22:20:34] SET_EDITOR_STEP step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+[22:20:34] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:20:34] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:20:34] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:20:34] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:20:34] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:20:35] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:20:37] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:20:37] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:20:37] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:20:37] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_3': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+
+[22:20:37] SET_EDITOR_STEP step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+
+[22:20:37] SET_EDITOR_STEP step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+[22:20:37] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:20:38] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:20:38] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:20:38] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:20:38] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:20:39] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:20:39] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:20:39] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:20:42] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:20:42] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:20:43] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:20:43] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+
+[22:21:41] SET_EDITOR_STEP step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+[22:21:41] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:21:41] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:21:41] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:21:44] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:21:44] WORKSPACE_SAVE step='step_1' rawTs_len=804 rawTs='let projectile: Sprite = null\nfor (let index = 0; index < 4; index++) {\n    proj'
+  LESSON: {'step_1': "'let projectile: Sprite = null\\nfor (let index = 0; '", 'step_2': "'let projectile: Sprite = null\\nfor (let index = 0; '"}
+[22:50:55] WORKSPACE_SAVE step=None rawTs_len=1 rawTs=' '
+[22:50:57] WORKSPACE_SAVE step=None rawTs_len=1 rawTs=' '
+[22:50:57] WORKSPACE_SAVE step=None rawTs_len=1 rawTs=' '
+
+[22:51:08] SET_EDITOR_STEP step='_blank_' rawTs_len=0 rawTs=''
+[22:51:09] WORKSPACE_SAVE step='_blank_' rawTs_len=1 rawTs='\n'
+  LESSON: {}
+[22:51:09] WORKSPACE_SAVE step='_blank_' rawTs_len=1 rawTs='\n'
+  LESSON: {}
+
+[22:51:13] SET_EDITOR_STEP step='step_1' rawTs_len=0 rawTs=''
+[22:51:17] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs='\n'
+  LESSON: {'step_1': "'\\n'"}
+[22:51:20] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs='\n'
+  LESSON: {'step_1': "'\\n'"}
+[05:45:06] WORKSPACE_SAVE step=None rawTs_len=1 rawTs=' '
+[05:45:09] WORKSPACE_SAVE step=None rawTs_len=1 rawTs=' '
+[05:45:09] WORKSPACE_SAVE step=None rawTs_len=1 rawTs=' '
+
+[05:45:12] SET_EDITOR_STEP step='_blank_' rawTs_len=0 rawTs=''
+[05:45:12] WORKSPACE_SAVE step='_blank_' rawTs_len=0 rawTs=''
+  LESSON: {}
+[05:45:13] WORKSPACE_SAVE step='_blank_' rawTs_len=0 rawTs=''
+  LESSON: {}
+[05:45:13] WORKSPACE_SAVE step='_blank_' rawTs_len=1 rawTs=' '
+  LESSON: {}
+[05:45:17] WORKSPACE_SAVE step='_blank_' rawTs_len=0 rawTs=''
+  LESSON: {}
+[05:45:17] WORKSPACE_SAVE step='_blank_' rawTs_len=0 rawTs=''
+  LESSON: {}
+
+[05:45:18] SET_EDITOR_STEP step='step_1' rawTs_len=0 rawTs=''
+[05:45:19] WORKSPACE_SAVE step='step_1' rawTs_len=0 rawTs=''
+  LESSON: {'step_1': "''"}
+[05:45:20] WORKSPACE_SAVE step='step_1' rawTs_len=0 rawTs=''
+  LESSON: {'step_1': "''"}
+[05:45:20] WORKSPACE_SAVE step='step_1' rawTs_len=0 rawTs=''
+  LESSON: {'step_1': "''"}
+[05:45:21] WORKSPACE_SAVE step='step_1' rawTs_len=0 rawTs=''
+  LESSON: {'step_1': "''"}
+[05:45:21] WORKSPACE_SAVE step='step_1' rawTs_len=0 rawTs=''
+  LESSON: {'step_1': "''"}
+[05:45:25] WORKSPACE_SAVE step='step_1' rawTs_len=0 rawTs=''
+  LESSON: {'step_1': "''"}
+[05:45:25] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs='\n'
+  LESSON: {'step_1': "'\\n'"}
+[05:45:25] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs='\n'
+  LESSON: {'step_1': "'\\n'"}
+[05:45:31] WORKSPACE_SAVE step='step_1' rawTs_len=1 rawTs='\n'
+  LESSON: {'step_1': "'\\n'"}
+[05:45:32] WORKSPACE_SAVE step='step_1' rawTs_len=46 rawTs='for (let index = 0; index < 4; index++) {\n\t\n}\n'
+  LESSON: {'step_1': "'for (let index = 0; index < 4; index++) {\\n\\t\\n}\\n'"}
+[05:45:32] WORKSPACE_SAVE step='step_1' rawTs_len=46 rawTs='for (let index = 0; index < 4; index++) {\n\t\n}\n'
+  LESSON: {'step_1': "'for (let index = 0; index < 4; index++) {\\n\\t\\n}\\n'"}
+
+[05:45:33] SET_EDITOR_STEP step='step_2' rawTs_len=46 rawTs='for (let index = 0; index < 4; index++) {\n\t\n}\n'
+[05:45:33] WORKSPACE_SAVE step='step_1' rawTs_len=46 rawTs='for (let index = 0; index < 4; index++) {\n\t\n}\n'
+  LESSON: {'step_1': "'for (let index = 0; index < 4; index++) {\\n\\t\\n}\\n'", 'step_2': "'for (let index = 0; index < 4; index++) {\\n\\t\\n}\\n'"}
+[05:45:33] WORKSPACE_SAVE step='step_2' rawTs_len=46 rawTs='for (let index = 0; index < 4; index++) {\n\t\n}\n'
+  LESSON: {'step_1': "'for (let index = 0; index < 4; index++) {\\n\\t\\n}\\n'", 'step_2': "'for (let index = 0; index < 4; index++) {\\n\\t\\n}\\n'"}
+[05:45:33] WORKSPACE_SAVE step='step_2' rawTs_len=46 rawTs='for (let index = 0; index < 4; index++) {\n\t\n}\n'
+  LESSON: {'step_1': "'for (let index = 0; index < 4; index++) {\\n\\t\\n}\\n'", 'step_2': "'for (let index = 0; index < 4; index++) {\\n\\t\\n}\\n'"}
+[05:45:35] WORKSPACE_SAVE step='step_2' rawTs_len=46 rawTs='for (let index = 0; index < 4; index++) {\n\t\n}\n'
+  LESSON: {'step_1': "'for (let index = 0; index < 4; index++) {\\n\\t\\n}\\n'", 'step_2': "'for (let index = 0; index < 4; index++) {\\n\\t\\n}\\n'"}
+[05:45:35] WORKSPACE_SAVE step='step_2' rawTs_len=46 rawTs='for (let index = 0; index < 4; index++) {\n\t\n}\n'
+  LESSON: {'step_1': "'for (let index = 0; index < 4; index++) {\\n\\t\\n}\\n'", 'step_2': "'for (let index = 0; index < 4; index++) {\\n\\t\\n}\\n'"}
+[05:45:36] WORKSPACE_SAVE step='step_2' rawTs_len=46 rawTs='for (let index = 0; index < 4; index++) {\n\t\n}\n'
+  LESSON: {'step_1': "'for (let index = 0; index < 4; index++) {\\n\\t\\n}\\n'", 'step_2': "'for (let index = 0; index < 4; index++) {\\n\\t\\n}\\n'"}
+[05:45:40] WORKSPACE_SAVE step='step_2' rawTs_len=106 rawTs='let mySprite: Sprite = null\ncontroller.moveSprite(mySprite)\nfor (let index = 0; '
+  LESSON: {'step_1': "'for (let index = 0; index < 4; index++) {\\n\\t\\n}\\n'", 'step_2': "'let mySprite: Sprite = null\\ncontroller.moveSprite('"}
+[05:45:40] WORKSPACE_SAVE step='step_2' rawTs_len=106 rawTs='let mySprite: Sprite = null\ncontroller.moveSprite(mySprite)\nfor (let index = 0; '
+  LESSON: {'step_1': "'for (let index = 0; index < 4; index++) {\\n\\t\\n}\\n'", 'step_2': "'let mySprite: Sprite = null\\ncontroller.moveSprite('"}
+[05:45:41] WORKSPACE_SAVE step='step_2' rawTs_len=106 rawTs='let mySprite: Sprite = null\ncontroller.moveSprite(mySprite)\nfor (let index = 0; '
+  LESSON: {'step_1': "'for (let index = 0; index < 4; index++) {\\n\\t\\n}\\n'", 'step_2': "'let mySprite: Sprite = null\\ncontroller.moveSprite('"}
+[05:45:43] WORKSPACE_SAVE step='step_2' rawTs_len=731 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'for (let index = 0; index < 4; index++) {\\n\\t\\n}\\n'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:45:43] WORKSPACE_SAVE step='step_2' rawTs_len=731 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'for (let index = 0; index < 4; index++) {\\n\\t\\n}\\n'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:45:48] WORKSPACE_SAVE step='step_2' rawTs_len=731 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'for (let index = 0; index < 4; index++) {\\n\\t\\n}\\n'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:45:50] WORKSPACE_SAVE step='step_2' rawTs_len=731 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'for (let index = 0; index < 4; index++) {\\n\\t\\n}\\n'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:45:50] WORKSPACE_SAVE step='step_2' rawTs_len=731 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'for (let index = 0; index < 4; index++) {\\n\\t\\n}\\n'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+
+[05:45:55] SET_EDITOR_STEP step='step_1' rawTs_len=46 rawTs='for (let index = 0; index < 4; index++) {\n\t\n}\n'
+[05:45:55] WORKSPACE_SAVE step='step_2' rawTs_len=731 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'for (let index = 0; index < 4; index++) {\\n\\t\\n}\\n'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:45:55] WORKSPACE_SAVE step='step_1' rawTs_len=46 rawTs='for (let index = 0; index < 4; index++) {\n\t\n}\n'
+  LESSON: {'step_1': "'for (let index = 0; index < 4; index++) {\\n\\t\\n}\\n'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:45:55] WORKSPACE_SAVE step='step_1' rawTs_len=46 rawTs='for (let index = 0; index < 4; index++) {\n\t\n}\n'
+  LESSON: {'step_1': "'for (let index = 0; index < 4; index++) {\\n\\t\\n}\\n'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:45:55] WORKSPACE_SAVE step='step_1' rawTs_len=731 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:45:57] WORKSPACE_SAVE step='step_1' rawTs_len=46 rawTs='for (let index = 0; index < 4; index++) {\n\t\n}\n'
+  LESSON: {'step_1': "'for (let index = 0; index < 4; index++) {\\n\\t\\n}\\n'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:45:57] WORKSPACE_SAVE step='step_1' rawTs_len=46 rawTs='for (let index = 0; index < 4; index++) {\n\t\n}\n'
+  LESSON: {'step_1': "'for (let index = 0; index < 4; index++) {\\n\\t\\n}\\n'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:45:57] WORKSPACE_SAVE step='step_1' rawTs_len=46 rawTs='for (let index = 0; index < 4; index++) {\n\t\n}\n'
+  LESSON: {'step_1': "'for (let index = 0; index < 4; index++) {\\n\\t\\n}\\n'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:46:02] WORKSPACE_SAVE step='step_1' rawTs_len=46 rawTs='for (let index = 0; index < 4; index++) {\n\t\n}\n'
+  LESSON: {'step_1': "'for (let index = 0; index < 4; index++) {\\n\\t\\n}\\n'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+
+[05:46:57] SET_EDITOR_STEP step='step_2' rawTs_len=731 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+[05:46:57] WORKSPACE_SAVE step='step_1' rawTs_len=46 rawTs='for (let index = 0; index < 4; index++) {\n\t\n}\n'
+  LESSON: {'step_1': "'for (let index = 0; index < 4; index++) {\\n\\t\\n}\\n'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:46:57] WORKSPACE_SAVE step='step_2' rawTs_len=731 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'for (let index = 0; index < 4; index++) {\\n\\t\\n}\\n'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:46:57] WORKSPACE_SAVE step='step_2' rawTs_len=731 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'for (let index = 0; index < 4; index++) {\\n\\t\\n}\\n'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:47:01] WORKSPACE_SAVE step='step_2' rawTs_len=731 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'for (let index = 0; index < 4; index++) {\\n\\t\\n}\\n'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:47:01] WORKSPACE_SAVE step='step_2' rawTs_len=731 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'for (let index = 0; index < 4; index++) {\\n\\t\\n}\\n'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:47:02] WORKSPACE_SAVE step='step_2' rawTs_len=731 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'for (let index = 0; index < 4; index++) {\\n\\t\\n}\\n'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[05:47:07] WORKSPACE_SAVE step='step_2' rawTs_len=731 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'for (let index = 0; index < 4; index++) {\\n\\t\\n}\\n'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+
+[05:47:42] SET_EDITOR_STEP step='_blank_' rawTs_len=0 rawTs=''
+[05:47:42] WORKSPACE_SAVE step='step_2' rawTs_len=731 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {}
+[05:47:42] WORKSPACE_SAVE step='_blank_' rawTs_len=0 rawTs=''
+  LESSON: {}
+[05:47:42] WORKSPACE_SAVE step='_blank_' rawTs_len=0 rawTs=''
+  LESSON: {}
+[05:47:46] WORKSPACE_SAVE step='_blank_' rawTs_len=0 rawTs=''
+  LESSON: {}
+[05:47:46] WORKSPACE_SAVE step='_blank_' rawTs_len=0 rawTs=''
+  LESSON: {}
+[05:47:48] WORKSPACE_SAVE step='_blank_' rawTs_len=0 rawTs=''
+  LESSON: {}
+[05:47:49] WORKSPACE_SAVE step='_blank_' rawTs_len=0 rawTs=''
+  LESSON: {}
+[05:47:52] WORKSPACE_SAVE step='_blank_' rawTs_len=0 rawTs=''
+  LESSON: {}
+[19:40:21] WORKSPACE_SAVE step=None rawTs_len=1 rawTs=' '
+[19:40:24] WORKSPACE_SAVE step=None rawTs_len=1 rawTs=' '
+[19:40:24] WORKSPACE_SAVE step=None rawTs_len=1 rawTs=' '
+
+[19:40:36] SET_EDITOR_STEP step='_blank_' rawTs_len=0 rawTs=''
+[19:40:37] WORKSPACE_SAVE step='_blank_' rawTs_len=1 rawTs='\n'
+  LESSON: {}
+[19:40:37] WORKSPACE_SAVE step='_blank_' rawTs_len=1 rawTs='\n'
+  LESSON: {}
+[19:40:44] WORKSPACE_SAVE step='_blank_' rawTs_len=1 rawTs='\n'
+  LESSON: {}
+[19:40:47] WORKSPACE_SAVE step='_blank_' rawTs_len=1 rawTs='\n'
+  LESSON: {}
+[19:41:57] WORKSPACE_SAVE step='_blank_' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {}
+[19:41:57] WORKSPACE_SAVE step='_blank_' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {}
+[19:42:04] WORKSPACE_SAVE step='_blank_' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {}
+[19:42:04] WORKSPACE_SAVE step='_blank_' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {}
+
+[19:42:07] SET_EDITOR_STEP step='step_1' rawTs_len=0 rawTs=''
+[19:42:08] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+
+[19:42:19] SET_EDITOR_STEP step='step_2' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+[19:42:19] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[19:42:19] WORKSPACE_SAVE step='step_2' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[19:42:19] WORKSPACE_SAVE step='step_2' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[19:42:22] WORKSPACE_SAVE step='step_2' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[19:42:22] WORKSPACE_SAVE step='step_2' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[19:42:23] WORKSPACE_SAVE step='step_2' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[19:42:27] WORKSPACE_SAVE step='step_2' rawTs_len=685 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[19:42:27] WORKSPACE_SAVE step='step_2' rawTs_len=685 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[19:42:32] WORKSPACE_SAVE step='step_2' rawTs_len=685 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+
+[19:42:46] SET_EDITOR_STEP step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+[19:42:47] WORKSPACE_SAVE step='step_2' rawTs_len=685 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[19:42:47] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[19:42:47] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[19:42:50] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[19:42:50] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[19:42:50] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+
+[19:42:53] SET_EDITOR_STEP step='step_2' rawTs_len=685 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+[19:42:53] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[19:42:53] WORKSPACE_SAVE step='step_2' rawTs_len=685 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[19:42:53] WORKSPACE_SAVE step='step_2' rawTs_len=685 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+
+[19:42:54] SET_EDITOR_STEP step='step_3' rawTs_len=685 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+[19:42:55] WORKSPACE_SAVE step='step_2' rawTs_len=685 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[19:42:55] WORKSPACE_SAVE step='step_3' rawTs_len=685 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[19:42:55] WORKSPACE_SAVE step='step_3' rawTs_len=685 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[19:42:58] WORKSPACE_SAVE step='step_3' rawTs_len=685 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[19:42:58] WORKSPACE_SAVE step='step_3' rawTs_len=685 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[19:42:58] WORKSPACE_SAVE step='step_3' rawTs_len=685 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[19:42:58] WORKSPACE_SAVE step='step_3' rawTs_len=685 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[19:42:58] WORKSPACE_SAVE step='step_3' rawTs_len=685 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[19:42:59] WORKSPACE_SAVE step='step_3' rawTs_len=685 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[19:43:04] WORKSPACE_SAVE step='step_3' rawTs_len=685 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[19:43:10] WORKSPACE_SAVE step='step_3' rawTs_len=713 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[19:43:11] WORKSPACE_SAVE step='step_3' rawTs_len=713 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[19:43:16] WORKSPACE_SAVE step='step_3' rawTs_len=713 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[19:43:16] WORKSPACE_SAVE step='step_3' rawTs_len=713 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[19:43:21] WORKSPACE_SAVE step='step_3' rawTs_len=713 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+
+[19:43:41] SET_EDITOR_STEP step='_blank_' rawTs_len=0 rawTs=''
+[19:43:41] WORKSPACE_SAVE step='step_3' rawTs_len=713 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {}
+[19:43:43] WORKSPACE_SAVE step='_blank_' rawTs_len=713 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {}
+
+[19:43:48] SET_EDITOR_STEP step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+[19:43:48] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+[19:43:48] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {'step_1': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_2': "'let mySprite = sprites.create(img`\\n    . . . . . .'", 'step_3': "'let mySprite = sprites.create(img`\\n    . . . . . .'"}
+
+[19:43:51] SET_EDITOR_STEP step='_blank_' rawTs_len=0 rawTs=''
+[19:43:52] WORKSPACE_SAVE step='step_1' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {}
+[19:43:52] WORKSPACE_SAVE step='_blank_' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {}
+[19:43:52] WORKSPACE_SAVE step='_blank_' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {}
+[19:43:53] WORKSPACE_SAVE step='_blank_' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {}
+[19:43:58] WORKSPACE_SAVE step='_blank_' rawTs_len=653 rawTs='let mySprite = sprites.create(img`\n    . . . . . . . . . . . . . . . . \n    . . '
+  LESSON: {}

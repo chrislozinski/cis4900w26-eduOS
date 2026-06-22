@@ -387,7 +387,7 @@ class LessonConfig(Gtk.Window):
 
         # Teacher-published lessons from /shared/teacher-lessons/
         try:
-            from lesson_list import load_published_lessons
+            from lessonList import load_published_lessons
             teacher_lessons = load_published_lessons()
         except Exception:
             teacher_lessons = []

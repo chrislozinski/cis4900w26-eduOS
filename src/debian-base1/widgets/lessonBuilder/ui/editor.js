@@ -244,7 +244,8 @@ var EditorScreen = {
 
     _promptBack: function() {
         if (!this._lesson) {
-            navigate("classroom", { classroomId: State.activeClassroom && State.activeClassroom.id });
+            var fbId = State.activeClassroom && State.activeClassroom.id;
+            navigate("classroom", { classroomId: fbId });
             return;
         }
         var lessonId = this._lessonId;
@@ -255,7 +256,9 @@ var EditorScreen = {
                 return (c.enabled_lessons || []).indexOf(lessonId) !== -1;
             });
         if (isPublished) {
-            navigate("classroom", { classroomId: State.activeClassroom && State.activeClassroom.id });
+            var classroomId = (State.activeClassroom && State.activeClassroom.id)
+                || (entry && entry.classroom_id);
+            navigate("classroom", { classroomId: classroomId });
             return;
         }
         document.getElementById("dialog-save-back").classList.remove("hidden");
