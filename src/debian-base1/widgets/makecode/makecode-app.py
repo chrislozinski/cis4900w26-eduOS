@@ -29,6 +29,20 @@ STATIC_DIR      = "/opt/makecode/static"
 CLASSROOMS_FILE = "/shared/classrooms.json"
 LOCAL_STUDENT_STATE_FILE = os.path.expanduser("~/.cache/cis4900/student-state.json")
 
+# Make the shared lessonBuilder modules importable from the sibling widget folder or deployed directory.
+import sys as _sys
+_LESSON_BUILDER_DIR = None
+for _cand in [
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), "lessonBuilder"),
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "lessonBuilder"),
+    "/opt/cis4900/widgets/lessonBuilder",
+]:
+    if os.path.isdir(_cand):
+        _LESSON_BUILDER_DIR = _cand
+        break
+if _LESSON_BUILDER_DIR and _LESSON_BUILDER_DIR not in _sys.path:
+    _sys.path.insert(0, _LESSON_BUILDER_DIR)
+
 
 def filesystem_safe_class_id(raw_id):
     """Safe directory segment for class id (supports students in multiple classes)."""
@@ -51,50 +65,68 @@ def student_makecode_profile_root(username, class_id):
     )
 
 
-LESSON_CATALOG = [
-    {
-        "id":          "course_csintro1",
-        "type":        "Course",
-        "title":       "CS Intro 1",
-        "description": "Core intro course with guided lessons and projects.",
-        "url":         "/docs/courses/csintro1.html",
-        "thumb":       "/docs/static/hero.svg",
-    },
-    {
-        "id":          "course_csintro2",
-        "type":        "Course",
-        "title":       "CS Intro 2",
-        "description": "Functions, tilemaps, logic, arrays, and projects.",
-        "url":         "/docs/courses/csintro2.html",
-        "thumb":       "/docs/static/hero.svg",
-    },
-    {
-        "id":          "course_csintro3",
-        "type":        "Course",
-        "title":       "CS Intro 3",
-        "description": "TypeScript-focused intermediate CS content.",
-        "url":         "/docs/courses/csintro3.html",
-        "thumb":       "/docs/static/hero.svg",
-    },
-    {
-        "id":          "skillmap_beginner",
-        "type":        "Skillmap",
-        "title":       "Beginner Skillmap",
-        "description": "Step-by-step interactive coding path.",
-        "url":         "/--skillmap#beginner",
-        "thumb":       "/docs/static/hero.svg",
-    },
-    {
-        "id":          "open_editor",
-        "type":        "Editor",
-        "title":       "Open Free Editor",
-        "description": "Start a new project from scratch.",
-        "url":         "/",
-        "thumb":       "/docs/static/icons/js.svg",
-    },
-]
+# Static catalog moved to lesson-list.py (BUILTIN_LESSON_CATALOG).
+# Kept here as a commented reference in case lesson-list.py is unavailable.
+#
+# LESSON_CATALOG = [
+#     {
+#         "id":          "course_csintro1",
+#         "type":        "Course",
+#         "title":       "CS Intro 1",
+#         "description": "Core intro course with guided lessons and projects.",
+#         "url":         "/docs/courses/csintro1.html",
+#         "thumb":       "/docs/static/hero.svg",
+#     },
+#     {
+#         "id":          "course_csintro2",
+#         "type":        "Course",
+#         "title":       "CS Intro 2",
+#         "description": "Functions, tilemaps, logic, arrays, and projects.",
+#         "url":         "/docs/courses/csintro2.html",
+#         "thumb":       "/docs/static/hero.svg",
+#     },
+#     {
+#         "id":          "course_csintro3",
+#         "type":        "Course",
+#         "title":       "CS Intro 3",
+#         "description": "TypeScript-focused intermediate CS content.",
+#         "url":         "/docs/courses/csintro3.html",
+#         "thumb":       "/docs/static/hero.svg",
+#     },
+#     {
+#         "id":          "skillmap_beginner",
+#         "type":        "Skillmap",
+#         "title":       "Beginner Skillmap",
+#         "description": "Step-by-step interactive coding path.",
+#         "url":         "/--skillmap#beginner",
+#         "thumb":       "/docs/static/hero.svg",
+#     },
+#     {
+#         "id":          "open_editor",
+#         "type":        "Editor",
+#         "title":       "Open Free Editor",
+#         "description": "Start a new project from scratch.",
+#         "url":         "/",
+#         "thumb":       "/docs/static/icons/js.svg",
+#     },
+# ]
+# LESSON_BY_ID = {l["id"]: l for l in LESSON_CATALOG}
 
-LESSON_BY_ID = {l["id"]: l for l in LESSON_CATALOG}
+
+def _build_lesson_catalog():
+    """Return the full lesson catalog (builtins + teacher-published lessons)."""
+    try:
+        from lessonList import build_lesson_catalog
+        return build_lesson_catalog()
+    except Exception:
+        # return builtins only if lessonList.py is unavailable
+        return [
+            {"id": "course_csintro1",   "type": "Course",   "title": "CS Intro 1",        "description": "Core intro course with guided lessons and projects.", "url": "/docs/courses/csintro1.html", "thumb": "/docs/static/hero.svg"},
+            {"id": "course_csintro2",   "type": "Course",   "title": "CS Intro 2",        "description": "Functions, tilemaps, logic, arrays, and projects.",  "url": "/docs/courses/csintro2.html", "thumb": "/docs/static/hero.svg"},
+            {"id": "course_csintro3",   "type": "Course",   "title": "CS Intro 3",        "description": "TypeScript-focused intermediate CS content.",        "url": "/docs/courses/csintro3.html", "thumb": "/docs/static/hero.svg"},
+            {"id": "skillmap_beginner", "type": "Skillmap", "title": "Beginner Skillmap", "description": "Step-by-step interactive coding path.",              "url": "/--skillmap#beginner",        "thumb": "/docs/static/hero.svg"},
+            {"id": "open_editor",       "type": "Editor",   "title": "Open Free Editor",  "description": "Start a new project from scratch.",                  "url": "/",                           "thumb": "/docs/static/icons/js.svg"},
+        ]
 
 server_port = 0
 
@@ -204,6 +236,25 @@ class MakeCodeStaticHandler(http.server.SimpleHTTPRequestHandler):
         parts = urlsplit(self.path)
         path = unquote(parts.path or "/")
 
+        # MakeCode static mode prepends "docs/" to tutorial paths; strip it so the handler below matches.
+        if path.startswith("/docs/api/md/teacher-lessons/"):
+            path = path[len("/docs"):]
+
+        if path.startswith("/api/md/teacher-lessons/"):
+            rel   = path[len("/api/md/teacher-lessons/"):].strip("/")
+            parts_rel = rel.split("/")
+            if len(parts_rel) >= 2:
+                lesson_id = parts_rel[0]
+                filename  = parts_rel[1].rstrip(".md") + ".md"
+                local     = os.path.join("/shared/teacher-lessons", lesson_id, filename)
+                if os.path.isfile(local):
+                    self._send_file_bytes(local, "text/plain; charset=utf-8")
+                else:
+                    self.send_error(404)
+            else:
+                self.send_error(404)
+            return
+
         if path.startswith("/api/md/arcade/"):
             rel = path[len("/api/md/arcade/") :].lstrip("/")
             local = _resolve_local_api_md(rel)
@@ -227,6 +278,34 @@ class MakeCodeStaticHandler(http.server.SimpleHTTPRequestHandler):
     def do_HEAD(self):
         parts = urlsplit(self.path)
         path = unquote(parts.path or "/")
+
+        # MakeCode static mode prepends "docs/" to tutorial paths; strip it so the handler below matches.
+        if path.startswith("/docs/api/md/teacher-lessons/"):
+            path = path[len("/docs"):]
+
+        if path.startswith("/api/md/teacher-lessons/"):
+            rel       = path[len("/api/md/teacher-lessons/"):].strip("/")
+            parts_rel = rel.split("/")
+            if len(parts_rel) >= 2:
+                lesson_id = parts_rel[0]
+                filename  = parts_rel[1].rstrip(".md") + ".md"
+                local     = os.path.join("/shared/teacher-lessons", lesson_id, filename)
+                if not os.path.isfile(local):
+                    self.send_error(404)
+                    return
+                try:
+                    length = os.path.getsize(local)
+                except Exception:
+                    self.send_error(404)
+                    return
+                self.send_response(200)
+                self.send_header("Content-Type", "text/plain; charset=utf-8")
+                self.send_header("Content-Length", str(length))
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.end_headers()
+            else:
+                self.send_error(404)
+            return
 
         if path.startswith("/api/md/arcade/"):
             rel = path[len("/api/md/arcade/") :].lstrip("/")
@@ -469,7 +548,8 @@ def build_landing_html_with_restore(base_url, classroom_name, enabled_ids, resto
         "Editor":   "#e0791d",
     }
 
-    lessons = [LESSON_BY_ID[lid] for lid in enabled_ids if lid in LESSON_BY_ID]
+    lesson_by_id = {l["id"]: l for l in _build_lesson_catalog()}
+    lessons = [lesson_by_id[lid] for lid in enabled_ids if lid in lesson_by_id]
 
     cards_html = ""
     for lesson in lessons:
@@ -1141,6 +1221,16 @@ class MakeCodeWindow(Gtk.Window):
             self._note_visit("skillmap_beginner", uri)
             return
 
+        # Teacher lesson tutorials load via /#tutorial:/api/md/teacher-lessons/<id>/tutorial
+        if "/api/md/teacher-lessons/" in combo:
+            import re as _re
+            m = _re.search(r'/teacher-lessons/(teacher_[^/\s]+)/', combo)
+            if m:
+                tid = m.group(1)
+                self._restore_urls[tid] = uri
+                self._note_visit(tid, uri)
+                return
+
         # Track CS Intro location and the free editor location so returning
         # to "Lessons" and then back to the editor keeps the project.
         # Match longer course ids first so csintro2 does not look like csintro.
@@ -1203,7 +1293,7 @@ class MakeCodeWindow(Gtk.Window):
                 self._last_btn.set_sensitive(False)
                 self._last_btn.set_opacity(0.0)
                 return
-            label = LESSON_BY_ID.get(self._prev_key, {}).get("title", "Last")
+            label = {l["id"]: l for l in _build_lesson_catalog()}.get(self._prev_key, {}).get("title", "Last")
             self._last_btn.set_label(f"↩  {label}")
             self._last_btn.set_sensitive(True)
             self._last_btn.set_opacity(1.0)

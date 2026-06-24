@@ -32,6 +32,11 @@ mkdir -p /shared/submissions
 chown testuser:teacher /shared/submissions
 chmod 1775 /shared/submissions
 
+# teacher-authored lesson packages (published tutorials)
+mkdir -p /shared/teacher-lessons
+chown root:teacher /shared/teacher-lessons
+chmod 775 /shared/teacher-lessons
+
 echo "Creating convenient symlinks to shared folders..."
 
 # Teacher gets symlinks to shared folders

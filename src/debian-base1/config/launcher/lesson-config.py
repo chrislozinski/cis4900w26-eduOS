@@ -9,6 +9,21 @@ import gi
 import json
 import os
 import shlex
+import sys
+
+# Make lessonBuilder modules importable from the deployed path or dev source tree.
+_THIS_DIR = os.path.dirname(os.path.abspath(__file__))
+_LESSON_BUILDER_DIR = None
+for _cand in [
+    "/opt/cis4900/widgets/lessonBuilder",
+    os.path.join(_THIS_DIR, "lessonBuilder"),
+    os.path.join(_THIS_DIR, "..", "..", "widgets", "lessonBuilder"),
+]:
+    if os.path.isdir(_cand):
+        _LESSON_BUILDER_DIR = _cand
+        break
+if _LESSON_BUILDER_DIR and _LESSON_BUILDER_DIR not in sys.path:
+    sys.path.insert(0, _LESSON_BUILDER_DIR)
 
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk, GLib
@@ -111,6 +126,7 @@ class LessonConfig(Gtk.Window):
         self.right_box.set_margin_start(6); self.right_box.set_margin_end(12)
         right_sw.add(self.right_box)
 
+        self.connect("focus-in-event", self._on_focus)
         self._show_placeholder("Select a classroom to configure its lesson resources.")
         self._refresh_cls_list()
 
@@ -152,6 +168,15 @@ class LessonConfig(Gtk.Window):
             if c['id'] == cls_id:
                 return c
         return None
+
+    def _on_focus(self, widget, event):
+        if not self.selected_cls_id:
+            return False
+        self.data = load_classrooms()
+        cls = self._get_cls(self.selected_cls_id)
+        if cls:
+            self._show_detail(cls)
+        return False
 
     def _on_cls_selected(self, _lb, row):
         if row is None:
@@ -359,6 +384,57 @@ class LessonConfig(Gtk.Window):
             vbox.pack_start(row_box, False, False, 0)
 
         section.pack_start(frame, False, False, 0)
+
+        # Teacher-published lessons from /shared/teacher-lessons/
+        try:
+            from lessonList import load_published_lessons
+            teacher_lessons = load_published_lessons()
+        except Exception:
+            teacher_lessons = []
+
+        if teacher_lessons:
+            section.pack_start(
+                Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL), False, False, 6)
+
+            teacher_hdr = Gtk.Label()
+            teacher_hdr.set_markup("<b>Teacher Lessons</b>")
+            teacher_hdr.set_halign(Gtk.Align.START)
+            section.pack_start(teacher_hdr, False, False, 0)
+
+            teacher_note = Gtk.Label(label="Lessons you created in Lesson Builder.")
+            teacher_note.set_halign(Gtk.Align.START)
+            teacher_note.get_style_context().add_class("dim-label")
+            section.pack_start(teacher_note, False, False, 0)
+
+            teacher_frame = Gtk.Frame()
+            teacher_frame.get_style_context().add_class("inner-list")
+            teacher_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+            teacher_frame.add(teacher_vbox)
+
+            for lesson in teacher_lessons:
+                lid = lesson.get("id", "")
+                if not lid:
+                    continue
+                row_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+                row_box.set_margin_start(10); row_box.set_margin_end(10)
+                row_box.set_margin_top(5);   row_box.set_margin_bottom(5)
+
+                cb = Gtk.CheckButton()
+                cb.set_active(lid in enabled_ids)
+                cb.connect("toggled", self._on_lesson_toggle, lid, cls)
+                row_box.pack_start(cb, False, False, 0)
+
+                desc = Gtk.Label()
+                desc.set_markup(
+                    f'<b><span foreground="#3d9970">{lesson.get("title", lid)}</span></b>  '
+                    f'<small>{lesson.get("description", "")}</small>')
+                desc.set_halign(Gtk.Align.START)
+                row_box.pack_start(desc, True, True, 0)
+
+                teacher_vbox.pack_start(row_box, False, False, 0)
+
+            section.pack_start(teacher_frame, False, False, 0)
+
         return section
 
     def _on_lesson_toggle(self, cb, lesson_id, cls):

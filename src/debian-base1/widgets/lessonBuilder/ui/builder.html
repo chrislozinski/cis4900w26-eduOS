@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { width: 100%; height: 100vh; overflow: hidden; }
+    #makecode-frame { width: 100%; height: 100%; border: none; display: block; }
+  </style>
+</head>
+<body>
+  <iframe id="makecode-frame"></iframe>
+  <div id="loading-overlay" style="
+    display:none; position:absolute; inset:0;
+    background:rgba(20,20,20,0.75);
+    align-items:center; justify-content:center;
+    z-index:9999;
+  "><span style="color:#aaa;font:18px sans-serif;">Loading…</span></div>
+  <script>
+    var editorReady        = false;
+    var pendingLoad        = null;
+    var currentStepId      = null;
+    var currentLessonTitle = "Lesson Sandbox";
+    var lastKnownTs        = "";
+    var lastKnownXml       = "";
+    var _pendingTs         = "";
+    var _pendingXml        = "";
+    var _isLoading         = false;
+    var _preSaveReceived   = false;
+    var _codeObserver      = null;
+    var _loadGen           = 0;
+
+    function _setLoading(on) {
+      document.getElementById("loading-overlay").style.display = on ? "flex" : "none";
+    }
+
+    function _waitForCodeRendered() {
+      if (_codeObserver) { _codeObserver.disconnect(); _codeObserver = null; }
+      var gen = ++_loadGen;
+      try {
+        // codespace is the SVG group inside MakeCode that holds the block elements
+        // Blockly updates its transform when it recenters after loading new blocks
+        // that recenter happens after the sim finishes compiling, so it is our signal to hide the overlay
+        var codespace = document.getElementById("makecode-frame")
+                            .contentDocument.querySelector(".blocklyBlockCanvas");
+        if (!codespace) return;
+        _codeObserver = new MutationObserver(function(mutations) {
+          for (var i = 0; i < mutations.length; i++) {
+            if (mutations[i].oldValue !== codespace.getAttribute("transform") && gen === _loadGen) {
+              _codeObserver.disconnect(); _codeObserver = null;
+              _setLoading(false);
+              return;
+            }
+          }
+        });
+        _codeObserver.observe(codespace, {
+          attributes:        true,
+          attributeFilter:   ["transform"],
+          attributeOldValue: true
+        });
+      } catch (e) {
+        // Catches iframe DOM access exceptions so the import call does not crash
+        // Overlay stays up since we cannot confirm rendering is done
+      }
+    }
+
+    document.getElementById("makecode-frame").src =
+        window.location.origin + "/?controller=1";
+
+    window.addEventListener("message", function(ev) {
+      var msg = ev.data;
+      if (!msg || !msg.type) return;
+      if (msg.type !== "pxthost") return;
+      var iframe = document.getElementById("makecode-frame");
+
+      if (msg.action === "workspacesync") {
+        iframe.contentWindow.postMessage(
+          { type: "pxthost", id: msg.id, projects: [], editor: "blocksprj" }, "*"
+        );
+        return;
+      }
+
+      if (msg.action === "workspaceloaded") {
+        iframe.contentWindow.postMessage({ type: "pxthost", id: msg.id }, "*");
+      }
+
+      if (!editorReady) {
+        editorReady = true;
+        if (pendingLoad) {
+          _sendImportProject(pendingLoad);
+          pendingLoad = null;
+        }
+      }
+
+      // Autosave whenever MakeCode requests it
+      if (msg.action === "workspacesave" && msg.project) {
+        var ts  = (msg.project.text && msg.project.text["main.ts"])     || "";
+        var xml = (msg.project.text && msg.project.text["main.blocks"]) || "";
+
+        if (_isLoading) {
+          if (!_preSaveReceived) {
+            _preSaveReceived = true;
+            if (!ts && _pendingTs) { ts = _pendingTs; xml = _pendingXml; }
+          } else {
+            _isLoading = _preSaveReceived = false;
+            _pendingTs = _pendingXml = "";
+          }
+        }
+
+        lastKnownTs  = ts;
+        lastKnownXml = xml;
+        if (window.webkit && window.webkit.messageHandlers.workspaceSave) {
+          window.webkit.messageHandlers.workspaceSave.postMessage(
+            JSON.stringify({ step_id: currentStepId, raw_ts: ts, cached_xml: xml })
+          );
+        }
+      }
+    });
+
+    // Called from Python to save current step code, then load next step
+    function loadStep(stepId, rawTs, cachedXml, lessonTitle) {
+      currentLessonTitle = lessonTitle || currentLessonTitle;
+      if (!editorReady) {
+        pendingLoad = { step_id: stepId, raw_ts: rawTs, cached_xml: cachedXml };
+        return;
+      }
+      if (currentStepId && currentStepId !== "_blank_" &&
+          window.webkit && window.webkit.messageHandlers.workspaceSave) {
+        window.webkit.messageHandlers.workspaceSave.postMessage(
+          JSON.stringify({ step_id: currentStepId, raw_ts: lastKnownTs, cached_xml: lastKnownXml })
+        );
+      }
+      lastKnownTs  = "";
+      lastKnownXml = "";
+      _pendingTs   = "";
+      _pendingXml  = "";
+
+      // Blank lesson, _blank_ stepId: reload the iframe so MakeCode resets to a new project using workspacesync to projects:[]
+      // this is the only way to clear old lesson code without calling _sendImportProject
+      // dont call_sendImportProject here as main.blocks:"" and makes MakeCode switch to the JS editor
+      // As well, sending empty XML in main.blocks and "\n" in rawTs were both tried but they both also cause the JS editor
+      if (stepId === "_blank_") {
+        currentStepId = "_blank_";
+        editorReady   = false;
+        document.getElementById("makecode-frame").src = window.location.origin + "/?controller=1";
+        return;
+      }
+
+      // Step exists but has no saved content yet: leave MakeCode as is
+      // Autosave will populate raw_ts/cached_xml on first user interaction
+      // DO NOT call _sendImportProject, main.blocks:"" triggers JS mode
+      if (!rawTs && !cachedXml) {
+        currentStepId = stepId;
+        return;
+      }
+      _sendImportProject({ step_id: stepId, raw_ts: rawTs, cached_xml: cachedXml });
+    }
+
+    function _sendImportProject(payload) {
+      currentStepId = payload.step_id;
+      lastKnownTs   = payload.raw_ts    || "";
+      lastKnownXml  = payload.cached_xml || "";
+      _pendingTs       = payload.raw_ts    || "";
+      _pendingXml      = payload.cached_xml || "";
+      _isLoading       = true;
+      _preSaveReceived = false;
+      _setLoading(true);
+      _waitForCodeRendered();  // set up observer BEFORE importproject is dispatched
+      var iframe = document.getElementById("makecode-frame");
+      var name   = currentLessonTitle || "Lesson Sandbox";
+      var project = {
+        editor: "blocksprj",
+        text: {
+          "main.ts":     payload.raw_ts    || "",
+          "main.blocks": payload.cached_xml || "",
+          "pxt.json": JSON.stringify({
+            name: name, preferredEditor: "blocksprj",
+            dependencies: { "device": "*" },
+            description: "", files: ["main.blocks", "main.ts"]
+          })
+        },
+        meta: {}
+      };
+      iframe.contentWindow.postMessage({
+        type: "pxteditor", action: "importproject",
+        id: "step-" + (payload.step_id || "blank") + "-" + Date.now(),
+        response: false, project: project
+      }, "*");
+    }
+  </script>
+</body>
+</html>

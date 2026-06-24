@@ -5,4 +5,5 @@
 #/ home / testuser/resources -- work  and Documents too 
 
 when i pwd im in /home/testuser/
-# hello jennifer ÏØø
+# hello jennifer ï¿½ï¿½ï¿½
+
