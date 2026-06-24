@@ -168,6 +168,23 @@ class LessonBuilderHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_error(404)
             return
 
+        # MakeCode static mode prepends "docs/" to tutorial paths, for more info see pxtapp.js markdownAsync
+        # /api/md/teacher-lessons/{id}/tutorial to docs/api/md/teacher-lessons/{id}/tutorial.md
+        if path.startswith("/docs/api/md/teacher-lessons/"):
+            rel  = path[len("/docs/api/md/teacher-lessons/"):].strip("/").split("/")
+            if len(rel) >= 2:
+                lesson_id = rel[0]
+                raw_name  = rel[1]
+                filename  = raw_name if raw_name.endswith(".md") else raw_name + ".md"
+                local     = os.path.join("/shared/teacher-lessons", lesson_id, filename)
+                if os.path.isfile(local):
+                    self._send_file(local, "text/plain; charset=utf-8")
+                else:
+                    self.send_error(404)
+            else:
+                self.send_error(404)
+            return
+
         if path.startswith("/api/md/teacher-lessons/"):
             rel  = path[len("/api/md/teacher-lessons/"):].strip("/").split("/")
             if len(rel) >= 2:
@@ -230,6 +247,30 @@ class LessonBuilderHandler(http.server.SimpleHTTPRequestHandler):
                     return
                 self.send_response(200)
                 self.send_header("Content-Type", self._mime(local))
+                self.send_header("Content-Length", str(length))
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.end_headers()
+            else:
+                self.send_error(404)
+            return
+
+        if path.startswith("/docs/api/md/teacher-lessons/"):
+            rel  = path[len("/docs/api/md/teacher-lessons/"):].strip("/").split("/")
+            if len(rel) >= 2:
+                lesson_id = rel[0]
+                raw_name  = rel[1]
+                filename  = raw_name if raw_name.endswith(".md") else raw_name + ".md"
+                local     = os.path.join("/shared/teacher-lessons", lesson_id, filename)
+                if not os.path.isfile(local):
+                    self.send_error(404)
+                    return
+                try:
+                    length = os.path.getsize(local)
+                except Exception:
+                    self.send_error(404)
+                    return
+                self.send_response(200)
+                self.send_header("Content-Type", "text/plain; charset=utf-8")
                 self.send_header("Content-Length", str(length))
                 self.send_header("Access-Control-Allow-Origin", "*")
                 self.end_headers()

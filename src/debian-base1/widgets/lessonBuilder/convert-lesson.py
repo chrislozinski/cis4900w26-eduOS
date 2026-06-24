@@ -24,6 +24,7 @@ def convert_lesson(draft):
         "### @explicitHints true",
         "",
         "## Introduction @showdialog",
+        "",
         description or "Welcome to this tutorial.",
         "",
     ]
@@ -46,6 +47,7 @@ def convert_lesson(draft):
             lines.append("")
         if captured_code:
             lines.append("#### ~ tutorialhint")
+            lines.append("")
             lines.append("```blocks")
             lines.append(captured_code)
             lines.append("```")

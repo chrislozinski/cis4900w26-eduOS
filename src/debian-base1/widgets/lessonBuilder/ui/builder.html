@@ -25,6 +25,8 @@
     var lastKnownXml       = "";
     var _pendingTs         = "";
     var _pendingXml        = "";
+    var _isLoading         = false;
+    var _preSaveReceived   = false;
 
     document.getElementById("makecode-frame").src =
         window.location.origin + "/?controller=1";
@@ -54,19 +56,20 @@
         }
       }
 
-      // Autosave whenever MakeCode fires it
+      // Autosave whenever MakeCode requests it
       if (msg.action === "workspacesave" && msg.project) {
         var ts  = (msg.project.text && msg.project.text["main.ts"])     || "";
         var xml = (msg.project.text && msg.project.text["main.blocks"]) || "";
 
-        if (!ts && _pendingTs) {
-          ts  = _pendingTs;
-          xml = _pendingXml;
-          // keep overlay visible — still waiting for real save
-        } else {
-          _pendingTs  = "";
-          _pendingXml = "";
-          document.getElementById("loading-overlay").style.display = "none";
+        if (_isLoading) {
+          if (!_preSaveReceived) {
+            _preSaveReceived = true;
+            if (!ts && _pendingTs) { ts = _pendingTs; xml = _pendingXml; }
+          } else {
+            _isLoading = _preSaveReceived = false;
+            _pendingTs = _pendingXml = "";
+            document.getElementById("loading-overlay").style.display = "none";
+          }
         }
 
         lastKnownTs  = ts;
@@ -96,6 +99,21 @@
       lastKnownXml = "";
       _pendingTs   = "";
       _pendingXml  = "";
+
+      // Blank lesson (_blank_ stepId): reload the iframe so MakeCode resets to a new project via workspacesync→projects:[]. 
+      // This is the ONLY safe way to clear old lesson code without calling _sendImportProject
+      // Never call_sendImportProject here as main.blocks:"" makes MakeCode switch to JS editor
+      // As well, empty XML in main.blocks was tried and explicitly removed and "\n" in rawTs was tried and also causes JS editor 
+      if (stepId === "_blank_") {
+        currentStepId = "_blank_";
+        editorReady   = false;
+        document.getElementById("makecode-frame").src = window.location.origin + "/?controller=1";
+        return;
+      }
+
+      // Step exists but has no saved content yet: leave MakeCode as is
+      // Autosave will populate raw_ts/cached_xml on first user interaction
+      // DO NOT call _sendImportProject, main.blocks:"" triggers JS mode
       if (!rawTs && !cachedXml) {
         currentStepId = stepId;
         return;
@@ -107,8 +125,10 @@
       currentStepId = payload.step_id;
       lastKnownTs   = payload.raw_ts    || "";
       lastKnownXml  = payload.cached_xml || "";
-      _pendingTs    = payload.raw_ts    || "";
-      _pendingXml   = payload.cached_xml || "";
+      _pendingTs       = payload.raw_ts    || "";
+      _pendingXml      = payload.cached_xml || "";
+      _isLoading       = true;
+      _preSaveReceived = false;
       document.getElementById("loading-overlay").style.display = "flex";
       var iframe = document.getElementById("makecode-frame");
       var name   = currentLessonTitle || "Lesson Sandbox";

@@ -30,6 +30,11 @@ var EditorScreen = {
                 lessonTitle: this._lesson.title || "Lesson",
             });
         } else {
+            // rawTs and cachedXml are intentionally empty for blank lessons.
+            // loadStep in builder.html detects both-empty and reloads the iframe to a clean blank canvas via workspacesync.
+            // DO NOT send a rawTs like "\n" as this bypasses the empty-check and causes
+            // _sendImportProject to send with main.blocks:"" which switches MakeCode to JS editor
+            // See builder.html loadStep for the full explanation.
             sendToPython("setEditorStep", {
                 stepId:      "_blank_",
                 rawTs:       "",
@@ -122,6 +127,9 @@ var EditorScreen = {
     _addStep: function() {
         if (!this._lesson) return;
         var steps         = this._lesson.steps || [];
+        // For the first step of a blank lesson, prevRawTs and prevCachedXml are intentionally ""
+        // builder.html loadStep handles the empty case by reloading the iframe to clear project blocks
+        // DO NOT use "\n" here as it bypasses the empty guard and causes JS mode via main.blocks:""
         var prevRawTs     = steps.length > 0 ? (steps[steps.length - 1].raw_ts     || "") : "";
         var prevCachedXml = steps.length > 0 ? (steps[steps.length - 1].cached_xml || "") : "";
         var newIdx        = steps.length;
