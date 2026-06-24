@@ -27,23 +27,41 @@
     var _pendingXml        = "";
     var _isLoading         = false;
     var _preSaveReceived   = false;
+    var _codeObserver      = null;
+    var _loadGen           = 0;
 
     function _setLoading(on) {
       document.getElementById("loading-overlay").style.display = on ? "flex" : "none";
     }
 
     function _waitForCodeRendered() {
-      // Blockly renders blocks as SVG children of .blocklyBlockCanvas.
-      // Once it has children the canvas is visually painted, safe to hide the overlay.
-      var frame = document.getElementById("makecode-frame");
+      if (_codeObserver) { _codeObserver.disconnect(); _codeObserver = null; }
+      var gen = ++_loadGen;
       try {
-        var canvas = frame.contentDocument.querySelector(".blocklyBlockCanvas");
-        if (canvas && canvas.childElementCount > 0) { _setLoading(false); return; }
+        // codespace is the SVG group inside MakeCode that holds the block elements
+        // Blockly updates its transform when it recenters after loading new blocks
+        // that recenter happens after the sim finishes compiling, so it is our signal to hide the overlay
+        var codespace = document.getElementById("makecode-frame")
+                            .contentDocument.querySelector(".blocklyBlockCanvas");
+        if (!codespace) return;
+        _codeObserver = new MutationObserver(function(mutations) {
+          for (var i = 0; i < mutations.length; i++) {
+            if (mutations[i].oldValue !== codespace.getAttribute("transform") && gen === _loadGen) {
+              _codeObserver.disconnect(); _codeObserver = null;
+              _setLoading(false);
+              return;
+            }
+          }
+        });
+        _codeObserver.observe(codespace, {
+          attributes:        true,
+          attributeFilter:   ["transform"],
+          attributeOldValue: true
+        });
       } catch (e) {
-        _setLoading(false);
-        return;
+        // Catches iframe DOM access exceptions so the import call does not crash
+        // Overlay stays up since we cannot confirm rendering is done
       }
-      requestAnimationFrame(_waitForCodeRendered);
     }
 
     document.getElementById("makecode-frame").src =
@@ -86,7 +104,6 @@
           } else {
             _isLoading = _preSaveReceived = false;
             _pendingTs = _pendingXml = "";
-            _waitForCodeRendered();
           }
         }
 
@@ -118,10 +135,10 @@
       _pendingTs   = "";
       _pendingXml  = "";
 
-      // Blank lesson (_blank_ stepId): reload the iframe so MakeCode resets to a new project via workspacesync→projects:[]. 
-      // This is the ONLY safe way to clear old lesson code without calling _sendImportProject
-      // Never call_sendImportProject here as main.blocks:"" makes MakeCode switch to JS editor
-      // As well, empty XML in main.blocks was tried and explicitly removed and "\n" in rawTs was tried and also causes JS editor 
+      // Blank lesson, _blank_ stepId: reload the iframe so MakeCode resets to a new project using workspacesync to projects:[]
+      // this is the only way to clear old lesson code without calling _sendImportProject
+      // dont call_sendImportProject here as main.blocks:"" and makes MakeCode switch to the JS editor
+      // As well, sending empty XML in main.blocks and "\n" in rawTs were both tried but they both also cause the JS editor
       if (stepId === "_blank_") {
         currentStepId = "_blank_";
         editorReady   = false;
@@ -148,6 +165,7 @@
       _isLoading       = true;
       _preSaveReceived = false;
       _setLoading(true);
+      _waitForCodeRendered();  // set up observer BEFORE importproject is dispatched
       var iframe = document.getElementById("makecode-frame");
       var name   = currentLessonTitle || "Lesson Sandbox";
       var project = {
