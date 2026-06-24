@@ -28,6 +28,24 @@
     var _isLoading         = false;
     var _preSaveReceived   = false;
 
+    function _setLoading(on) {
+      document.getElementById("loading-overlay").style.display = on ? "flex" : "none";
+    }
+
+    function _waitForCodeRendered() {
+      // Blockly renders blocks as SVG children of .blocklyBlockCanvas.
+      // Once it has children the canvas is visually painted, safe to hide the overlay.
+      var frame = document.getElementById("makecode-frame");
+      try {
+        var canvas = frame.contentDocument.querySelector(".blocklyBlockCanvas");
+        if (canvas && canvas.childElementCount > 0) { _setLoading(false); return; }
+      } catch (e) {
+        _setLoading(false);
+        return;
+      }
+      requestAnimationFrame(_waitForCodeRendered);
+    }
+
     document.getElementById("makecode-frame").src =
         window.location.origin + "/?controller=1";
 
@@ -68,7 +86,7 @@
           } else {
             _isLoading = _preSaveReceived = false;
             _pendingTs = _pendingXml = "";
-            document.getElementById("loading-overlay").style.display = "none";
+            _waitForCodeRendered();
           }
         }
 
@@ -129,7 +147,7 @@
       _pendingXml      = payload.cached_xml || "";
       _isLoading       = true;
       _preSaveReceived = false;
-      document.getElementById("loading-overlay").style.display = "flex";
+      _setLoading(true);
       var iframe = document.getElementById("makecode-frame");
       var name   = currentLessonTitle || "Lesson Sandbox";
       var project = {

@@ -170,7 +170,10 @@ window.receiveFromPython = function(payload) {
     }
 
     if (action === "lessonPermanentlyDeleted") {
-        ClassroomScreen.refresh();
+        ClassroomScreen._trashItems = ClassroomScreen._trashItems.filter(function(i) {
+            return i.id !== payload.lessonId;
+        });
+        ClassroomScreen._renderList();
         return;
     }
 

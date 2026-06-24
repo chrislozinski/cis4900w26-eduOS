@@ -236,6 +236,10 @@ class MakeCodeStaticHandler(http.server.SimpleHTTPRequestHandler):
         parts = urlsplit(self.path)
         path = unquote(parts.path or "/")
 
+        # MakeCode static mode prepends "docs/" to tutorial paths; strip it so the handler below matches.
+        if path.startswith("/docs/api/md/teacher-lessons/"):
+            path = path[len("/docs"):]
+
         if path.startswith("/api/md/teacher-lessons/"):
             rel   = path[len("/api/md/teacher-lessons/"):].strip("/")
             parts_rel = rel.split("/")
@@ -274,6 +278,10 @@ class MakeCodeStaticHandler(http.server.SimpleHTTPRequestHandler):
     def do_HEAD(self):
         parts = urlsplit(self.path)
         path = unquote(parts.path or "/")
+
+        # MakeCode static mode prepends "docs/" to tutorial paths; strip it so the handler below matches.
+        if path.startswith("/docs/api/md/teacher-lessons/"):
+            path = path[len("/docs"):]
 
         if path.startswith("/api/md/teacher-lessons/"):
             rel       = path[len("/api/md/teacher-lessons/"):].strip("/")

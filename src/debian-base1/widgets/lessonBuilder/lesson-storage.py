@@ -74,16 +74,32 @@ def _load_json_list(path):
     return []
 
 
+# In-memory cache for lessons.json to avoid redundant reads on every autosave.
+# Safe because lessons.json is only written by this single process.
+_lessons_cache = None
+
+def _load_lessons():
+    global _lessons_cache
+    if _lessons_cache is None:
+        _lessons_cache = _load_json_list(LOCAL_LESSONS_FILE)
+    return _lessons_cache
+
+def _set_lessons(data):
+    global _lessons_cache
+    _lessons_cache = data
+    _write_file(LOCAL_LESSONS_FILE, json.dumps(data, indent=2))
+
+
 # Lesson CRUD
 
 def load_all_lessons():
     """Return the list of all lesson objects from lessons.json."""
-    return _load_json_list(LOCAL_LESSONS_FILE)
+    return _load_lessons()
 
 
 def load_lesson(lesson_id):
     """Find and return a single lesson by id, or None if not found."""
-    for l in _load_json_list(LOCAL_LESSONS_FILE):
+    for l in _load_lessons():
         if l.get("id") == lesson_id:
             return l
     return None
@@ -92,14 +108,14 @@ def load_lesson(lesson_id):
 def save_lesson(lesson_id, lesson_data):
     """Replace the lesson with lesson_id in lessons.json (upserts if missing)."""
     _ensure_dirs()
-    lessons = _load_json_list(LOCAL_LESSONS_FILE)
+    lessons = _load_lessons()
     for i, l in enumerate(lessons):
         if l.get("id") == lesson_id:
             lessons[i] = lesson_data
-            _write_file(LOCAL_LESSONS_FILE, json.dumps(lessons, indent=2))
+            _set_lessons(lessons)
             return
     lessons.append(lesson_data)
-    _write_file(LOCAL_LESSONS_FILE, json.dumps(lessons, indent=2))
+    _set_lessons(lessons)
 
 
 def create_lesson(title, lesson_type="makecode", description="", classroom_id=""):
@@ -123,9 +139,9 @@ def create_lesson(title, lesson_type="makecode", description="", classroom_id=""
         "steps":         [],
         "solution_code": "",
     }
-    lessons = _load_json_list(LOCAL_LESSONS_FILE)
+    lessons = _load_lessons()
     lessons.append(lesson)
-    _write_file(LOCAL_LESSONS_FILE, json.dumps(lessons, indent=2))
+    _set_lessons(lessons)
     return lesson_id
 
 
@@ -139,12 +155,11 @@ def load_recycling():
 def move_to_bin(lesson_id):
     """Soft-delete: move lesson from lessons.json to recycling.json and unpublish from all classrooms."""
     _ensure_dirs()
-    lessons = _load_json_list(LOCAL_LESSONS_FILE)
+    lessons = _load_lessons()
     lesson  = next((l for l in lessons if l.get("id") == lesson_id), None)
     if not lesson:
         return
-    _write_file(LOCAL_LESSONS_FILE,
-                  json.dumps([l for l in lessons if l.get("id") != lesson_id], indent=2))
+    _set_lessons([l for l in lessons if l.get("id") != lesson_id])
     recycling = _load_json_list(LOCAL_RECYCLING_FILE)
     recycling.append(lesson)
     _write_file(LOCAL_RECYCLING_FILE, json.dumps(recycling, indent=2))
@@ -160,9 +175,9 @@ def recover_lesson(lesson_id):
         return
     _write_file(LOCAL_RECYCLING_FILE,
                   json.dumps([l for l in recycling if l.get("id") != lesson_id], indent=2))
-    lessons = _load_json_list(LOCAL_LESSONS_FILE)
+    lessons = _load_lessons()
     lessons.append(lesson)
-    _write_file(LOCAL_LESSONS_FILE, json.dumps(lessons, indent=2))
+    _set_lessons(lessons)
 
 
 def permanent_delete(lesson_id):

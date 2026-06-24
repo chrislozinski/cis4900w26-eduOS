@@ -110,9 +110,24 @@ var EditorScreen = {
 
     _selectStep: function(idx) {
         this._flushCurrentStepFields();
+        var prev = this._stepIdx;
         this._stepIdx = idx;
-        this._renderStepList();
         this._renderStepFields();
+        // Targeted update: only toggle the active class and refresh the previous
+        // step's name (which may have changed from _flushCurrentStepFields above).
+        // Full _renderStepList rebuild is only needed when items are added/removed/reordered.
+        var el = document.getElementById("editor-step-list");
+        if (el) {
+            var items = el.children;
+            if (items[prev]) {
+                items[prev].className = "step-item";
+                var prevStep = (this._lesson.steps || [])[prev];
+                var prevName = items[prev].lastElementChild;
+                if (prevName && prevStep)
+                    prevName.textContent = prevStep.name || "Step " + (prev + 1);
+            }
+            if (items[idx]) items[idx].className = "step-item active";
+        }
         var step = (this._lesson.steps || [])[idx];
         if (step) {
             sendToPython("setEditorStep", {

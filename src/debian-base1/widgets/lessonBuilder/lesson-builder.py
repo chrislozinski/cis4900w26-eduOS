@@ -9,7 +9,6 @@ import json
 import getpass
 import os
 import threading
-import time
 import http.server
 import socketserver
 from urllib.parse import urlsplit, urlunsplit, unquote
@@ -420,7 +419,7 @@ class LessonBuilderWindow(Gtk.Window):
         self._username          = getpass.getuser()
         self._current_lesson_id = None
         self._current_step_idx  = None
-        self._classrooms_cache  = None
+        self._classrooms_mtime  = None
         self.connect("focus-in-event", lambda w, e: self._refresh_classrooms() or False)
 
         self._paned = Gtk.Paned(orientation=Gtk.Orientation.HORIZONTAL)
@@ -608,12 +607,12 @@ class LessonBuilderWindow(Gtk.Window):
             cached_xml = data.get("cached_xml", "")
         except Exception:
             return
-        _dbg = "/home/testuser/work/test_linux_file.txt"
-        with open(_dbg, "a") as _f:
-            _f.write(f"[{time.strftime('%H:%M:%S')}] WORKSPACE_SAVE "
-                     f"step={step_id!r} "
-                     f"rawTs_len={len(raw_ts)} "
-                     f"rawTs={repr(raw_ts[:80])}\n")
+        # _dbg = "/home/testuser/work/test_linux_file.txt"
+        # with open(_dbg, "a") as _f:
+        #     _f.write(f"[{time.strftime('%H:%M:%S')}] WORKSPACE_SAVE "
+        #              f"step={step_id!r} "
+        #              f"rawTs_len={len(raw_ts)} "
+        #              f"rawTs={repr(raw_ts[:80])}\n")
         if not step_id or not self._current_lesson_id:
             return
         lesson = _lesson_storage.load_lesson(self._current_lesson_id)
@@ -625,10 +624,10 @@ class LessonBuilderWindow(Gtk.Window):
                 step["cached_xml"] = cached_xml
                 break
         _lesson_storage.save_lesson(self._current_lesson_id, lesson)
-        with open(_dbg, "a") as _f:
-            summary = {s["id"]: repr((s.get("raw_ts") or "")[:50])
-                       for s in lesson.get("steps", [])}
-            _f.write(f"  LESSON: {summary}\n")
+        # with open(_dbg, "a") as _f:
+        #     summary = {s["id"]: repr((s.get("raw_ts") or "")[:50])
+        #                for s in lesson.get("steps", [])}
+        #     _f.write(f"  LESSON: {summary}\n")
         self._send_to_ui({
             "action":    "stepCodeUpdated",
             "stepId":    step_id,
@@ -732,8 +731,7 @@ class LessonBuilderWindow(Gtk.Window):
             with open(CLASSROOMS_FILE, "r") as f:
                 cls_data = json.load(f)
             classrooms = cls_data.get("classrooms", [])
-            serialized = json.dumps(classrooms, sort_keys=True)
-            self._classrooms_cache = serialized
+            self._classrooms_mtime = os.stat(CLASSROOMS_FILE).st_mtime
             self._send_to_ui({"action": "classroomsUpdated", "classrooms": classrooms})
         except Exception:
             pass
@@ -796,12 +794,12 @@ class LessonBuilderWindow(Gtk.Window):
         raw_ts_val   = data.get("rawTs", "")
         cached_xml   = data.get("cachedXml", "")
         lesson_title = data.get("lessonTitle", "Lesson Sandbox")
-        _dbg = "/home/testuser/work/test_linux_file.txt"
-        with open(_dbg, "a") as _f:
-            _f.write(f"\n[{time.strftime('%H:%M:%S')}] SET_EDITOR_STEP "
-                     f"step={step_id!r} "
-                     f"rawTs_len={len(raw_ts_val)} "
-                     f"rawTs={repr(raw_ts_val[:80])}\n")
+        # _dbg = "/home/testuser/work/test_linux_file.txt"
+        # with open(_dbg, "a") as _f:
+        #     _f.write(f"\n[{time.strftime('%H:%M:%S')}] SET_EDITOR_STEP "
+        #              f"step={step_id!r} "
+        #              f"rawTs_len={len(raw_ts_val)} "
+        #              f"rawTs={repr(raw_ts_val[:80])}\n")
         self._makecode_webview.run_javascript(
             f"loadStep({json.dumps(step_id)}, {json.dumps(raw_ts_val)}, "
             f"{json.dumps(cached_xml)}, {json.dumps(lesson_title)});",
@@ -821,13 +819,13 @@ class LessonBuilderWindow(Gtk.Window):
 
     def _refresh_classrooms(self):
         try:
+            mtime = os.stat(CLASSROOMS_FILE).st_mtime
+            if mtime == self._classrooms_mtime:
+                return
+            self._classrooms_mtime = mtime
             with open(CLASSROOMS_FILE, "r") as f:
                 cls_data = json.load(f)
             classrooms = cls_data.get("classrooms", [])
-            serialized = json.dumps(classrooms, sort_keys=True)
-            if serialized == self._classrooms_cache:
-                return
-            self._classrooms_cache = serialized
             self._send_to_ui({"action": "classroomsUpdated", "classrooms": classrooms})
         except Exception:
             pass

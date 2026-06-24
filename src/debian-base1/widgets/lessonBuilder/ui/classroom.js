@@ -31,13 +31,18 @@ var ClassroomScreen = {
         document.getElementById("classroom-name").textContent = name;
         State.activeClassroom = cls;
 
+        var activeFilter = this._filter;
+        var tabData = [
+            { id: "all",       label: "All" },
+            { id: "published", label: "Published" },
+            { id: "drafts",    label: "Drafts" },
+            { id: "bin",       label: "Recycle Bin" },
+        ];
         var tabs = document.getElementById("classroom-tabs");
-        tabs.innerHTML = [
-            '<button class="filter-tab active" data-tab="all" onclick="ClassroomScreen._setFilter(this,\'all\')">All</button>',
-            '<button class="filter-tab" data-tab="published" onclick="ClassroomScreen._setFilter(this,\'published\')">Published</button>',
-            '<button class="filter-tab" data-tab="drafts" onclick="ClassroomScreen._setFilter(this,\'drafts\')">Drafts</button>',
-            '<button class="filter-tab" data-tab="bin" onclick="ClassroomScreen._setFilter(this,\'bin\')">Recycle Bin</button>',
-        ].join("");
+        tabs.innerHTML = tabData.map(function(tab) {
+            return '<button class="filter-tab' + (activeFilter === tab.id ? " active" : "") +
+                   '" data-tab="' + tab.id + '" onclick="ClassroomScreen._setFilter(this,\'' + tab.id + '\')">' + tab.label + '</button>';
+        }).join("");
 
         this._renderList();
     },
