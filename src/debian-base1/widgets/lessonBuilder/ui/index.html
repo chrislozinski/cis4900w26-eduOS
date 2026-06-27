@@ -208,16 +208,22 @@
 </div>
 
 
-<!-- Save / discard dialog (back button) -->
-<div id="dialog-save-back" class="dialog-overlay hidden">
+<!-- Rename lesson dialog -->
+<div id="dialog-rename" class="dialog-overlay hidden" onclick="if(event.target===this)RenameDialog.cancel()">
   <div class="dialog">
-    <div class="dialog-title">Save draft before leaving?</div>
+    <div class="dialog-title">Rename Lesson</div>
+    <div class="field-group" style="margin:0 0 4px;">
+      <input id="rename-lesson-input" class="field-input" type="text" placeholder="Lesson title…"
+        onkeydown="if(event.key==='Enter')RenameDialog.confirm()">
+    </div>
     <div class="dialog-actions">
-      <button class="btn btn-secondary" onclick="EditorScreen._confirmBack(false)">Discard</button>
-      <button class="btn btn-primary"   onclick="EditorScreen._confirmBack(true)">Save</button>
+      <button class="btn btn-secondary" onclick="RenameDialog.cancel()">Cancel</button>
+      <button class="btn btn-primary" onclick="RenameDialog.confirm()">Rename</button>
     </div>
   </div>
 </div>
+
+
 
 
 <!-- Lesson type picker -->

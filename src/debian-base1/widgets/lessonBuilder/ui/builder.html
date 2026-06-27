@@ -43,7 +43,7 @@
         // that recenter happens after the sim finishes compiling, so it is our signal to hide the overlay
         var codespace = document.getElementById("makecode-frame")
                             .contentDocument.querySelector(".blocklyBlockCanvas");
-        if (!codespace) return;
+        if (!codespace) { _setLoading(false); return; }
         _codeObserver = new MutationObserver(function(mutations) {
           for (var i = 0; i < mutations.length; i++) {
             if (mutations[i].oldValue !== codespace.getAttribute("transform") && gen === _loadGen) {
@@ -60,7 +60,8 @@
         });
       } catch (e) {
         // Catches iframe DOM access exceptions so the import call does not crash
-        // Overlay stays up since we cannot confirm rendering is done
+        // Hide the overlay so it does not stay stuck on a failed observe
+        _setLoading(false);
       }
     }
 

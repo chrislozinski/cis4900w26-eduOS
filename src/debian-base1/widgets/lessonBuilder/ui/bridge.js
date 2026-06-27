@@ -21,6 +21,26 @@ var ConfirmDialog = {
     },
 };
 
+// Rename lesson dialog
+var RenameDialog = {
+    _lessonId: null,
+    show: function(lessonId, currentTitle) {
+        this._lessonId = lessonId;
+        document.getElementById("rename-lesson-input").value = currentTitle || "";
+        document.getElementById("dialog-rename").classList.remove("hidden");
+        setTimeout(function() { document.getElementById("rename-lesson-input").select(); }, 50);
+    },
+    cancel: function() {
+        document.getElementById("dialog-rename").classList.add("hidden");
+    },
+    confirm: function() {
+        var newTitle = (document.getElementById("rename-lesson-input").value || "").trim();
+        if (!newTitle) { document.getElementById("rename-lesson-input").focus(); return; }
+        document.getElementById("dialog-rename").classList.add("hidden");
+        sendToPython("renameLesson", { lessonId: this._lessonId, title: newTitle });
+    },
+};
+
 // State shared across screens
 var State = {
     classrooms:       [],
@@ -45,13 +65,11 @@ function sendToPython(action, data) {
 
 // Navigate between screens
 function navigate(screen, data) {
-    document.querySelectorAll(".screen").forEach(function(s) {
-        s.classList.remove("active");
-    });
     var el = document.getElementById("screen-" + screen);
-    if (el) {
-        el.classList.add("active");
-    }
+    if (el) el.classList.add("active");
+    document.querySelectorAll(".screen").forEach(function(s) {
+        if (s.id !== "screen-" + screen) s.classList.remove("active");
+    });
     if (screen === "editor") {
         sendToPython("showEditor", {});
         EditorScreen.onEnter(data);

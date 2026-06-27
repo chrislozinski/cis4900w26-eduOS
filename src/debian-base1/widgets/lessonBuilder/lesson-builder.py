@@ -711,6 +711,16 @@ class LessonBuilderWindow(Gtk.Window):
         lesson_id   = data.get("lessonId")
         lesson_data = data.get("lesson")
         if lesson_id and lesson_data:
+            # Keep existing step code if the JS model sends empty
+            # The JS model can be stale if stepCodeUpdated has not arrived yet
+            existing = _lesson_storage.load_lesson(lesson_id) or {}
+            ex_steps = {s.get("id"): s for s in existing.get("steps", [])}
+            for step in lesson_data.get("steps", []):
+                ex = ex_steps.get(step.get("id"), {})
+                if not step.get("raw_ts") and ex.get("raw_ts"):
+                    step["raw_ts"] = ex["raw_ts"]
+                if not step.get("cached_xml") and ex.get("cached_xml"):
+                    step["cached_xml"] = ex["cached_xml"]
             _lesson_storage.save_lesson(lesson_id, lesson_data)
         self._send_to_ui({"action": "lessonSaved", "lessonId": lesson_id})
 

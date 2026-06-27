@@ -24,7 +24,12 @@ var HomeScreen = {
     _render: function() {
         var content = document.getElementById("home-content");
         if (!content) return;
-        var sig = State.classrooms.map(function(c) { return c.id; }).join(",");
+        var sig = State.classrooms.map(function(c) {
+            var count = State.lessons.filter(function(d) {
+                return (c.enabled_lessons || []).indexOf(d.id) !== -1 || d.classroom_id === c.id;
+            }).length;
+            return c.id + ":" + (c.enabled_lessons || []).join("|") + ":" + count;
+        }).join(",");
         if (this._lastSig === sig && content.children.length) return;
         this._lastSig = sig;
         if (!State.classrooms.length) {

@@ -277,28 +277,7 @@ var EditorScreen = {
     },
 
     _promptBack: function() {
-        var clsId = State.activeClassroom && State.activeClassroom.id;
-        if (!this._lesson) {
-            navigate("lessons", { classroomId: clsId });
-            return;
-        }
-        var lessonId = this._lessonId;
-        var entry = State.lessons.find(function(d) { return d.id === lessonId; });
-        var isPublished =
-            (entry && Array.isArray(entry.published_to) && entry.published_to.length > 0) ||
-            State.classrooms.some(function(c) {
-                return (c.enabled_lessons || []).indexOf(lessonId) !== -1;
-            });
-        if (isPublished) {
-            navigate("lessons", { classroomId: clsId || (entry && entry.classroom_id) });
-            return;
-        }
-        document.getElementById("dialog-save-back").classList.remove("hidden");
-    },
-
-    _confirmBack: function(save) {
-        document.getElementById("dialog-save-back").classList.add("hidden");
-        if (save) this._saveLesson();
+        this._saveLesson();
         navigate("lessons", { classroomId: State.activeClassroom && State.activeClassroom.id });
     },
 

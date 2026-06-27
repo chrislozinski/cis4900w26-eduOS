@@ -207,9 +207,7 @@ var UnitLessonScreen = {
     _renameLesson: function(lessonId) {
         var lesson = State.lessons.find(function(d) { return d.id === lessonId; });
         if (!lesson) return;
-        var newTitle = prompt("Rename lesson:", lesson.title || "");
-        if (newTitle === null || newTitle.trim() === "") return;
-        sendToPython("renameLesson", { lessonId: lessonId, title: newTitle.trim() });
+        RenameDialog.show(lessonId, lesson.title || "");
     },
 };
 
