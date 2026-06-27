@@ -61,6 +61,10 @@ function navigate(screen, data) {
             HomeScreen.onEnter(data);
         } else if (screen === "classroom") {
             ClassroomScreen.onEnter(data);
+        } else if (screen === "lessons") {
+            UnitLessonScreen.onEnter(data);
+        } else if (screen === "unit-builder") {
+            // coming soon shell
         }
     }
 }
@@ -92,6 +96,8 @@ window.receiveFromPython = function(payload) {
             HomeScreen._render();
         } else if (document.getElementById("screen-classroom").classList.contains("active")) {
             ClassroomScreen.refresh();
+        } else if (document.getElementById("screen-lessons").classList.contains("active")) {
+            UnitLessonScreen.refresh();
         }
         return;
     }
@@ -149,7 +155,7 @@ window.receiveFromPython = function(payload) {
     if (action === "lessonDeleted") {
         State.lessons = State.lessons.filter(function(d) { return d.id !== payload.lessonId; });
         if (State.activeClassroom) {
-            navigate("classroom", { classroomId: State.activeClassroom.id });
+            navigate("lessons", { classroomId: State.activeClassroom.id });
         } else {
             navigate("home", {});
         }
@@ -158,27 +164,27 @@ window.receiveFromPython = function(payload) {
 
     if (action === "lessonRecovered") {
         State.lessons.push({ id: payload.lessonId, title: (payload.lesson || {}).title || "", published_to: [], classroom_id: (payload.lesson || {}).classroom_id || "" });
-        ClassroomScreen._filter = "all";
-        ClassroomScreen._render();
+        UnitLessonScreen._filter = "all";
+        UnitLessonScreen._render();
         return;
     }
 
     if (action === "lessonRenamed") {
         State.lessons.forEach(function(d) { if (d.id === payload.lessonId) d.title = payload.title; });
-        ClassroomScreen.refresh();
+        UnitLessonScreen.refresh();
         return;
     }
 
     if (action === "lessonPermanentlyDeleted") {
-        ClassroomScreen._trashItems = ClassroomScreen._trashItems.filter(function(i) {
+        UnitLessonScreen._trashItems = UnitLessonScreen._trashItems.filter(function(i) {
             return i.id !== payload.lessonId;
         });
-        ClassroomScreen._renderList();
+        UnitLessonScreen._renderList();
         return;
     }
 
     if (action === "trashLoaded") {
-        ClassroomScreen.onTrashLoaded(payload.items || []);
+        UnitLessonScreen.onTrashLoaded(payload.items || []);
         return;
     }
 

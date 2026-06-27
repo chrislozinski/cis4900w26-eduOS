@@ -11,6 +11,16 @@
 <div id="screen-home" class="screen">
   <div class="topbar">
     <div class="topbar-title">Lesson <span>Builder</span></div>
+    <div class="topbar-actions" style="position:relative;">
+      <button class="gear-btn" onclick="SettingsMenu.toggle(this)" title="Settings">&#9881;</button>
+      <div class="settings-pop hidden">
+        <button class="settings-item theme-item" onclick="toggleTheme();SettingsMenu.close()">Switch to Light Mode</button>
+      </div>
+    </div>
+  </div>
+  <div class="home-header">
+    <h1 class="home-heading">Your Classes</h1>
+    <p class="home-sub">Choose a class to build and manage its lessons.</p>
   </div>
   <div class="content" id="home-content">
     <p style="color:#555;text-align:center;padding:60px 0;">Loading…</p>
@@ -18,31 +28,84 @@
 </div>
 
 
-<!-- Classroom screen -->
+<!-- Classroom screen (unit list view) -->
 <div id="screen-classroom" class="screen">
   <div class="topbar">
-    <button class="back-btn" onclick="navigate('home',{})">← Back</button>
-    <div class="topbar-title" id="classroom-name"></div>
-    <div class="topbar-actions">
-      <button class="btn btn-primary btn-sm" onclick="NewLessonDialog.show(State.activeClassroom && State.activeClassroom.id)">+ New Lesson</button>
+    <button class="back-btn" onclick="navigate('home',{})">&lt; All Classes</button>
+    <div class="topbar-actions" style="position:relative;">
+      <button class="gear-btn" onclick="SettingsMenu.toggle(this)" title="Settings">&#9881;</button>
+      <div class="settings-pop hidden">
+        <button class="settings-item theme-item" onclick="toggleTheme();SettingsMenu.close()">Switch to Light Mode</button>
+      </div>
     </div>
   </div>
-  <div class="classroom-toolbar">
-    <div id="classroom-tabs" style="display:flex;gap:6px;"></div>
+  <div class="class-subheader">
+    <div class="class-subheader-row1">
+      <h1 class="class-subheader-name" id="classroom-name"></h1>
+      <div class="class-subheader-actions">
+        <button class="btn btn-secondary btn-sm" onclick="navigate('unit-builder',{})">+ New Unit</button>
+      </div>
+    </div>
   </div>
   <div class="content" id="classroom-lesson-list"></div>
+</div>
+
+
+<!-- Lessons screen (unit detail view) -->
+<div id="screen-lessons" class="screen">
+  <div class="topbar">
+    <button class="back-btn" id="lessons-back-btn"
+      onclick="navigate('classroom',{classroomId:State.activeClassroom&&State.activeClassroom.id})">&lt; Back</button>
+    <span style="color:var(--border);padding:0 4px;">·</span>
+    <span id="lessons-crumb" style="font-size:12px;color:var(--ink3);font-weight:500;"></span>
+    <div class="topbar-actions" style="position:relative;">
+      <button class="gear-btn" onclick="SettingsMenu.toggle(this)" title="Settings">&#9881;</button>
+      <div class="settings-pop hidden">
+        <button class="settings-item theme-item" onclick="toggleTheme();SettingsMenu.close()">Switch to Light Mode</button>
+      </div>
+    </div>
+  </div>
+  <div class="unit-subheader">
+    <div class="unit-subheader-row1">
+      <h1 class="unit-subheader-name" style="flex:1;">Coding Lessons</h1>
+      <button class="btn btn-primary btn-sm"
+        onclick="NewLessonDialog.show(State.activeClassroom&&State.activeClassroom.id)">+ New Lesson</button>
+    </div>
+    <p class="unit-subheader-meta" id="lessons-meta"></p>
+    <div class="unit-filter-row" id="lessons-tabs"></div>
+  </div>
+  <div id="lessons-list"></div>
+</div>
+
+
+<!-- Unit Builder screen (coming soon) -->
+<div id="screen-unit-builder" class="screen">
+  <div class="topbar">
+    <button class="back-btn"
+      onclick="navigate('classroom',{classroomId:State.activeClassroom&&State.activeClassroom.id})">&lt; All Classes</button>
+    <div class="topbar-actions">
+      <button class="btn btn-secondary btn-sm" disabled>Save Draft</button>
+      <button class="btn btn-primary btn-sm" disabled>Publish</button>
+    </div>
+  </div>
+  <div class="content coming-soon-shell">
+    <h2>Unit Builder</h2>
+    <p>Multi-app unit building is coming soon. You'll be able to sequence reading, coding, videos, and quizzes into one guided flow.</p>
+    <button class="btn btn-secondary"
+      onclick="navigate('classroom',{classroomId:State.activeClassroom&&State.activeClassroom.id})">&lt; All Classes</button>
+  </div>
 </div>
 
 
 <!-- Editor screen -->
 <div id="screen-editor" class="screen">
   <div class="topbar">
-    <button class="back-btn" onclick="EditorScreen._promptBack()">← Back</button>
-    <div class="topbar-title" id="editor-lesson-title">Lesson Editor</div>
+    <button class="back-btn" onclick="EditorScreen._promptBack()">&lt; Back</button>
+    <div id="editor-lesson-title" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 6px;font-size:11px;color:var(--ink3);"></div>
     <div class="topbar-actions">
       <button class="btn btn-secondary btn-sm" onclick="EditorScreen._saveLesson()">Save Draft</button>
       <button class="btn btn-secondary btn-sm" onclick="EditorScreen._previewLesson()">Preview</button>
-      <button class="btn btn-success btn-sm" onclick="EditorScreen._publishDialog()">Publish</button>
+      <button class="btn btn-primary btn-sm" onclick="EditorScreen._publishDialog()">Publish</button>
     </div>
   </div>
 
@@ -61,6 +124,20 @@
             <div style="margin-top:6px;display:flex;gap:6px;">
               <button class="btn btn-secondary btn-sm" style="flex:1" onclick="NewLessonDialog.show(State.activeClassroom && State.activeClassroom.id)">+ New Lesson</button>
               <button class="btn btn-danger btn-sm" onclick="EditorScreen._deleteLesson()">Delete</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lesson Description section -->
+        <div class="section collapsed" id="section-description">
+          <div class="section-header" onclick="EditorScreen._toggleSection('section-description')">
+            <span class="section-toggle">▼</span> Lesson Description
+          </div>
+          <div class="section-body">
+            <div class="field-group">
+              <textarea id="lesson-description" class="field-input" rows="3"
+                placeholder="Write a description to be shown to students when they start the lesson"
+                onchange="EditorScreen._saveLesson()"></textarea>
             </div>
           </div>
         </div>
@@ -143,24 +220,63 @@
 </div>
 
 
-<!-- New Lesson dialog -->
-<div id="dialog-new-lesson" class="dialog-overlay hidden" onclick="if(event.target===this)NewLessonDialog.hide()">
-  <div class="dialog">
-    <div class="dialog-title">New Lesson</div>
-    <div class="field-group">
-      <div class="field-label">Title</div>
-      <input id="new-lesson-title" class="field-input" type="text" placeholder="Lesson title…"
-        onkeydown="if(event.key==='Enter')NewLessonDialog.confirm()">
+<!-- Lesson type picker -->
+<div id="dialog-create-step1" class="dialog-overlay hidden"
+  onclick="if(event.target===this)NewLessonDialog.hide()">
+  <div class="dialog" style="width:520px;">
+    <div class="dialog-title">Create New Lesson</div>
+    <p style="font-size:12px;color:var(--ink3);margin:-8px 0 16px;">What kind of lesson do you want to build?</p>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div class="type-option" onclick="NewLessonDialog._pickType('makecode')">
+        <div class="type-option-icon icon-mc">MC</div>
+        <div>
+          <div class="type-option-title">MakeCode Tutorial</div>
+          <div class="type-option-desc">Build a step by step tutorial for MakeCode.</div>
+        </div>
+      </div>
+      <div class="type-option disabled">
+        <div class="type-option-icon icon-ma">MA</div>
+        <div>
+          <div class="type-option-title">Multi-app Unit <span class="coming-soon-tag">Coming Soon</span></div>
+          <div class="type-option-desc">Mix reading, coding, video and quiz steps in one flow.</div>
+        </div>
+      </div>
+      <div class="type-option disabled">
+        <div class="type-option-icon icon-cu">CU</div>
+        <div>
+          <div class="type-option-title">Custom <span class="coming-soon-tag">Coming Soon</span></div>
+          <div class="type-option-desc">Custom lesson structure with no fixed template.</div>
+        </div>
+      </div>
     </div>
-    <div class="field-group">
-      <div class="field-label">Description (optional)</div>
-      <input id="new-lesson-description" class="field-input" type="text" placeholder="Brief description…">
+    <div class="dialog-actions">
+      <button class="btn btn-secondary" onclick="NewLessonDialog.hide()">Cancel</button>
     </div>
-    <div class="checkbox-group">
-      <div class="field-label">Applications</div>
-      <label class="checkbox-row">
-        <input type="checkbox" checked disabled> MakeCode
-      </label>
+  </div>
+</div>
+
+
+<!-- New lesson title and description form -->
+<div id="dialog-create-step2" class="dialog-overlay hidden"
+  onclick="if(event.target===this)NewLessonDialog.hide()">
+  <div class="dialog" style="width:480px;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;">
+      <button class="back-btn" onclick="NewLessonDialog._backToStep1()">&lt; Back</button>
+      <div class="dialog-title" style="margin:0;">MakeCode Tutorial</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:13px;">
+      <div class="field-group" style="margin:0;">
+        <div class="field-label">Title</div>
+        <input id="new-lesson-title" class="field-input" type="text" placeholder="Lesson title&hellip;"
+          onkeydown="if(event.key==='Enter')NewLessonDialog.confirm()">
+      </div>
+      <div class="field-group" style="margin:0;">
+        <div class="field-label">Description
+          <span style="text-transform:none;font-weight:400;color:var(--ink3);">(optional)</span>
+        </div>
+        <textarea id="new-lesson-description" class="field-input" rows="3"
+          placeholder="Brief description shown to students before they begin&hellip;"></textarea>
+      </div>
     </div>
     <div class="dialog-actions">
       <button class="btn btn-secondary" onclick="NewLessonDialog.hide()">Cancel</button>
@@ -171,19 +287,36 @@
 
 
 <!-- Toast notification -->
-<div id="toast" style="
-  position:fixed;bottom:24px;right:24px;
-  background:#3d9970;color:#fff;
-  padding:8px 16px;border-radius:6px;
-  font-size:13px;font-weight:600;
-  opacity:0;transition:opacity 0.3s;
-  pointer-events:none;z-index:200;
-"></div>
+<div id="toast"></div>
 
 
 <script src="bridge.js"></script>
 <script src="home.js"></script>
 <script src="classroom.js"></script>
 <script src="editor.js"></script>
+<script>
+  (function () {
+    var STORAGE_KEY = 'lb-theme';
+    function applyTheme(dark) {
+      document.documentElement.setAttribute('data-theme', dark ? 'dark' : '');
+      document.querySelectorAll(".theme-item").forEach(function(el) {
+        el.textContent = dark ? "Switch to Light Mode" : "Switch to Dark Mode";
+      });
+    }
+    window.toggleTheme = function() {
+      var goingDark = document.documentElement.getAttribute('data-theme') !== 'dark';
+      try { localStorage.setItem(STORAGE_KEY, goingDark ? 'dark' : 'light'); } catch(e) {}
+      applyTheme(goingDark);
+    };
+    var stored = null;
+    try { stored = localStorage.getItem(STORAGE_KEY); } catch(e) {}
+    applyTheme(stored !== 'light');
+    document.addEventListener("click", function(e) {
+      if (!e.target.closest(".gear-btn") && !e.target.closest(".settings-pop")) {
+        if (window.SettingsMenu) SettingsMenu.close();
+      }
+    });
+  })();
+</script>
 </body>
 </html>
