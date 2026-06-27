@@ -431,7 +431,6 @@ class LessonBuilderWindow(Gtk.Window):
         self._ui_webview = self._create_webview(
             os.path.join("/shared", "makecode", "profiles", self._username, "webkit-builder-ui")
         )
-        self._ui_webview.set_size_request(320, -1)
         self._paned.pack1(self._ui_webview, resize=True, shrink=False)
 
         self._makecode_webview = self._create_webview(
@@ -439,9 +438,9 @@ class LessonBuilderWindow(Gtk.Window):
         )
         self._makecode_box = Gtk.Box()
         self._makecode_box.pack_start(self._makecode_webview, True, True, 0)
-        self._makecode_box.set_size_request(500, -1) # makes it so the makecode window cannot be completely minimized 
         self._paned.pack2(self._makecode_box, resize=True, shrink=False)
         self._makecode_box.set_visible(False)
+        self._paned.connect("notify::position", self._on_paned_resized)
 
         # Preview window
         self._current_preview_lesson_id = None
@@ -831,6 +830,19 @@ class LessonBuilderWindow(Gtk.Window):
             self._send_to_ui({"action": "classroomsUpdated", "classrooms": classrooms})
         except Exception:
             pass
+
+    def _on_paned_resized(self, paned, _gtkParamSpec):
+        alloc        = self.get_allocation()
+        position     = paned.get_position()
+        sidebar_min  = 320
+        makecode_min = 500
+        handle_size  = paned.style_get_property("handle-size")
+        max_position = alloc.width - handle_size - makecode_min
+        clamped      = max(sidebar_min, min(position, max_position)) if max_position > sidebar_min else position
+        if clamped != position:
+            paned.handler_block_by_func(self._on_paned_resized)
+            paned.set_position(clamped)
+            paned.handler_unblock_by_func(self._on_paned_resized)
 
     def _set_editor_visible(self, visible):
         def _update():
