@@ -139,7 +139,10 @@ if [[ -f "${I3_CACHE}" ]]; then
     cp "${I3_CACHE}" "${I3_INJECT}" && chmod +x "${I3_INJECT}"
 fi
 
-# lb build calls auto/config and auto/build automatically.
+# grub-efi-amd64-signed became essential in bookworm so we patch live-build so binary_grub-efi can remove it
+sed -i 's/apt-get remove --auto-remove --purge/apt-get remove --allow-remove-essential --auto-remove --purge/' \
+    /usr/share/live/build/functions/packages.sh
+
 lb build
 
 # save i3 binary to cache for future builds

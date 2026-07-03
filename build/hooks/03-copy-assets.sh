@@ -55,6 +55,10 @@ cp "${SRC_ROOT}/config/interface/rofi-config.rasi" /etc/skel/.config/rofi/config
 mkdir -p /opt/makecode
 cp -r "${SRC_ROOT}/widgets/makecode/makecode-static" /opt/makecode/static
 
+mkdir -p /opt/cis4900/widgets/lessonBuilder
+cp -r "${SRC_ROOT}/widgets/lessonBuilder/." /opt/cis4900/widgets/lessonBuilder/
+chmod +x /opt/cis4900/widgets/lessonBuilder/*.py
+
 mkdir -p /etc/systemd/system
 if [ -d "${SRC_ROOT}/config/systemd" ]; then
   cp "${SRC_ROOT}/config/systemd/"*.service /etc/systemd/system/ 2>/dev/null || true
@@ -64,8 +68,10 @@ if [ -d "${SRC_ROOT}/network/services" ]; then
   cp "${SRC_ROOT}/network/services/"*.service /etc/systemd/system/ 2>/dev/null || true
 fi
 
+cp "${SRC_ROOT}/config/updateManager/ychitsa-update" /usr/local/bin/ychitsa-update
+
 chmod +x /usr/local/bin/create-users.sh /usr/local/bin/user-roles.sh /usr/local/bin/config-user-i3.sh
 chmod +x /usr/local/bin/config-vifm.sh /usr/local/bin/config-gtk.sh /usr/local/bin/config-launcher.sh
-chmod +x /usr/local/bin/wifi-connect.sh
+chmod +x /usr/local/bin/wifi-connect.sh /usr/local/bin/ychitsa-update
 chmod +x /etc/skel/.config/launcher/*.py /etc/skel/.config/launcher/*.sh
 chmod +x /etc/skel/.config/launcher/network/*.py

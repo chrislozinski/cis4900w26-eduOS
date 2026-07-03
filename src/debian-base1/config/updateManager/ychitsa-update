@@ -1,0 +1,212 @@
+#!/bin/bash
+set -euo pipefail
+
+REPO=/opt/cis4900-repo
+SRC=$REPO/src/debian-base1
+USERS=(testuser studentuser)
+
+echo "Checking for updates..."
+git -C "$REPO" fetch origin main --quiet
+
+CHANGED=$(git -C "$REPO" diff --name-only HEAD..origin/main 2>/dev/null)
+
+if [ -z "$CHANGED" ]; then
+    echo "Already up to date."
+    exit 0
+fi
+
+declare -A UPDATES
+declare -A UPDATE_LABELS
+
+check() {
+    local key="$1"; local label="$2"; shift 2
+    for pattern in "$@"; do
+        if echo "$CHANGED" | grep -q "^$pattern"; then
+            UPDATES[$key]=1
+            UPDATE_LABELS[$key]="$label"
+            return
+        fi
+    done
+}
+
+check "launcher"  "App code (launcher, Python widgets)"         \
+    "src/debian-base1/config/launcher/" "src/debian-base1/widgets/"
+check "i3"        "i3 and interface config"                     \
+    "src/debian-base1/config/i3/" "src/debian-base1/config/interface/"
+check "network"   "Network sync modules"                        \
+    "src/debian-base1/network/"
+check "makecode"  "MakeCode static build"                       \
+    "src/debian-base1/widgets/makecode/"
+check "services"  "Systemd service files"                       \
+    "src/debian-base1/network/services/"
+check "syscfg"    "System configs (Xorg, LightDM, NM, polkit)" \
+    "build/inject/"
+check "packages"  "New packages (apt)"                          \
+    "build/packages/apps.list"
+check "users"     "User and role setup scripts"                 \
+    "src/debian-base1/config/users/"
+check "waterfox"  "Waterfox browser"                            \
+    "build/hooks/01-waterfox.sh"
+
+if [ ${#UPDATES[@]} -eq 0 ]; then
+    echo "Changes detected but none map to known update categories."
+    echo "Files changed:"
+    echo "$CHANGED" | sed 's/^/  /'
+    exit 0
+fi
+
+echo ""
+echo "Available updates:"
+echo ""
+i=1
+declare -a ORDER
+for key in launcher i3 network makecode services syscfg packages users waterfox; do
+    [ "${UPDATES[$key]+_}" ] || continue
+    echo "  [$i] ${UPDATE_LABELS[$key]}"
+    ORDER[$i]=$key
+    ((i++))
+done
+echo "  [a] Apply all updates"
+echo ""
+read -rp "Enter selection (comma-separated, e.g. 1,3): " CHOICE
+echo ""
+
+declare -A SELECTED
+if [ "$CHOICE" = "a" ] || [ "$CHOICE" = "A" ]; then
+    for key in "${!UPDATES[@]}"; do SELECTED[$key]=1; done
+else
+    IFS=',' read -ra NUMS <<< "$CHOICE"
+    for n in "${NUMS[@]}"; do
+        n="${n// /}"
+        key="${ORDER[$n]:-}"
+        [ -n "$key" ] && SELECTED[$key]=1
+    done
+fi
+
+if [ ${#SELECTED[@]} -eq 0 ]; then
+    echo "Nothing selected."
+    exit 0
+fi
+
+echo "Pulling latest code..."
+git -C "$REPO" pull --rebase --quiet
+echo ""
+
+apply() {
+    local key="$1"
+    [ "${SELECTED[$key]+_}" ] || return 0
+    echo "Applying: ${UPDATE_LABELS[$key]}"
+
+    case "$key" in
+    launcher)
+        for u in "${USERS[@]}"; do
+            [ -d "/home/$u" ] || continue
+            # Sync launcher configs/scripts 
+            # we exclude icons/ and network/ because those come from different source dirs managed separately
+            rsync -a --delete \
+                --exclude='icons/' --exclude='network/' \
+                "$SRC/config/launcher/" "/home/$u/.config/launcher/"
+            # Widget files that the build hook places directly in the launcher dir
+            rsync -a "$SRC/widgets/makecode/makecode-app.py"  "/home/$u/.config/launcher/"
+            rsync -a "$SRC/widgets/fileNav/fileViewer.py"     "/home/$u/.config/launcher/"
+            rsync -a "$SRC/widgets/library/library.py"        "/home/$u/.config/launcher/"
+            #  icons/ in the launcher dir
+            rsync -a --delete "$SRC/icons/" "/home/$u/.config/launcher/icons/"
+            chown -R "$u:$u" "/home/$u/.config/launcher/"
+        done
+        # lessonBuilder lives at /opt/cis4900/widgets/lessonBuilder per appbar-config-teacher.json
+        mkdir -p /opt/cis4900/widgets/lessonBuilder
+        rsync -a --delete "$SRC/widgets/lessonBuilder/" "/opt/cis4900/widgets/lessonBuilder/"
+        chmod +x /opt/cis4900/widgets/lessonBuilder/*.py
+        ;;
+    i3)
+        for u in "${USERS[@]}"; do
+            [ -d "/home/$u" ] || continue
+            mkdir -p \
+                "/home/$u/.config/i3" \
+                "/home/$u/.config/i3status" \
+                "/home/$u/.config/polybar" \
+                "/home/$u/.config/vifm" \
+                "/home/$u/.config/dunst" \
+                "/home/$u/.config/rofi"
+            # Files are renamed at destination, so match what 03-copy-assets.sh does
+            cp "$SRC/config/i3/i3-config"       "/home/$u/.config/i3/config"
+            cp "$SRC/config/i3/i3status-config" "/home/$u/.config/i3status/config"
+            cp "$SRC/config/i3/layout.json"     "/home/$u/.config/i3/layout.json"
+            cp "$SRC/config/i3/polybar-config"  "/home/$u/.config/polybar/config.ini"
+            cp "$SRC/config/interface/picom.conf"          "/home/$u/.config/picom.conf"
+            cp "$SRC/config/interface/vifmrc"              "/home/$u/.config/vifm/vifmrc"
+            cp "$SRC/config/interface/notifications.conf"  "/home/$u/.config/dunst/dunstrc"
+            cp "$SRC/config/interface/rofi-config.rasi"    "/home/$u/.config/rofi/config.rasi"
+            rsync -a "$SRC/config/interface/polybar-hover.py" "/home/$u/.config/polybar/"
+            chown -R "$u:$u" \
+                "/home/$u/.config/i3/" \
+                "/home/$u/.config/i3status/" \
+                "/home/$u/.config/polybar/" \
+                "/home/$u/.config/vifm/" \
+                "/home/$u/.config/dunst/" \
+                "/home/$u/.config/rofi/" \
+                "/home/$u/.config/picom.conf" 2>/dev/null || true
+        done
+        ;;
+    network)
+        for u in "${USERS[@]}"; do
+            [ -d "/home/$u" ] || continue
+            # Sync Python modules only as services/ is handled by the services category
+            rsync -a --exclude='services/' "$SRC/network/" "/home/$u/.config/launcher/network/"
+            chown -R "$u:$u" "/home/$u/.config/launcher/network/"
+        done
+        ;;
+    makecode)
+        rsync -a --delete "$SRC/widgets/makecode/makecode-static/" "/opt/makecode/static/"
+        for u in "${USERS[@]}"; do
+            [ -d "/home/$u" ] || continue
+            rsync -a "$SRC/widgets/makecode/makecode-app.py" "/home/$u/.config/launcher/"
+            chown "$u:$u" "/home/$u/.config/launcher/makecode-app.py"
+        done
+        ;;
+    services)
+        rsync -a "$SRC/network/services/" "/etc/systemd/system/"
+        systemctl daemon-reload
+        for u in "${USERS[@]}"; do
+            systemctl restart "student-agent@$u.service" 2>/dev/null || true
+        done
+        systemctl restart teacher-publisher.service 2>/dev/null || true
+        ;;
+    syscfg)
+        rsync -a "$REPO/build/inject/gpu.conf" \
+            "/etc/X11/xorg.conf.d/20-fbdev.conf"
+        rsync -a "$REPO/build/inject/lightdm.conf" \
+            "/etc/lightdm/lightdm.conf"
+        rsync -a "$REPO/build/inject/nm-managed.conf" \
+            "/etc/NetworkManager/conf.d/10-managed.conf"
+        rsync -a "$REPO/build/inject/10-network-manager.rules" \
+            "/etc/polkit-1/rules.d/10-network-manager.rules"
+        systemctl restart NetworkManager 2>/dev/null || true
+        ;;
+    packages)
+        APT_LIST=$(grep -v '^#' "$REPO/build/packages/apps.list" | tr '\n' ' ')
+        # shellcheck disable=SC2086
+        apt-get install -y $APT_LIST
+        ;;
+    users)
+        rsync -a "$SRC/config/users/create-users.sh"   /usr/local/bin/
+        rsync -a "$SRC/config/users/user-roles.sh"     /usr/local/bin/
+        rsync -a "$SRC/config/users/config-user-i3.sh" /usr/local/bin/
+        chmod +x /usr/local/bin/create-users.sh /usr/local/bin/user-roles.sh \
+                  /usr/local/bin/config-user-i3.sh
+        bash /usr/local/bin/create-users.sh 2>/dev/null || true
+        bash /usr/local/bin/user-roles.sh   2>/dev/null || true
+        ;;
+    waterfox)
+        bash "$REPO/build/hooks/01-waterfox.sh"
+        ;;
+    esac
+}
+
+for key in launcher i3 network makecode services syscfg packages users waterfox; do
+    apply "$key"
+done
+
+echo ""
+echo "Done."

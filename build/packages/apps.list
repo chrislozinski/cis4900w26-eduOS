@@ -52,3 +52,4 @@ py3status
 dunst
 libnotify-bin
 fonts-font-awesome
+grub-efi-amd64
