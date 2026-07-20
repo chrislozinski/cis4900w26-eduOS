@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+LOG=/var/log/ychitsa-gpu-boot.log
+trap 'echo "ychitsa-gpu-recover FAILED at line ${LINENO}: ${BASH_COMMAND}" | tee -a "${LOG}" > /dev/kmsg' ERR
+
+if [ ! -f /etc/ychitsa/needs-gpu-recovery ]; then
+    exit 0
+fi
+
+if ! nm-online -q -t 15; then
+    exit 0
+fi
+
+isenkram-autoinstall-firmware
+apt-get install -y --only-upgrade firmware-amd-graphics linux-image-amd64
+
+/usr/local/sbin/ychitsa-gpu-tier retry-best
+notify-send "Ychitsa OS" "Checked for a graphics fix. Will retry full acceleration on next restart."

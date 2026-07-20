@@ -1,0 +1,116 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+MNT=/mnt
+TARGET_DISK=""
+SQUASHFS_SRC=""
+GRUB_CMDLINE="loglevel=3 ychitsa.gpu_tier=0"
+LOG=/var/log/ychitsa-install.log
+
+trap 'echo "ychitsa-install FAILED at line ${LINENO}: ${BASH_COMMAND}" | tee -a "${LOG}" > /dev/kmsg' ERR
+
+log()  { echo "==> $*"; }
+die()  { echo "FATAL: $*" >&2; exit 1; }
+
+pick_disk() {
+    local boot_dev
+    boot_dev=$(findmnt -no SOURCE /run/live/medium | sed 's/[0-9]*$//')
+
+    local menu_items=()
+    while read -r name size; do
+        [[ "/dev/${name}" == "${boot_dev}" ]] && continue
+        menu_items+=("/dev/${name}" "${size}")
+    done < <(lsblk -dpno NAME,SIZE | sed 's|/dev/||')
+
+    TARGET_DISK=$(whiptail --menu "Select install target (ALL DATA WILL BE ERASED)" \
+        20 70 8 "${menu_items[@]}" 3>&1 1>&2 2>&3) || exit 1
+    whiptail --yesno "This will ERASE ALL DATA on ${TARGET_DISK}. Continue?" \
+        10 60 --defaultno || exit 1
+}
+
+partition_disk() {
+    log "Partitioning ${TARGET_DISK}"
+    sgdisk --zap-all "${TARGET_DISK}"
+    sgdisk -n1:0:+512M -t1:ef00 -c1:EFI  "${TARGET_DISK}"
+    sgdisk -n2:0:0     -t2:8300 -c2:root "${TARGET_DISK}"
+    partprobe "${TARGET_DISK}"
+    mkfs.vfat -F32 "${TARGET_DISK}1"
+    mkfs.ext4 -F   "${TARGET_DISK}2"
+}
+
+mount_target() {
+    mount "${TARGET_DISK}2" "${MNT}"
+    mkdir -p "${MNT}/boot/efi"
+    mount "${TARGET_DISK}1" "${MNT}/boot/efi"
+}
+
+find_squashfs() {
+    SQUASHFS_SRC=$(find /run/live/medium -maxdepth 2 -name '*.squashfs' | head -n1)
+    [[ -n "${SQUASHFS_SRC}" ]] || die "Could not locate live squashfs under /run/live/medium"
+}
+
+clone_filesystem() {
+    log "Cloning live filesystem to ${MNT}"
+    unsquashfs -f -d "${MNT}" "${SQUASHFS_SRC}"
+}
+
+strip_live_packages() {
+    chroot "${MNT}" apt-get purge -y live-boot live-config live-config-systemd
+}
+
+write_fstab() {
+    local root_uuid efi_uuid
+    root_uuid=$(blkid -s UUID -o value "${TARGET_DISK}2")
+    efi_uuid=$(blkid -s UUID -o value "${TARGET_DISK}1")
+    cat > "${MNT}/etc/fstab" <<EOF
+UUID=${root_uuid}  /         ext4  errors=remount-ro  0 1
+UUID=${efi_uuid}   /boot/efi vfat  umask=0077          0 2
+EOF
+}
+
+write_grub_default() {
+    local line="GRUB_CMDLINE_LINUX_DEFAULT=\"${GRUB_CMDLINE}\""
+    if grep -q '^GRUB_CMDLINE_LINUX_DEFAULT=' "${MNT}/etc/default/grub"; then
+        sed -i "s|^GRUB_CMDLINE_LINUX_DEFAULT=.*|${line}|" "${MNT}/etc/default/grub"
+    else
+        echo "${line}" >> "${MNT}/etc/default/grub"
+    fi
+
+    # os-prober has documented multi-hour hangs scanning other block devices; this is a single-OS install, so skip it.
+    if grep -q '^GRUB_DISABLE_OS_PROBER=' "${MNT}/etc/default/grub"; then
+        sed -i 's|^GRUB_DISABLE_OS_PROBER=.*|GRUB_DISABLE_OS_PROBER=true|' "${MNT}/etc/default/grub"
+    else
+        echo 'GRUB_DISABLE_OS_PROBER=true' >> "${MNT}/etc/default/grub"
+    fi
+}
+
+install_bootloader() {
+    for fs in dev proc sys; do mount --bind "/${fs}" "${MNT}/${fs}"; done
+    chroot "${MNT}" grub-install --target=x86_64-efi \
+        --efi-directory=/boot/efi --bootloader-id=debian --recheck
+    chroot "${MNT}" grub-mkconfig -o /boot/grub/grub.cfg
+    for fs in dev proc sys; do umount "${MNT}/${fs}"; done
+}
+
+finalize() {
+    chroot "${MNT}" bash -c "echo ychitsa > /etc/hostname"
+    rm -f "${MNT}/etc/machine-id"
+    chroot "${MNT}" dbus-uuidgen --ensure=/etc/machine-id
+    umount -R "${MNT}"
+    whiptail --msgbox "Install complete. Remove the USB and reboot." 10 60
+}
+
+main() {
+    pick_disk
+    partition_disk
+    mount_target
+    find_squashfs
+    clone_filesystem
+    strip_live_packages
+    write_fstab
+    write_grub_default
+    install_bootloader
+    finalize
+}
+
+main "$@"

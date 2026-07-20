@@ -61,11 +61,18 @@ mkdir -p "${LB_WORKDIR}" "${DIST_DIR}"
 
 cd "${LB_WORKDIR}"
 
-# Clean first: lb clean --purge wipes config/ and auto/ entirely,
-# so all mapping must happen AFTER the clean.
+# Clean first. NOTE: lb clean --purge only wipes the chroot/build stages,
+# NOT config/includes.chroot — stale files there survive every clean.
 if [[ "${CLEAN}" == "1" ]]; then
   lb clean noauto --purge || true
 fi
+
+# includes.chroot accumulates stale files across builds (files deleted from the
+# repo are never deleted here by the copy steps below, and lb clean doesn't touch
+# this dir). Sweep every path that is fully re-created below so the repo is the
+# single source of truth. (usr/local/share/cis4900-src is hash-managed separately.)
+rm -rf "${LB_WORKDIR}/config/includes.chroot/lib/live/config"
+rm -rf "${LB_WORKDIR}/config/includes.chroot/etc/systemd/system"
 
 # live-build lifecycle scripts
 mkdir -p "${LB_WORKDIR}/auto"
@@ -79,10 +86,54 @@ mkdir -p "${LB_WORKDIR}/config/package-lists"
 cp "${BUILD_DIR}/packages/base.list" "${LB_WORKDIR}/config/package-lists/live.list.chroot"
 cp "${BUILD_DIR}/packages/apps.list" "${LB_WORKDIR}/config/package-lists/cis4900.list.chroot"
 
-# debian-installer files (udeb_exclude must exist or older live-build versions error)
-mkdir -p "${LB_WORKDIR}/config/debian-installer"
-touch    "${LB_WORKDIR}/config/debian-installer/exclude"
-cp "${BUILD_DIR}/inject/udeb_exclude" "${LB_WORKDIR}/config/debian-installer/udeb_exclude"
+# extra apt sources for the chroot (bookworm-backports kernel/firmware)
+mkdir -p "${LB_WORKDIR}/config/archives"
+cp "${BUILD_DIR}/archives/backports.list.chroot" \
+   "${LB_WORKDIR}/config/archives/backports.list.chroot"
+
+# pin the kernel/firmware family to bookworm-backports, see build/inject/99-bookworm-backports.pref
+mkdir -p "${LB_WORKDIR}/config/includes.chroot/etc/apt/preferences.d"
+cp "${BUILD_DIR}/inject/99-bookworm-backports.pref" \
+   "${LB_WORKDIR}/config/includes.chroot/etc/apt/preferences.d/99-bookworm-backports.pref"
+
+# custom GRUB live boot menu entry, overlaid on live-build's default bootloader templates
+rm -rf "${LB_WORKDIR}/config/bootloaders"
+cp -r /usr/share/live/build/bootloaders "${LB_WORKDIR}/config/bootloaders"
+cp "${BUILD_DIR}/inject/grub-live-menu.cfg" \
+   "${LB_WORKDIR}/config/bootloaders/grub-pc/grub.cfg"
+
+# the installer script itself
+mkdir -p "${LB_WORKDIR}/config/includes.chroot/usr/local/sbin"
+cp "${BUILD_DIR}/inject/ychitsa-install" \
+   "${LB_WORKDIR}/config/includes.chroot/usr/local/sbin/ychitsa-install"
+chmod +x "${LB_WORKDIR}/config/includes.chroot/usr/local/sbin/ychitsa-install"
+
+# systemd unit that runs the installer on tty1 when the Install GRUB entry is selected
+# (ConditionKernelCommandLine=ychitsa.installer=1 keeps it inert on all other boots)
+mkdir -p "${LB_WORKDIR}/config/includes.chroot/etc/systemd/system"
+cp "${BUILD_DIR}/inject/ychitsa-installer.service" \
+   "${LB_WORKDIR}/config/includes.chroot/etc/systemd/system/ychitsa-installer.service"
+
+# cap live-config's start time so a wedged component can never hang boot forever
+mkdir -p "${LB_WORKDIR}/config/includes.chroot/etc/systemd/system/live-config.service.d"
+cp "${BUILD_DIR}/inject/live-config-timeout.conf" \
+   "${LB_WORKDIR}/config/includes.chroot/etc/systemd/system/live-config.service.d/timeout.conf"
+
+# GPU fallback tier scripts and the systemd units that run them, see build/inject/gpu/
+cp "${BUILD_DIR}/inject/gpu/ychitsa-gpu-tier" \
+   "${LB_WORKDIR}/config/includes.chroot/usr/local/sbin/ychitsa-gpu-tier"
+cp "${BUILD_DIR}/inject/gpu/ychitsa-gpu-recover" \
+   "${LB_WORKDIR}/config/includes.chroot/usr/local/sbin/ychitsa-gpu-recover"
+chmod +x "${LB_WORKDIR}/config/includes.chroot/usr/local/sbin/ychitsa-gpu-tier" \
+         "${LB_WORKDIR}/config/includes.chroot/usr/local/sbin/ychitsa-gpu-recover"
+
+mkdir -p "${LB_WORKDIR}/config/includes.chroot/etc/systemd/system"
+cp "${BUILD_DIR}/inject/gpu/ychitsa-gpu-stage.service" \
+   "${LB_WORKDIR}/config/includes.chroot/etc/systemd/system/ychitsa-gpu-stage.service"
+cp "${BUILD_DIR}/inject/gpu/ychitsa-gpu-confirm.service" \
+   "${LB_WORKDIR}/config/includes.chroot/etc/systemd/system/ychitsa-gpu-confirm.service"
+cp "${BUILD_DIR}/inject/gpu/ychitsa-gpu-recover.service" \
+   "${LB_WORKDIR}/config/includes.chroot/etc/systemd/system/ychitsa-gpu-recover.service"
 
 # inject files into their /etc/ destination paths inside the chroot
 mkdir -p "${LB_WORKDIR}/config/includes.chroot/etc/lightdm"

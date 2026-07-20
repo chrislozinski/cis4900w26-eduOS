@@ -1,11 +1,25 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# network manager for wifi usage 
+# network manager for wifi usage
 mkdir -p /etc/systemd/system/multi-user.target.wants
 
 ln -sf /lib/systemd/system/NetworkManager.service \
     /etc/systemd/system/multi-user.target.wants/NetworkManager.service
+
+# installer service; only ever starts when the kernel cmdline has ychitsa.installer=1
+ln -sf /etc/systemd/system/ychitsa-installer.service \
+    /etc/systemd/system/multi-user.target.wants/ychitsa-installer.service
+
+# GPU fallback tier system, see build/inject/gpu/
+mkdir -p /etc/systemd/system/graphical.target.wants
+
+ln -sf /etc/systemd/system/ychitsa-gpu-stage.service \
+    /etc/systemd/system/graphical.target.wants/ychitsa-gpu-stage.service
+ln -sf /etc/systemd/system/ychitsa-gpu-confirm.service \
+    /etc/systemd/system/graphical.target.wants/ychitsa-gpu-confirm.service
+ln -sf /etc/systemd/system/ychitsa-gpu-recover.service \
+    /etc/systemd/system/graphical.target.wants/ychitsa-gpu-recover.service
 
 mkdir -p /var/lib/cis4900
 chown root:teacher /var/lib/cis4900

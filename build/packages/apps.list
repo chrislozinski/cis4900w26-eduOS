@@ -6,6 +6,7 @@ xorg
 xserver-xorg-video-fbdev
 xserver-xorg-video-vesa
 x11-xserver-utils
+linux-image-amd64
 firmware-amd-graphics
 dbus
 dbus-x11
@@ -53,3 +54,10 @@ dunst
 libnotify-bin
 fonts-font-awesome
 grub-efi-amd64
+grub-common
+dosfstools
+isenkram-cli
+gdisk
+parted
+squashfs-tools
+whiptail
