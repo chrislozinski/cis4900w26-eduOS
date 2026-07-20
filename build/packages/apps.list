@@ -54,6 +54,8 @@ dunst
 libnotify-bin
 fonts-font-awesome
 grub-efi-amd64
+grub-efi-amd64-signed
+shim-signed
 grub-common
 dosfstools
 isenkram-cli

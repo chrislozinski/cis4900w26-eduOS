@@ -86,9 +86,19 @@ write_grub_default() {
 
 install_bootloader() {
     for fs in dev proc sys; do mount --bind "/${fs}" "${MNT}/${fs}"; done
+    # bind is non-recursive: bring efivarfs along so grub-install can write the
+    # firmware boot entry (without it, it silently skips NVRAM and exits 0)
+    if [ -d /sys/firmware/efi/efivars ]; then
+        mount -t efivarfs efivarfs "${MNT}/sys/firmware/efi/efivars"
+    fi
+    # --uefi-secure-boot: install the shim-signed chain (works with SB on or off)
+    # --force-extra-removable: also write EFI/BOOT/BOOTX64.EFI so the disk boots
+    # even on firmware that ignores or loses NVRAM entries
     chroot "${MNT}" grub-install --target=x86_64-efi \
-        --efi-directory=/boot/efi --bootloader-id=debian --recheck
+        --efi-directory=/boot/efi --bootloader-id=debian \
+        --uefi-secure-boot --force-extra-removable --recheck
     chroot "${MNT}" grub-mkconfig -o /boot/grub/grub.cfg
+    umount "${MNT}/sys/firmware/efi/efivars" 2>/dev/null || true
     for fs in dev proc sys; do umount "${MNT}/${fs}"; done
 }
 
