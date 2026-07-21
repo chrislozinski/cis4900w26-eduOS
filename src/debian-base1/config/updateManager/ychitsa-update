@@ -174,8 +174,8 @@ apply() {
         systemctl restart teacher-publisher.service 2>/dev/null || true
         ;;
     syscfg)
-        rsync -a "$REPO/build/inject/gpu.conf" \
-            "/etc/X11/xorg.conf.d/20-fbdev.conf"
+        # Do not ship always-on Xorg fbdev; remove leftover if present.
+        rm -f /etc/X11/xorg.conf.d/20-fbdev.conf
         rsync -a "$REPO/build/inject/lightdm.conf" \
             "/etc/lightdm/lightdm.conf"
         rsync -a "$REPO/build/inject/nm-managed.conf" \

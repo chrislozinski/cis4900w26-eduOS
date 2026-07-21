@@ -139,9 +139,9 @@ cp "${BUILD_DIR}/inject/gpu/ychitsa-gpu-recover.service" \
 mkdir -p "${LB_WORKDIR}/config/includes.chroot/etc/lightdm"
 cp "${BUILD_DIR}/inject/lightdm.conf" \
    "${LB_WORKDIR}/config/includes.chroot/etc/lightdm/lightdm.conf"
+# Do not install an always-on Xorg fbdev Device section. That forced software
+# rendering (llvmpipe) even when amdgpu worked. See build/HARDWARE.md.
 mkdir -p "${LB_WORKDIR}/config/includes.chroot/etc/X11/xorg.conf.d"
-cp "${BUILD_DIR}/inject/gpu.conf" \
-   "${LB_WORKDIR}/config/includes.chroot/etc/X11/xorg.conf.d/20-fbdev.conf"
 mkdir -p "${LB_WORKDIR}/config/includes.chroot/etc/NetworkManager/conf.d"
 cp "${BUILD_DIR}/inject/nm-managed.conf" \
    "${LB_WORKDIR}/config/includes.chroot/etc/NetworkManager/conf.d/10-managed.conf"

@@ -1,5 +1,7 @@
 # Build
 
+See also [HARDWARE.md](HARDWARE.md) for real-laptop GPU/boot notes from testing (Stoney Ridge / Radeon R5).
+
 Run from the repo root:
 
 ```bash
@@ -32,7 +34,6 @@ APT package lists installed into the OS.
 ### `inject/`
 Files dropped directly into the built OS filesystem, or used to override live-build's own default templates, before packages run.
 - `lightdm.conf` -> `/etc/lightdm/lightdm.conf` (autologin config)
-- `gpu.conf` -> `/etc/X11/xorg.conf.d/20-fbdev.conf` (fbdev fallback driver, only takes effect at GPU tier 3)
 - `99-bookworm-backports.pref` -> `/etc/apt/preferences.d/99-bookworm-backports.pref`, pins the kernel/firmware package family to `bookworm-backports` so the whole dependency chain (including packages live-build's own `chroot_firmware` stage adds automatically, like `firmware-linux-nonfree`) resolves consistently from one suite instead of mixing main and backports
 - `grub-live-menu.cfg` -> overlays live-build's default `config/bootloaders/grub-pc/grub.cfg`, adding the "Install Ychitsa OS" boot menu entry
 - `ychitsa-install` -> `/usr/local/sbin/ychitsa-install`, the installer script (partition, clone the live filesystem to disk, install the bootloader)
@@ -41,6 +42,7 @@ Files dropped directly into the built OS filesystem, or used to override live-bu
   - `ychitsa-gpu-tier` -> `/usr/local/sbin/ychitsa-gpu-tier`, the fallback tier system itself
   - `ychitsa-gpu-recover` -> `/usr/local/sbin/ychitsa-gpu-recover`, opportunistic online GPU repair for hardware not yet diagnosed
   - `ychitsa-gpu-stage.service` / `ychitsa-gpu-confirm.service` / `ychitsa-gpu-recover.service` -> `/etc/systemd/system/`, enabled by `hooks/05-services.sh`
+- Do **not** ship an always-on Xorg `fbdev` Device section. That used to live in `gpu.conf` and forced software rendering even when amdgpu worked. See HARDWARE.md.
 
 ### `hooks/`
 Scripts run **inside the chroot** by live-build after packages are installed, in numeric order.
@@ -88,6 +90,12 @@ Use `--clean` when you change the i3 patches in `hooks/02-build-i3.sh` or need a
 
 ## GPU acceleration on AMD Stoney Ridge
 
-Some AMD Stoney Ridge iGPUs fail to fully initialize `amdgpu` (the last line you see is often a `kfd ... STONEY` message, but the real failure is deeper in `amdgpu`'s powerplay/Display Core code, not that line). The old approach was a permanent `nomodeset modprobe.blacklist=amdgpu`, which meant no GPU acceleration at all, forever, on every machine.
+Some AMD Stoney Ridge iGPUs fail to fully initialize `amdgpu`. The old approach was a permanent blacklist or an always-on Xorg `fbdev` config. Both blocked hardware acceleration.
 
-Instead, `linux-image-amd64` and `firmware-amd-graphics` in `apps.list` now resolve to their `bookworm-backports` builds (the two best-evidenced candidate fixes for this chip generation), pinned there by `99-bookworm-backports.pref`, and `ychitsa-gpu-tier` (see `inject/` above) tries full acceleration first on every boot, automatically stepping down through safer kernel parameter tiers only if a boot doesn't actually come up, and remembering whichever tier last worked. See the GPU section of the project plan for the full design and the research behind it.
+What we ship now:
+- Backports kernel + `firmware-amd-graphics` (see `99-bookworm-backports.pref`)
+- `ychitsa-gpu-tier` kernel cmdline fallbacks (tier 0 full, then `amdgpu.dc=0`, then `iommu=soft`, then nomodeset blacklist)
+- No always-on Xorg fbdev Device section (that forced `llvmpipe` even when amdgpu worked)
+
+On the test Lenovo, removing fbdev gave `OpenGL renderer: AMD Radeon R5 Graphics (stoney)`. Details and check commands: [HARDWARE.md](HARDWARE.md).
+

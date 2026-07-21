@@ -4,7 +4,8 @@ set -euo pipefail
 MNT=/mnt
 TARGET_DISK=""
 SQUASHFS_SRC=""
-GRUB_CMDLINE="loglevel=3 ychitsa.gpu_tier=0"
+GRUB_CMDLINE="quiet loglevel=3 ychitsa.gpu_tier=0"
+UPDATER_REPO_URL="https://github.com/chrislozinski/cis4900w26-eduOS.git"
 LOG=/var/log/ychitsa-install.log
 
 trap 'echo "ychitsa-install FAILED at line ${LINENO}: ${BASH_COMMAND}" | tee -a "${LOG}" > /dev/kmsg' ERR
@@ -55,7 +56,9 @@ clone_filesystem() {
 }
 
 strip_live_packages() {
-    chroot "${MNT}" apt-get purge -y live-boot live-config live-config-systemd
+    chroot "${MNT}" apt-get purge -y \
+        live-boot live-boot-initramfs-tools live-config live-config-systemd \
+        || true
 }
 
 write_fstab() {
@@ -68,20 +71,23 @@ UUID=${efi_uuid}   /boot/efi vfat  umask=0077          0 2
 EOF
 }
 
-write_grub_default() {
-    local line="GRUB_CMDLINE_LINUX_DEFAULT=\"${GRUB_CMDLINE}\""
-    if grep -q '^GRUB_CMDLINE_LINUX_DEFAULT=' "${MNT}/etc/default/grub"; then
-        sed -i "s|^GRUB_CMDLINE_LINUX_DEFAULT=.*|${line}|" "${MNT}/etc/default/grub"
+ensure_grub_key() {
+    local key="$1"
+    local value="$2"
+    if grep -q "^${key}=" "${MNT}/etc/default/grub"; then
+        sed -i "s|^${key}=.*|${key}=${value}|" "${MNT}/etc/default/grub"
     else
-        echo "${line}" >> "${MNT}/etc/default/grub"
+        echo "${key}=${value}" >> "${MNT}/etc/default/grub"
     fi
+}
 
-    # os-prober has documented multi-hour hangs scanning other block devices; this is a single-OS install, so skip it.
-    if grep -q '^GRUB_DISABLE_OS_PROBER=' "${MNT}/etc/default/grub"; then
-        sed -i 's|^GRUB_DISABLE_OS_PROBER=.*|GRUB_DISABLE_OS_PROBER=true|' "${MNT}/etc/default/grub"
-    else
-        echo 'GRUB_DISABLE_OS_PROBER=true' >> "${MNT}/etc/default/grub"
-    fi
+write_grub_default() {
+    ensure_grub_key GRUB_CMDLINE_LINUX_DEFAULT "\"${GRUB_CMDLINE}\""
+    # os-prober has documented multi-hour hangs scanning other block devices;
+    # this is a single-OS install, so skip it.
+    ensure_grub_key GRUB_DISABLE_OS_PROBER true
+    ensure_grub_key GRUB_TIMEOUT 0
+    ensure_grub_key GRUB_TIMEOUT_STYLE hidden
 }
 
 install_bootloader() {
@@ -94,6 +100,8 @@ install_bootloader() {
     # --uefi-secure-boot: install the shim-signed chain (works with SB on or off)
     # --force-extra-removable: also write EFI/BOOT/BOOTX64.EFI so the disk boots
     # even on firmware that ignores or loses NVRAM entries
+    # Rebuild initramfs after stripping live packages (needs /dev and /proc).
+    chroot "${MNT}" update-initramfs -u
     chroot "${MNT}" grub-install --target=x86_64-efi \
         --efi-directory=/boot/efi --bootloader-id=debian \
         --uefi-secure-boot --force-extra-removable --recheck
@@ -102,10 +110,40 @@ install_bootloader() {
     for fs in dev proc sys; do umount "${MNT}/${fs}"; done
 }
 
+seed_updater_repo() {
+    if [ -d "${MNT}/opt/cis4900-repo/.git" ]; then
+        log "Updater repo already present at /opt/cis4900-repo"
+        return 0
+    fi
+    if ! command -v git >/dev/null 2>&1; then
+        log "git not available in live environment; skip updater seed"
+        return 0
+    fi
+    # Best-effort: install may be offline. Do not fail the whole install.
+    if ping -c1 -W3 github.com >/dev/null 2>&1 || \
+       ping -c1 -W3 1.1.1.1 >/dev/null 2>&1; then
+        log "Seeding /opt/cis4900-repo from ${UPDATER_REPO_URL}"
+        mkdir -p "${MNT}/opt"
+        if git clone --depth 1 "${UPDATER_REPO_URL}" "${MNT}/opt/cis4900-repo"; then
+            log "Updater repo seeded"
+        else
+            log "Updater seed failed; clone later with: sudo git clone ${UPDATER_REPO_URL} /opt/cis4900-repo"
+        fi
+    else
+        log "No network; skip updater seed"
+    fi
+}
+
 finalize() {
     chroot "${MNT}" bash -c "echo ychitsa > /etc/hostname"
+    if grep -qE '^127\.0\.1\.1[[:space:]]' "${MNT}/etc/hosts"; then
+        sed -i 's/^127\.0\.1\.1.*/127.0.1.1 ychitsa/' "${MNT}/etc/hosts"
+    else
+        echo '127.0.1.1 ychitsa' >> "${MNT}/etc/hosts"
+    fi
     rm -f "${MNT}/etc/machine-id"
     chroot "${MNT}" dbus-uuidgen --ensure=/etc/machine-id
+    seed_updater_repo
     umount -R "${MNT}"
     whiptail --msgbox "Install complete. Remove the USB and reboot." 10 60
 }

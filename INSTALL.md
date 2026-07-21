@@ -28,4 +28,23 @@ The Debian Installer is gone. `ychitsa-install` (`build/inject/ychitsa-install`)
 
 Both GRUB failures the old installer used to hit (the `grub-efi-amd64-signed` essential-package bug and the missing `grub-efi-amd64` package at install time) are structurally gone: there's no more Debian Installer running its own separate bootloader-install step, and `grub-efi-amd64`, `grub-common`, and `dosfstools` are all baked into `apps.list` so the installer's own `grub-install`/`grub-mkconfig` calls never depend on a network fetch.
 
-First-boot GPU black screens should also no longer need a manual fix. See `build/README.md` and the GPU fallback tier system (`build/inject/gpu/ychitsa-gpu-tier`) for how the OS now tests for working acceleration itself and falls back automatically instead of requiring a manual `nomodeset` edit.
+First-boot GPU black screens should also no longer need a manual fix. See `build/README.md`, `build/HARDWARE.md`, and the GPU fallback tier system (`build/inject/gpu/ychitsa-gpu-tier`) for how the OS now tests for working acceleration itself and falls back automatically instead of requiring a manual `nomodeset` edit.
+
+---
+
+## After install: updates
+
+The updater binary is on PATH as `ychitsa-update` (`/usr/local/bin`), not in your home folder.
+
+```bash
+sudo ychitsa-update
+```
+
+It needs a git checkout at `/opt/cis4900-repo`. Fresh installs try to clone that when network is available. If install was offline, seed it once from the public GitHub repo (not the school GitLab URL):
+
+```bash
+sudo git clone https://github.com/chrislozinski/cis4900w26-eduOS.git /opt/cis4900-repo
+sudo ychitsa-update
+```
+
+More hardware, GPU, hostname, and quiet-boot notes: `build/HARDWARE.md`.

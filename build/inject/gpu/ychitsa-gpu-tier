@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-BASE="loglevel=3"
+BASE="quiet loglevel=3"
 TIER=(
     ""
     "amdgpu.dc=0"
@@ -21,19 +21,34 @@ current_tier() {
     grep -oP 'ychitsa.gpu_tier=\K[0-9]+' /proc/cmdline || echo 0
 }
 
-set_next_boot() {
-    local line="GRUB_CMDLINE_LINUX_DEFAULT=\"$(cmdline_for "$1")\""
-    if grep -q '^GRUB_CMDLINE_LINUX_DEFAULT=' /etc/default/grub; then
-        sed -i "s|^GRUB_CMDLINE_LINUX_DEFAULT=.*|${line}|" /etc/default/grub
+ensure_grub_key() {
+    local key="$1"
+    local value="$2"
+    if grep -q "^${key}=" /etc/default/grub; then
+        sed -i "s|^${key}=.*|${key}=${value}|" /etc/default/grub
     else
-        echo "${line}" >> /etc/default/grub
+        echo "${key}=${value}" >> /etc/default/grub
+    fi
+}
+
+set_next_boot() {
+    local new_cmdline
+    local old_cmdline=""
+    new_cmdline="$(cmdline_for "$1")"
+
+    if grep -q '^GRUB_CMDLINE_LINUX_DEFAULT=' /etc/default/grub; then
+        old_cmdline=$(sed -n 's/^GRUB_CMDLINE_LINUX_DEFAULT="\(.*\)"/\1/p' /etc/default/grub)
     fi
 
-    # os-prober has documented multi-hour hangs scanning other block devices; this is a single-OS install, so skip it.
-    if grep -q '^GRUB_DISABLE_OS_PROBER=' /etc/default/grub; then
-        sed -i 's|^GRUB_DISABLE_OS_PROBER=.*|GRUB_DISABLE_OS_PROBER=true|' /etc/default/grub
-    else
-        echo 'GRUB_DISABLE_OS_PROBER=true' >> /etc/default/grub
+    ensure_grub_key GRUB_CMDLINE_LINUX_DEFAULT "\"${new_cmdline}\""
+    # os-prober has documented multi-hour hangs scanning other block devices;
+    # this is a single-OS install, so skip it.
+    ensure_grub_key GRUB_DISABLE_OS_PROBER true
+    ensure_grub_key GRUB_TIMEOUT 0
+    ensure_grub_key GRUB_TIMEOUT_STYLE hidden
+
+    if [ "${old_cmdline}" = "${new_cmdline}" ]; then
+        return 0
     fi
     update-grub
 }
@@ -54,8 +69,11 @@ confirm() {
     set_next_boot "${t}"
     echo "tier ${t} confirmed $(date -Is)" > "${LOG}"
     dmesg >> "${LOG}"
-    if [ "${t}" -gt 0 ]; then
-        mkdir -p /etc/ychitsa
+    mkdir -p /etc/ychitsa
+    if [ "${t}" -eq 0 ]; then
+        # Stable full acceleration: stop stage/confirm from rewriting GRUB every boot.
+        touch /etc/ychitsa/gpu-tier-pinned
+    elif [ "${t}" -gt 0 ]; then
         touch /etc/ychitsa/needs-gpu-recovery
     fi
 }
