@@ -1,14 +1,51 @@
 services:
-  debian-min-sys:    
+  # Default: teacher UI + publisher + RDP
+  # Docker student desktop joining a teacher elsewhere: set TEACHER_IP in the
+  # .env file next to this compose file, then plain "docker compose up --build".
+  # The CMD writes it to /etc/cis4900-env, which .xsession sources — xrdp-sesman
+  # does NOT forward env vars into sessions, so this bridge is required.
+  debian-min-sys:
     build: .
     image: debian-base1-sys:latest
     container_name: debian-base1
     ports:
       - "3389:3389"
-      - "49002:49002"
+      - "49002:49002"     # teacher TCP state sync
     environment:
-      - CIS4900_CLASSROOMS_FILE=/opt/cis4900/classrooms.json
+      - CIS4900_CLASSROOMS_FILE=/shared/classrooms.json
       - PYTHONUNBUFFERED=1
+      - CIS4900_DEV=1
+      - TEACHER_IP=${TEACHER_IP:-}
+      - TEACHER_TCP_PORT=${TEACHER_TCP_PORT:-49002}
     volumes:
-      # mapping this folder to the work folder directory for testuser
-      - .:/home/testuser/work 
+      - .:/home/testuser/work
+
+  # This is to run Docker as student if the Teacher is already running elsewhere
+  #   TEACHER_IP=192.168.1.20 docker compose --profile student-agent up student-agent
+  student-agent:
+    profiles: ["student-agent"]
+    image: debian-base1-sys:latest
+    build: .
+    environment:
+      - PYTHONUNBUFFERED=1
+      - CIS4900_DEV=1
+      - CIS4900_STATE_SECRET=cis4900-dev-secret
+      - TEACHER_IP=${TEACHER_IP:-}
+    working_dir: /opt/cis4900
+    command: ["python3", "-m", "network.agent", "--student-id=studentuser"]
+
+  # mDNS test for Linux Docker only (ex Linux VM on Windows with bridged NIC)
+  #   docker compose --profile mdns up debian-mdns
+  # RDP: <linux-vm-ip>:3389
+  debian-mdns:
+    profiles: ["mdns"]
+    build: .
+    image: debian-base1-sys:latest
+    container_name: debian-base1-mdns
+    network_mode: host
+    environment:
+      - CIS4900_CLASSROOMS_FILE=/shared/classrooms.json
+      - PYTHONUNBUFFERED=1
+      - CIS4900_DEV=1
+    volumes:
+      - .:/home/testuser/work

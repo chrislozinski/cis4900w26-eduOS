@@ -16,6 +16,7 @@ dbus-x11
 python3
 python3-gi
 python3-gi-cairo
+python3-zeroconf
 gir1.2-gtk-3.0
 gir1.2-webkit2-4.1
 openssl

@@ -6,17 +6,11 @@ Wants=network-online.target
 [Service]
 Type=simple
 User=root
-
-Environment=CIS4900_STATE_SECRET=cis4900-dev-secret
-CIS4900_CLASSROOMS_FILE=/home/teacheruser/.config/launcher/classrooms.json
-
-# Pin broadcast to a specific wireless interface (e.g. wlan0).
-# Leave blank to use the default-route interface.
+Environment=CIS4900_CLASSROOMS_FILE=/shared/classrooms.json
 Environment=CIS4900_IFACE=
-
+# Set CIS4900_DEV=1 only on lab images that intentionally use the default secret.
 ExecStart=/usr/bin/python3 -m network.publisher
 WorkingDirectory=/usr/local/share/cis4900-src/src/debian-base1
-
 Restart=on-failure
 RestartSec=5
 StandardOutput=journal

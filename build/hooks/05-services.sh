@@ -21,18 +21,40 @@ ln -sf /etc/systemd/system/ychitsa-gpu-confirm.service \
 ln -sf /etc/systemd/system/ychitsa-gpu-recover.service \
     /etc/systemd/system/graphical.target.wants/ychitsa-gpu-recover.service
 
-mkdir -p /var/lib/cis4900
-chown root:teacher /var/lib/cis4900
-chmod 775 /var/lib/cis4900
-
-# Seed classrooms.json from the build-time source copy.
-# On a live ISO this is the initial state; teachers update it via classroom_manager.
-SEED_SRC="/usr/local/share/cis4900-src/src/debian-base1/config/launcher/classrooms.json"
-if [ -f "${SEED_SRC}" ] && [ ! -f /var/lib/cis4900/classrooms.json ]; then
-    cp "${SEED_SRC}" /var/lib/cis4900/classrooms.json
+# Seed classrooms.json for publisher (same path as Classroom Manager).
+# Prefer /opt/cis4900 seed when present; also seed if classrooms list is empty.
+mkdir -p /shared /shared/teacher-lessons
+SEED_SRC=""
+if [ -f /opt/cis4900/classrooms.json ]; then
+    SEED_SRC="/opt/cis4900/classrooms.json"
+elif [ -f "/usr/local/share/cis4900-src/src/debian-base1/config/launcher/classrooms.json" ]; then
+    SEED_SRC="/usr/local/share/cis4900-src/src/debian-base1/config/launcher/classrooms.json"
 fi
-chown root:teacher /var/lib/cis4900/classrooms.json
-chmod 664 /var/lib/cis4900/classrooms.json
+need_seed=0
+if [ ! -f /shared/classrooms.json ]; then
+    need_seed=1
+elif ! python3 -c "import json; d=json.load(open('/shared/classrooms.json')); raise SystemExit(0 if d.get('classrooms') else 1)" 2>/dev/null; then
+    need_seed=1
+fi
+if [ "$need_seed" = "1" ] && [ -n "${SEED_SRC}" ] && [ -f "${SEED_SRC}" ]; then
+    cp "${SEED_SRC}" /shared/classrooms.json.tmp
+    mv -f /shared/classrooms.json.tmp /shared/classrooms.json
+fi
+if [ -f /shared/classrooms.json ]; then
+    chown root:teacher /shared/classrooms.json
+    chmod 664 /shared/classrooms.json
+fi
+
+# Keep a copy under /var/lib for older tooling; prefer /shared.
+# group-student so the student agent can write student-state.json here
+mkdir -p /var/lib/cis4900
+chown root:student /var/lib/cis4900
+chmod 775 /var/lib/cis4900
+if [ -f /shared/classrooms.json ] && [ ! -f /var/lib/cis4900/classrooms.json ]; then
+    cp /shared/classrooms.json /var/lib/cis4900/classrooms.json
+    chown root:teacher /var/lib/cis4900/classrooms.json
+    chmod 664 /var/lib/cis4900/classrooms.json
+fi
 
 # Service files copied to /etc/systemd/system/ by 03-copy-assets.sh
 # teacher service

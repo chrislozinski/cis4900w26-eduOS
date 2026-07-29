@@ -63,6 +63,7 @@ RUN apt-get update && apt-get install -y \
     python3 \
     python3-gi \
     python3-gi-cairo \
+    python3-zeroconf \
     gir1.2-gtk-3.0 \
     gir1.2-webkit2-4.1 \
     vifm \
@@ -149,6 +150,7 @@ COPY config/launcher/launcher.py            /etc/skel/.config/launcher/launcher.
 COPY config/launcher/folder_viewer.py       /etc/skel/.config/launcher/folder_viewer.py
 COPY config/launcher/app-window.py          /etc/skel/.config/launcher/app-window.py
 COPY config/launcher/classroom_manager.py   /etc/skel/.config/launcher/classroom_manager.py
+COPY widgets/joinClassroom/join-classroom.py /etc/skel/.config/launcher/join-classroom.py
 COPY widgets/makecode/makecode-app.py       /etc/skel/.config/launcher/makecode-app.py
 COPY widgets/fileNav/fileViewer.py          /etc/skel/.config/launcher/fileViewer.py
 COPY widgets/library/library.py             /etc/skel/.config/launcher/library.py
@@ -171,9 +173,16 @@ COPY network/ /etc/skel/.config/launcher/network/
 # /opt/cis4900 copy: python3 -m network.publisher runs from here (via network.sh)
 RUN mkdir -p /opt/cis4900
 COPY network/ /opt/cis4900/network/
-COPY config/launcher/classrooms.json /opt/cis4900/classrooms.json
 COPY network/network.sh /opt/cis4900/network.sh
-RUN chmod +x /opt/cis4900/network.sh /etc/skel/.config/launcher/network/*.py
+# Durable seed (survives ./shared volume overlay). Live DB is /shared/classrooms.json.
+COPY config/launcher/classrooms.json /opt/cis4900/classrooms.json
+RUN mkdir -p /shared /shared/teacher-lessons \
+    && chmod +x /opt/cis4900/network.sh /etc/skel/.config/launcher/network/*.py \
+    && chmod +x /etc/skel/.config/launcher/join-classroom.py \
+    && cp /opt/cis4900/classrooms.json /shared/classrooms.json
+# Session agent wrapper: launched by i3 autostart (students) and Join Classroom
+COPY network/student-agent-session.sh /usr/local/bin/student-agent-session.sh
+RUN chmod +x /usr/local/bin/student-agent-session.sh
 
 # Lesson Builder app (teacher-only)
 RUN mkdir -p /opt/cis4900/widgets/lessonBuilder
@@ -190,6 +199,7 @@ RUN chmod +x /etc/skel/.config/launcher/launcher.py \
              /etc/skel/.config/launcher/folder_viewer.py \
              /etc/skel/.config/launcher/app-window.py \
              /etc/skel/.config/launcher/classroom_manager.py \
+             /etc/skel/.config/launcher/join-classroom.py \
              /etc/skel/.config/launcher/makecode-app.py \
              /etc/skel/.config/launcher/fileViewer.py \
              /etc/skel/.config/launcher/library.py \
@@ -260,4 +270,6 @@ EXPOSE 3389
 ENTRYPOINT ["/usr/bin/tini", "--"]
 
 #CMD dbus-daemon --system --fork && /usr/sbin/xrdp-sesman && /usr/sbin/xrdp -n
-CMD dbus-daemon --system --fork && /usr/sbin/xrdp-sesman && (cd /opt/cis4900 && python3 -m network.publisher &) && /usr/sbin/xrdp -n
+# /etc/cis4900-env bridges container env into RDP sessions (.xsession sources it);
+# xrdp-sesman strips daemon env vars, so GUI apps would otherwise never see TEACHER_IP
+CMD printf 'export TEACHER_IP=%s\nexport TEACHER_TCP_PORT=%s\n' "${TEACHER_IP:-}" "${TEACHER_TCP_PORT:-49002}" > /etc/cis4900-env && dbus-daemon --system --fork && /usr/sbin/xrdp-sesman && (cd /opt/cis4900 && python3 -m network.publisher &) && /usr/sbin/xrdp -n

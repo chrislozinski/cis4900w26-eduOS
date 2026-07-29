@@ -89,9 +89,26 @@ def load_config(config_dir, role):
     return json.loads(raw)
 
 
+def _default_apps():
+    """Catalog entries marked "default": true. Always on every student sidebar,
+    even when unenrolled or the teacher's enabled_apps list is empty."""
+    try:
+        with open(AVAILABLE_APPS_FILE, 'r') as f:
+            catalog = json.load(f).get('available_apps', [])
+        return [a for a in catalog if a.get('default')]
+    except Exception:
+        return []
+
+
+def _with_default_apps(items):
+    labels = {i.get('label') for i in items if isinstance(i, dict)}
+    return list(items) + [a for a in _default_apps() if a['label'] not in labels]
+
+
 def _set_classroom_apps(config):
     """Replace the student item list entirely with classroom enabled_apps
-    The teacher fully controls what appears, checking or unchecking add/ removesan app"""
+    The teacher fully controls what appears, checking or unchecking add/ removesan app
+    Default apps (available-apps.json "default": true) are always appended"""
     username = getpass.getuser()
     # Prefer local state cache applied by student-state
     try:
@@ -99,19 +116,21 @@ def _set_classroom_apps(config):
             state = json.load(f)
         items = state.get('environment', {}).get('enabled_apps', [])
         if isinstance(items, list):
-            config['items'] = list(items)
+            config['items'] = _with_default_apps(items)
             return config
     except Exception:
         pass
+    items = []
     try:
         with open(CLASSROOMS_FILE, 'r') as f:
             data = json.load(f)
         for classroom in data.get('classrooms', []):
             if username in classroom.get('students', []):
-                config['items'] = list(classroom.get('enabled_apps', []))
+                items = list(classroom.get('enabled_apps', []))
                 break
     except Exception:
-        pass  # no classrooms file or not enrolled, which means theres an empty sidebar
+        pass  # no classrooms file or not enrolled; only default apps show
+    config['items'] = _with_default_apps(items)
     return config
 
 

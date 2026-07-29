@@ -41,6 +41,10 @@ for_window [instance="file_viewer"] move container to mark viewer_tabs
 for_window [title="Classroom Manager"] floating disable
 for_window [title="Classroom Manager"] move container to mark viewer_tabs
 
+# join classroom, student widget for entering the teacher's code
+for_window [title="Join Classroom"] floating disable
+for_window [title="Join Classroom"] move container to mark viewer_tabs
+
 # lesson config, teacher widget for configuring lesson resources
 for_window [title="Lesson Config"] floating disable
 for_window [title="Lesson Config"] move container to mark viewer_tabs

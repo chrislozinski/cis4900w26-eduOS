@@ -19,6 +19,7 @@ cp "${SRC_ROOT}/config/launcher/launcher.py" /etc/skel/.config/launcher/launcher
 cp "${SRC_ROOT}/config/launcher/folder_viewer.py" /etc/skel/.config/launcher/folder_viewer.py
 cp "${SRC_ROOT}/config/launcher/app-window.py" /etc/skel/.config/launcher/app-window.py
 cp "${SRC_ROOT}/config/launcher/classroom_manager.py" /etc/skel/.config/launcher/classroom_manager.py
+cp "${SRC_ROOT}/widgets/joinClassroom/join-classroom.py" /etc/skel/.config/launcher/join-classroom.py
 cp "${SRC_ROOT}/widgets/makecode/makecode-app.py" /etc/skel/.config/launcher/makecode-app.py
 cp "${SRC_ROOT}/widgets/fileNav/fileViewer.py" /etc/skel/.config/launcher/fileViewer.py
 cp "${SRC_ROOT}/widgets/library/library.py" /etc/skel/.config/launcher/library.py
@@ -39,6 +40,12 @@ cp -r "${SRC_ROOT}/icons/light" /etc/skel/.config/launcher/icons/
 cp -r "${SRC_ROOT}/icons/dark" /etc/skel/.config/launcher/icons/
 
 cp "${SRC_ROOT}/network/"*.py /etc/skel/.config/launcher/network/
+mkdir -p /etc/skel/.config/launcher/network/docs
+cp "${SRC_ROOT}/network/docs/"*.md /etc/skel/.config/launcher/network/docs/ 2>/dev/null || true
+# Also install network package for systemd WorkingDirectory imports
+mkdir -p /usr/local/share/cis4900-src/src/debian-base1/network/docs
+cp "${SRC_ROOT}/network/"*.py /usr/local/share/cis4900-src/src/debian-base1/network/ 2>/dev/null || true
+cp "${SRC_ROOT}/network/docs/"*.md /usr/local/share/cis4900-src/src/debian-base1/network/docs/ 2>/dev/null || true
 
 cp "${SRC_ROOT}/config/users/create-users.sh" /usr/local/bin/create-users.sh
 cp "${SRC_ROOT}/config/users/user-roles.sh" /usr/local/bin/user-roles.sh
@@ -69,9 +76,10 @@ if [ -d "${SRC_ROOT}/network/services" ]; then
 fi
 
 cp "${SRC_ROOT}/config/updateManager/ychitsa-update" /usr/local/bin/ychitsa-update
+cp "${SRC_ROOT}/network/student-agent-session.sh" /usr/local/bin/student-agent-session.sh
 
 chmod +x /usr/local/bin/create-users.sh /usr/local/bin/user-roles.sh /usr/local/bin/config-user-i3.sh
 chmod +x /usr/local/bin/config-vifm.sh /usr/local/bin/config-gtk.sh /usr/local/bin/config-launcher.sh
-chmod +x /usr/local/bin/wifi-connect.sh /usr/local/bin/ychitsa-update
+chmod +x /usr/local/bin/wifi-connect.sh /usr/local/bin/ychitsa-update /usr/local/bin/student-agent-session.sh
 chmod +x /etc/skel/.config/launcher/*.py /etc/skel/.config/launcher/*.sh
 chmod +x /etc/skel/.config/launcher/network/*.py

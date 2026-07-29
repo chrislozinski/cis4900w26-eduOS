@@ -38,6 +38,14 @@
       "window_title": "MakeCode",
       "icon": "stylized/crayons.png",
       "command": "python3 ~/.config/launcher/makecode-app.py"
+    },
+    {
+      "type": "app",
+      "label": "Join Classroom",
+      "window_title": "Join Classroom",
+      "icon": "stylized/checkandpage.svg",
+      "command": "python3 ~/.config/launcher/join-classroom.py",
+      "default": true
     }
   ]
 }

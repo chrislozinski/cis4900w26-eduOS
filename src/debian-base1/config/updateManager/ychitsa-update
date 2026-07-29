@@ -1,14 +1,39 @@
 #!/bin/bash
+# Usage: ychitsa-update [branch]   (default: main)
+#
+# Pulls the requested branch into /opt/cis4900-repo and applies the parts that
+# changed. Two code roots matter on an installed system:
+#   systemd network code:  /usr/local/share/cis4900-src/src/debian-base1
+#   user UI code:          /home/<user>/.config/launcher (and /etc/skel for new users)
+# Both must be synced or restarts keep running stale code.
 set -euo pipefail
 
+BRANCH="${1:-main}"
 REPO=/opt/cis4900-repo
+REPO_URL=https://github.com/chrislozinski/cis4900w26-eduOS.git
 SRC=$REPO/src/debian-base1
+SYS_NET=/usr/local/share/cis4900-src/src/debian-base1/network
 USERS=(testuser studentuser)
 
-echo "Checking for updates..."
-git -C "$REPO" fetch origin main --quiet
+# Users in the student role (any number of accounts, not just studentuser)
+student_users() { getent group student | cut -d: -f4 | tr ',' ' '; }
 
-CHANGED=$(git -C "$REPO" diff --name-only HEAD..origin/main 2>/dev/null)
+restart_sync_services() {
+    systemctl restart teacher-publisher.service 2>/dev/null || true
+    for u in $(student_users); do
+        [ -n "$u" ] && systemctl restart "student-agent@$u.service" 2>/dev/null || true
+    done
+}
+
+if [ ! -d "$REPO/.git" ]; then
+    echo "No repo at $REPO — cloning..."
+    git clone --depth 1 --branch "$BRANCH" "$REPO_URL" "$REPO"
+fi
+
+echo "Checking for updates on branch: $BRANCH"
+git -C "$REPO" fetch --depth 1 origin "+refs/heads/$BRANCH:refs/remotes/origin/$BRANCH" --quiet
+
+CHANGED=$(git -C "$REPO" diff --name-only "HEAD..origin/$BRANCH" 2>/dev/null)
 
 if [ -z "$CHANGED" ]; then
     echo "Already up to date."
@@ -47,6 +72,8 @@ check "users"     "User and role setup scripts"                 \
     "src/debian-base1/config/users/"
 check "waterfox"  "Waterfox browser"                            \
     "build/hooks/01-waterfox.sh"
+check "updater"   "Updater (ychitsa-update itself)"             \
+    "src/debian-base1/config/updateManager/"
 
 if [ ${#UPDATES[@]} -eq 0 ]; then
     echo "Changes detected but none map to known update categories."
@@ -60,7 +87,7 @@ echo "Available updates:"
 echo ""
 i=1
 declare -a ORDER
-for key in launcher i3 network makecode services syscfg packages users waterfox; do
+for key in launcher i3 network makecode services syscfg packages users waterfox updater; do
     [ "${UPDATES[$key]+_}" ] || continue
     echo "  [$i] ${UPDATE_LABELS[$key]}"
     ORDER[$i]=$key
@@ -88,8 +115,8 @@ if [ ${#SELECTED[@]} -eq 0 ]; then
     exit 0
 fi
 
-echo "Pulling latest code..."
-git -C "$REPO" pull --rebase --quiet
+echo "Pulling latest code (branch: $BRANCH)..."
+git -C "$REPO" checkout -B "$BRANCH" "origin/$BRANCH" --quiet
 echo ""
 
 apply() {
@@ -99,6 +126,7 @@ apply() {
 
     case "$key" in
     launcher)
+        # launcher: UI code runs from each user's ~/.config/launcher
         for u in "${USERS[@]}"; do
             [ -d "/home/$u" ] || continue
             # Sync launcher configs/scripts 
@@ -107,19 +135,26 @@ apply() {
                 --exclude='icons/' --exclude='network/' \
                 "$SRC/config/launcher/" "/home/$u/.config/launcher/"
             # Widget files that the build hook places directly in the launcher dir
-            rsync -a "$SRC/widgets/makecode/makecode-app.py"  "/home/$u/.config/launcher/"
-            rsync -a "$SRC/widgets/fileNav/fileViewer.py"     "/home/$u/.config/launcher/"
-            rsync -a "$SRC/widgets/library/library.py"        "/home/$u/.config/launcher/"
+            rsync -a "$SRC/widgets/makecode/makecode-app.py"          "/home/$u/.config/launcher/"
+            rsync -a "$SRC/widgets/fileNav/fileViewer.py"             "/home/$u/.config/launcher/"
+            rsync -a "$SRC/widgets/library/library.py"                "/home/$u/.config/launcher/"
+            rsync -a "$SRC/widgets/joinClassroom/join-classroom.py"   "/home/$u/.config/launcher/"
             #  icons/ in the launcher dir
             rsync -a --delete "$SRC/icons/" "/home/$u/.config/launcher/icons/"
             chown -R "$u:$u" "/home/$u/.config/launcher/"
         done
+        # Keep /etc/skel current so accounts created after this update are not stale
+        rsync -a "$SRC/widgets/makecode/makecode-app.py"          /etc/skel/.config/launcher/
+        rsync -a "$SRC/widgets/fileNav/fileViewer.py"             /etc/skel/.config/launcher/fileViewer.py
+        rsync -a "$SRC/widgets/library/library.py"                /etc/skel/.config/launcher/
+        rsync -a "$SRC/widgets/joinClassroom/join-classroom.py"   /etc/skel/.config/launcher/
         # lessonBuilder lives at /opt/cis4900/widgets/lessonBuilder per appbar-config-teacher.json
         mkdir -p /opt/cis4900/widgets/lessonBuilder
         rsync -a --delete "$SRC/widgets/lessonBuilder/" "/opt/cis4900/widgets/lessonBuilder/"
         chmod +x /opt/cis4900/widgets/lessonBuilder/*.py
         ;;
     i3)
+        # i3: per-user window manager / interface configs
         for u in "${USERS[@]}"; do
             [ -d "/home/$u" ] || continue
             mkdir -p \
@@ -139,6 +174,12 @@ apply() {
             cp "$SRC/config/interface/notifications.conf"  "/home/$u/.config/dunst/dunstrc"
             cp "$SRC/config/interface/rofi-config.rasi"    "/home/$u/.config/rofi/config.rasi"
             rsync -a "$SRC/config/interface/polybar-hover.py" "/home/$u/.config/polybar/"
+            # Students get the sync agent autostart line (config-user-i3.sh adds
+            # the same line; the raw i3-config copy above stripped it)
+            if id -nG "$u" | grep -qw student; then
+                printf '\nexec --no-startup-id /usr/local/bin/student-agent-session.sh\n' \
+                    >> "/home/$u/.config/i3/config"
+            fi
             chown -R "$u:$u" \
                 "/home/$u/.config/i3/" \
                 "/home/$u/.config/i3status/" \
@@ -150,12 +191,19 @@ apply() {
         done
         ;;
     network)
+        # network: systemd runs from cis4900-src; UIs import from ~/.config/launcher/network
+        mkdir -p "$SYS_NET"
+        rsync -a --delete --exclude='services/' "$SRC/network/" "$SYS_NET/"
         for u in "${USERS[@]}"; do
             [ -d "/home/$u" ] || continue
-            # Sync Python modules only as services/ is handled by the services category
             rsync -a --exclude='services/' "$SRC/network/" "/home/$u/.config/launcher/network/"
             chown -R "$u:$u" "/home/$u/.config/launcher/network/"
         done
+        rsync -a --exclude='services/' "$SRC/network/" /etc/skel/.config/launcher/network/
+        if [ -f "$SRC/network/student-agent-session.sh" ]; then
+            install -m 755 "$SRC/network/student-agent-session.sh" /usr/local/bin/student-agent-session.sh
+        fi
+        restart_sync_services
         ;;
     makecode)
         rsync -a --delete "$SRC/widgets/makecode/makecode-static/" "/opt/makecode/static/"
@@ -166,12 +214,17 @@ apply() {
         done
         ;;
     services)
-        rsync -a "$SRC/network/services/" "/etc/systemd/system/"
+        # services: unit files + migration off the old non-templated student agent
+        systemctl disable --now student-agent.service 2>/dev/null || true
+        rm -f /etc/systemd/system/student-agent.service \
+              /etc/systemd/system/multi-user.target.wants/student-agent.service
+        rsync -a "$SRC/network/services/" /etc/systemd/system/
         systemctl daemon-reload
-        for u in "${USERS[@]}"; do
-            systemctl restart "student-agent@$u.service" 2>/dev/null || true
+        for u in $(student_users); do
+            [ -z "$u" ] && continue
+            systemctl enable "student-agent@$u.service" 2>/dev/null || true
         done
-        systemctl restart teacher-publisher.service 2>/dev/null || true
+        restart_sync_services
         ;;
     syscfg)
         # Do not ship always-on Xorg fbdev; remove leftover if present.
@@ -185,6 +238,7 @@ apply() {
         systemctl restart NetworkManager 2>/dev/null || true
         ;;
     packages)
+        apt-get update
         APT_LIST=$(grep -v '^#' "$REPO/build/packages/apps.list" | tr '\n' ' ')
         # shellcheck disable=SC2086
         apt-get install -y $APT_LIST
@@ -201,12 +255,23 @@ apply() {
     waterfox)
         bash "$REPO/build/hooks/01-waterfox.sh"
         ;;
+    updater)
+        # Handled unconditionally after the apply loop (see self-update below)
+        ;;
     esac
 }
 
-for key in launcher i3 network makecode services syscfg packages users waterfox; do
+for key in launcher i3 network makecode services syscfg packages users waterfox updater; do
     apply "$key"
 done
+
+# Self-update: temp + mv so the running script's inode is never truncated
+if ! cmp -s "$SRC/config/updateManager/ychitsa-update" /usr/local/bin/ychitsa-update; then
+    cp "$SRC/config/updateManager/ychitsa-update" /usr/local/bin/.ychitsa-update.new
+    chmod +x /usr/local/bin/.ychitsa-update.new
+    mv -f /usr/local/bin/.ychitsa-update.new /usr/local/bin/ychitsa-update
+    echo "Updater itself was updated."
+fi
 
 echo ""
 echo "Done."

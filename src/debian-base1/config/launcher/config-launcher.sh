@@ -15,6 +15,7 @@ setup_launcher_for_user() {
     cp /etc/skel/.config/launcher/folder_viewer.py         "$home_dir/.config/launcher/folder_viewer.py"
     cp /etc/skel/.config/launcher/app-window.py            "$home_dir/.config/launcher/app-window.py"
     cp /etc/skel/.config/launcher/classroom_manager.py     "$home_dir/.config/launcher/classroom_manager.py"
+    cp /etc/skel/.config/launcher/join-classroom.py        "$home_dir/.config/launcher/join-classroom.py"
     cp /etc/skel/.config/launcher/makecode-app.py          "$home_dir/.config/launcher/makecode-app.py"
     cp /etc/skel/.config/launcher/library.py               "$home_dir/.config/launcher/library.py"
     cp /etc/skel/.config/launcher/lesson-config.py         "$home_dir/.config/launcher/lesson-config.py"
@@ -43,6 +44,7 @@ setup_launcher_for_user() {
     chmod +x "$home_dir/.config/launcher/folder_viewer.py"
     chmod +x "$home_dir/.config/launcher/app-window.py"
     chmod +x "$home_dir/.config/launcher/classroom_manager.py"
+    chmod +x "$home_dir/.config/launcher/join-classroom.py"
     chmod +x "$home_dir/.config/launcher/makecode-app.py"
     chmod +x "$home_dir/.config/launcher/webapp-viewer.py"
     chmod +x "$home_dir/.config/launcher/library.py"
@@ -62,19 +64,47 @@ setup_launcher_for_user() {
     echo "Launcher configured for: $username"
 }
 
-# /shared/classrooms.json
-# Created once with the seed file, teachers edit it live with the classroom_manager.py app
-if [ ! -f /shared/classrooms.json ]; then
-    if [ -f /etc/skel/.config/launcher/classrooms.json ]; then
-        cp /etc/skel/.config/launcher/classrooms.json /shared/classrooms.json
+# /shared/classrooms.json, live DB. Seed from /opt (survives Docker volume overlay).
+bootstrap_shared_classrooms() {
+    mkdir -p /shared /shared/teacher-lessons \
+        /shared/cis4900-control /shared/classroom-work \
+        /shared/classroom-delivery /shared/cis4900-secrets 2>/dev/null || true
+
+    local need_seed=0
+    if [ ! -f /shared/classrooms.json ]; then
+        need_seed=1
     else
-        echo '{"classrooms":[{"id":"class001","name":"Class 001","students":[],"enabled_apps":[]}]}' \
-            > /shared/classrooms.json
+        # Empty classrooms list counts as needs seed (volume overlay of empty/broken file)
+        if ! python3 -c "import json; d=json.load(open('/shared/classrooms.json')); raise SystemExit(0 if d.get('classrooms') else 1)" 2>/dev/null; then
+            need_seed=1
+        fi
     fi
-    chown root:teacher /shared/classrooms.json
-    chmod 664 /shared/classrooms.json   # teacher group can read/write
-    echo "Created /shared/classrooms.json"
-fi
+
+    if [ "$need_seed" = "1" ]; then
+        local src=""
+        if [ -f /opt/cis4900/classrooms.json ]; then
+            src=/opt/cis4900/classrooms.json
+        elif [ -f /etc/skel/.config/launcher/classrooms.json ]; then
+            src=/etc/skel/.config/launcher/classrooms.json
+        fi
+        if [ -n "$src" ]; then
+            tmp=/shared/classrooms.json.tmp
+            cp "$src" "$tmp"
+            mv -f "$tmp" /shared/classrooms.json
+            echo "Seeded /shared/classrooms.json from $src"
+        else
+            tmp=/shared/classrooms.json.tmp
+            echo '{"classrooms":[{"id":"class001","name":"Class 001","students":["studentuser"],"enabled_apps":[],"enabled_lessons":[]}],"web_apps":[]}' > "$tmp"
+            mv -f "$tmp" /shared/classrooms.json
+            echo "Seeded /shared/classrooms.json with minimal default"
+        fi
+    fi
+
+    chown root:teacher /shared/classrooms.json 2>/dev/null || true
+    chmod 664 /shared/classrooms.json 2>/dev/null || true
+}
+
+bootstrap_shared_classrooms
 
 # config launcher for all users
 users=$(awk -F: '$3 >= 1000 && $3 < 65534 {print $1}' /etc/passwd)
