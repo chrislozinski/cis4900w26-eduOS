@@ -2,6 +2,8 @@
 # using font awesome for a lock icon
 LOCK=$(printf '') 
 
+ROFI_THEME="$HOME/.config/rofi/rofi-network.rasi"
+
 # Enable WiFi radio (no-op if already on; fails silently if no device)
 nmcli radio wifi on 2>/dev/null || true
 
@@ -37,9 +39,19 @@ if [ ${#DISPLAY_LIST[@]} -eq 0 ]; then
     exit 1
 fi
 
+# Mark the currently-connected network's row as rofi's "active" element,
+# so rofi-network.rasi can highlight it distinctly from the rest of the list
+ACTIVE_SSID=$(nmcli -t -f ACTIVE,SSID dev wifi ifname "$WIFI_DEV" 2>/dev/null \
+    | awk -F: '$1=="yes"{print $2; exit}')
+ROFI_ACTIVE_ARGS=()
+if [ -n "$ACTIVE_SSID" ]; then
+    for i in "${!DISPLAY_LIST[@]}"; do
+        [ "${SSID_MAP[${DISPLAY_LIST[$i]}]}" = "$ACTIVE_SSID" ] && ROFI_ACTIVE_ARGS=(-a "$i") && break
+    done
+fi
+
 SELECTION=$(printf '%s\n' "${DISPLAY_LIST[@]}" \
-    | rofi -dmenu -l 10 -p "WiFi" \
-        -theme-str 'window {width: 420px;} * {font: "JetBrains Mono Medium 11";}')
+    | rofi -dmenu -l 10 -p "WiFi" -theme "$ROFI_THEME" "${ROFI_ACTIVE_ARGS[@]}")
 [ -z "$SELECTION" ] && exit 0
 
 # Show network selector
@@ -51,7 +63,8 @@ nmcli dev wifi connect "$SSID" ifname "$WIFI_DEV" 2>/dev/null && exit 0
 
 # Width adapts to SSID length, 40 chars, if you want non-obscured input, remove -password 
 PASS_WIDTH=$(( ${#SSID} + 40 ))
-PASSWORD=$(rofi -dmenu -password -lines 0 -p "Password for $SSID:" -theme-str "window {width: ${PASS_WIDTH}ch;}")
+PASSWORD=$(rofi -dmenu -password -lines 0 -p "Password for $SSID:" \
+    -theme "$ROFI_THEME" -theme-str "window {width: ${PASS_WIDTH}ch;}")
 [ -z "$PASSWORD" ] && exit 0
 
 nmcli dev wifi connect "$SSID" ifname "$WIFI_DEV" password "$PASSWORD" && \

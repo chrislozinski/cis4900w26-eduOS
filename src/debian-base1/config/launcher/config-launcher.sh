@@ -18,8 +18,10 @@ setup_launcher_for_user() {
     cp /etc/skel/.config/launcher/join-classroom.py        "$home_dir/.config/launcher/join-classroom.py"
     cp /etc/skel/.config/launcher/makecode-app.py          "$home_dir/.config/launcher/makecode-app.py"
     cp /etc/skel/.config/launcher/library.py               "$home_dir/.config/launcher/library.py"
+    cp /etc/skel/.config/launcher/tray_indicators.py       "$home_dir/.config/launcher/tray_indicators.py"
     cp /etc/skel/.config/launcher/lesson-config.py         "$home_dir/.config/launcher/lesson-config.py"
     cp /etc/skel/.config/launcher/waterfox-launcher.sh     "$home_dir/.config/launcher/waterfox-launcher.sh"
+    cp /etc/skel/.config/launcher/wifi-connect.sh          "$home_dir/.config/launcher/wifi-connect.sh"
     mkdir -p "$home_dir/.config/launcher/network"
     if [ -d "/etc/skel/.config/launcher/network" ]; then
         cp -r /etc/skel/.config/launcher/network/* "$home_dir/.config/launcher/network/" 2>/dev/null || true
@@ -50,6 +52,7 @@ setup_launcher_for_user() {
     chmod +x "$home_dir/.config/launcher/library.py"
     chmod +x "$home_dir/.config/launcher/lesson-config.py"
     chmod +x "$home_dir/.config/launcher/waterfox-launcher.sh"
+    chmod +x "$home_dir/.config/launcher/wifi-connect.sh"
     if [ -d "$home_dir/.config/launcher/network" ]; then
         chmod +x "$home_dir/.config/launcher/network/"*.py 2>/dev/null || true
     fi

@@ -85,9 +85,6 @@ bindsym --border button3 nop
 default_border pixel 0
 default_floating_border pixel 0
 
-exec --no-startup-id sh -c 'until [ -S "${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/pipewire-0" ]; do sleep 0.2; done; exec polybar statusbar'
-exec --no-startup-id python3  ~/.config/polybar/polybar-hover.py
-
 bindsym $mod+shift+n exec xterm -e nmtui
 
 bindsym XF86AudioRaiseVolume exec --no-startup-id sh -c "pactl set-sink-volume @DEFAULT_SINK@ +5% && notify-send -t 800 -h int:value:\$(pactl get-sink-volume @DEFAULT_SINK@ | grep -oP '\\d+(?=%)' | head -1) 'Volume' ''"

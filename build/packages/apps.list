@@ -1,5 +1,4 @@
 i3-wm
-i3status
 suckless-tools
 xterm
 xorg
@@ -53,7 +52,6 @@ rofi
 wireless-regdb
 firmware-realtek
 alsa-utils
-py3status
 dunst
 libnotify-bin
 fonts-font-awesome

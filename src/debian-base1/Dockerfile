@@ -42,8 +42,6 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y \
     i3-wm \
-    i3status \
-    py3status \
     suckless-tools \
     xrdp \
     xorg \
@@ -126,19 +124,15 @@ RUN mkdir -p /etc/skel/.config/zathura \
 
 # Set up default configuration directories in /etc/skel
 RUN mkdir -p /etc/skel/.config/i3 \
-             /etc/skel/.config/i3status \
              /etc/skel/.config/vifm \
-             /etc/skel/.config/polybar \
              /etc/skel/.config/launcher \
              /etc/skel/.config/launcher/icons \
              /etc/skel/.config/launcher/network \
              /etc/skel/.config/dunst
 
-# Copy i3 and i3status configs
+# Copy i3 config
 COPY config/i3/i3-config /etc/skel/.config/i3/config
-COPY config/i3/i3status-config /etc/skel/.config/i3status/config
-COPY config/i3/polybar-config /etc/skel/.config/polybar/config.ini
-COPY config/i3/layout.json /etc/skel/.config/i3/layout.json  
+COPY config/i3/layout.json /etc/skel/.config/i3/layout.json
 
 # Copy vifm config (kept for potential backend use)
 COPY config/interface/vifmrc /etc/skel/.config/vifm/vifmrc
@@ -154,9 +148,11 @@ COPY widgets/joinClassroom/join-classroom.py /etc/skel/.config/launcher/join-cla
 COPY widgets/makecode/makecode-app.py       /etc/skel/.config/launcher/makecode-app.py
 COPY widgets/fileNav/fileViewer.py          /etc/skel/.config/launcher/fileViewer.py
 COPY widgets/library/library.py             /etc/skel/.config/launcher/library.py
+COPY widgets/statusTray/tray_indicators.py  /etc/skel/.config/launcher/tray_indicators.py
 COPY config/launcher/lesson-config.py       /etc/skel/.config/launcher/lesson-config.py
 COPY config/launcher/waterfox-launcher.sh   /etc/skel/.config/launcher/waterfox-launcher.sh
 COPY config/launcher/start-audio.sh        /etc/skel/.config/launcher/start-audio.sh
+COPY config/launcher/wifi-connect.sh        /etc/skel/.config/launcher/wifi-connect.sh
 
 # Copy sidebar configs as fallback and role specific
 COPY config/launcher/appbar-config.json          /etc/skel/.config/launcher/appbar-config.json
@@ -205,7 +201,8 @@ RUN chmod +x /etc/skel/.config/launcher/launcher.py \
              /etc/skel/.config/launcher/library.py \
              /etc/skel/.config/launcher/lesson-config.py \
              /etc/skel/.config/launcher/waterfox-launcher.sh \
-             /etc/skel/.config/launcher/start-audio.sh
+             /etc/skel/.config/launcher/start-audio.sh \
+             /etc/skel/.config/launcher/wifi-connect.sh
 
 # Copy setup scripts
 COPY config/users/create-users.sh /usr/local/bin/create-users.sh
@@ -214,10 +211,8 @@ COPY config/users/config-user-i3.sh /usr/local/bin/config-user-i3.sh
 COPY config/interface/notifications.conf /etc/skel/.config/dunst/dunstrc
 COPY config/interface/config-vifm.sh /usr/local/bin/config-vifm.sh
 COPY config/interface/config-gtk.sh /usr/local/bin/config-gtk.sh
-COPY config/interface/polybar-hover.py  /etc/skel/.config/polybar/polybar-hover.py
 COPY config/launcher/config-launcher.sh /usr/local/bin/config-launcher.sh
 COPY config/launcher/webapp-viewer.py /etc/skel/.config/launcher/webapp-viewer.py
-COPY config/launcher/wifi-connect.sh /usr/local/bin/wifi-connect.sh
 
 RUN chmod +x /usr/local/bin/create-users.sh \
              /usr/local/bin/user-roles.sh \
@@ -225,7 +220,6 @@ RUN chmod +x /usr/local/bin/create-users.sh \
              /usr/local/bin/config-vifm.sh \
              /usr/local/bin/config-gtk.sh \
              /etc/skel/.config/launcher/webapp-viewer.py \
-             /etc/skel/.config/polybar/polybar-hover.py \
              /usr/local/bin/config-launcher.sh
 
 # Create role groups 

@@ -1,0 +1,39 @@
+@import "~/.config/rofi/config.rasi"
+
+window {
+    width: 420px;
+    border-radius: 10px;
+}
+
+mainbox {
+    padding: 4px;
+}
+
+inputbar {
+    border-radius: 8px;
+    margin: 0px 0px 6px 0px;
+}
+
+listview {
+    spacing: 2px;
+}
+
+element {
+    border-radius: 6px;
+    padding: 8px 10px;
+}
+
+element normal.active {
+    background-color: #26422e;
+    text-color: #8fe3a8;
+}
+
+element selected.normal {
+    background-color: #2e4070;
+    text-color: #ffffff;
+}
+
+element selected.active {
+    background-color: #2f5d3f;
+    text-color: #ffffff;
+}

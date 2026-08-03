@@ -139,6 +139,7 @@ apply() {
             rsync -a "$SRC/widgets/fileNav/fileViewer.py"             "/home/$u/.config/launcher/"
             rsync -a "$SRC/widgets/library/library.py"                "/home/$u/.config/launcher/"
             rsync -a "$SRC/widgets/joinClassroom/join-classroom.py"   "/home/$u/.config/launcher/"
+            rsync -a "$SRC/widgets/statusTray/tray_indicators.py"     "/home/$u/.config/launcher/"
             #  icons/ in the launcher dir
             rsync -a --delete "$SRC/icons/" "/home/$u/.config/launcher/icons/"
             chown -R "$u:$u" "/home/$u/.config/launcher/"
@@ -148,6 +149,7 @@ apply() {
         rsync -a "$SRC/widgets/fileNav/fileViewer.py"             /etc/skel/.config/launcher/fileViewer.py
         rsync -a "$SRC/widgets/library/library.py"                /etc/skel/.config/launcher/
         rsync -a "$SRC/widgets/joinClassroom/join-classroom.py"   /etc/skel/.config/launcher/
+        rsync -a "$SRC/widgets/statusTray/tray_indicators.py"     /etc/skel/.config/launcher/
         # lessonBuilder lives at /opt/cis4900/widgets/lessonBuilder per appbar-config-teacher.json
         mkdir -p /opt/cis4900/widgets/lessonBuilder
         rsync -a --delete "$SRC/widgets/lessonBuilder/" "/opt/cis4900/widgets/lessonBuilder/"
@@ -159,21 +161,19 @@ apply() {
             [ -d "/home/$u" ] || continue
             mkdir -p \
                 "/home/$u/.config/i3" \
-                "/home/$u/.config/i3status" \
-                "/home/$u/.config/polybar" \
                 "/home/$u/.config/vifm" \
                 "/home/$u/.config/dunst" \
                 "/home/$u/.config/rofi"
             # Files are renamed at destination, so match what 03-copy-assets.sh does
             cp "$SRC/config/i3/i3-config"       "/home/$u/.config/i3/config"
-            cp "$SRC/config/i3/i3status-config" "/home/$u/.config/i3status/config"
             cp "$SRC/config/i3/layout.json"     "/home/$u/.config/i3/layout.json"
-            cp "$SRC/config/i3/polybar-config"  "/home/$u/.config/polybar/config.ini"
             cp "$SRC/config/interface/picom.conf"          "/home/$u/.config/picom.conf"
             cp "$SRC/config/interface/vifmrc"              "/home/$u/.config/vifm/vifmrc"
             cp "$SRC/config/interface/notifications.conf"  "/home/$u/.config/dunst/dunstrc"
             cp "$SRC/config/interface/rofi-config.rasi"    "/home/$u/.config/rofi/config.rasi"
-            rsync -a "$SRC/config/interface/polybar-hover.py" "/home/$u/.config/polybar/"
+            cp "$SRC/config/interface/rofi-network.rasi"   "/home/$u/.config/rofi/rofi-network.rasi"
+            # polybar/i3status are retired - remove leftovers from older installs
+            rm -rf "/home/$u/.config/polybar" "/home/$u/.config/i3status"
             # Students get the sync agent autostart line (config-user-i3.sh adds
             # the same line; the raw i3-config copy above stripped it)
             if id -nG "$u" | grep -qw student; then
@@ -182,13 +182,12 @@ apply() {
             fi
             chown -R "$u:$u" \
                 "/home/$u/.config/i3/" \
-                "/home/$u/.config/i3status/" \
-                "/home/$u/.config/polybar/" \
                 "/home/$u/.config/vifm/" \
                 "/home/$u/.config/dunst/" \
                 "/home/$u/.config/rofi/" \
                 "/home/$u/.config/picom.conf" 2>/dev/null || true
         done
+        rm -f /usr/local/bin/wifi-connect.sh   # relocated to ~/.config/launcher/
         ;;
     network)
         # network: systemd runs from cis4900-src; UIs import from ~/.config/launcher/network
