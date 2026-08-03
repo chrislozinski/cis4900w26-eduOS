@@ -440,6 +440,7 @@ class LessonBuilderWindow(Gtk.Window):
         self._makecode_box.pack_start(self._makecode_webview, True, True, 0)
         self._paned.pack2(self._makecode_box, resize=True, shrink=False)
         self._makecode_box.set_visible(False)
+        self._paned.connect("notify::position", self._on_paned_resized)
 
         # Preview window
         self._current_preview_lesson_id = None
@@ -710,6 +711,16 @@ class LessonBuilderWindow(Gtk.Window):
         lesson_id   = data.get("lessonId")
         lesson_data = data.get("lesson")
         if lesson_id and lesson_data:
+            # Keep existing step code if the JS model sends empty
+            # The JS model can be stale if stepCodeUpdated has not arrived yet
+            existing = _lesson_storage.load_lesson(lesson_id) or {}
+            ex_steps = {s.get("id"): s for s in existing.get("steps", [])}
+            for step in lesson_data.get("steps", []):
+                ex = ex_steps.get(step.get("id"), {})
+                if not step.get("raw_ts") and ex.get("raw_ts"):
+                    step["raw_ts"] = ex["raw_ts"]
+                if not step.get("cached_xml") and ex.get("cached_xml"):
+                    step["cached_xml"] = ex["cached_xml"]
             _lesson_storage.save_lesson(lesson_id, lesson_data)
         self._send_to_ui({"action": "lessonSaved", "lessonId": lesson_id})
 
@@ -829,6 +840,19 @@ class LessonBuilderWindow(Gtk.Window):
             self._send_to_ui({"action": "classroomsUpdated", "classrooms": classrooms})
         except Exception:
             pass
+
+    def _on_paned_resized(self, paned, _gtkParamSpec):
+        alloc        = self.get_allocation()
+        position     = paned.get_position()
+        sidebar_min  = 320
+        makecode_min = 500
+        handle_size  = paned.style_get_property("handle-size")
+        max_position = alloc.width - handle_size - makecode_min
+        clamped      = max(sidebar_min, min(position, max_position)) if max_position > sidebar_min else position
+        if clamped != position:
+            paned.handler_block_by_func(self._on_paned_resized)
+            paned.set_position(clamped)
+            paned.handler_unblock_by_func(self._on_paned_resized)
 
     def _set_editor_visible(self, visible):
         def _update():

@@ -19,6 +19,8 @@ var EditorScreen = {
     onLessonLoaded: function(lessonId, lesson) {
         this._lessonId = lessonId;
         this._lesson   = lesson || { id: lessonId, title: "", steps: [], solution_code: "" };
+        var titleEl = document.getElementById("editor-lesson-title");
+        if (titleEl) titleEl.textContent = this._lesson.title || "";
         this._stepIdx  = Math.min(this._stepIdx, Math.max(0, (this._lesson.steps || []).length - 1));
         sendToPython("setCurrentLesson", { lessonId: lessonId, stepIndex: this._stepIdx });
         var firstStep = (this._lesson.steps || [])[this._stepIdx];
@@ -53,6 +55,13 @@ var EditorScreen = {
         this._renderLessonList();
         this._renderStepList();
         this._renderStepFields();
+        this._renderLessonDescription();
+    },
+
+    _renderLessonDescription: function() {
+        var el = document.getElementById("lesson-description");
+        if (!el || !this._lesson) return;
+        el.value = this._lesson.description || "";
     },
 
     _renderLessonList: function() {
@@ -229,6 +238,8 @@ var EditorScreen = {
     _saveLesson: function() {
         if (!this._lesson || !this._lessonId) return;
         this._flushCurrentStepFields();
+        var descEl = document.getElementById("lesson-description");
+        if (descEl) this._lesson.description = descEl.value;
         sendToPython("saveLesson", { lessonId: this._lessonId, lesson: this._lesson });
     },
 
@@ -266,31 +277,8 @@ var EditorScreen = {
     },
 
     _promptBack: function() {
-        if (!this._lesson) {
-            var fbId = State.activeClassroom && State.activeClassroom.id;
-            navigate("classroom", { classroomId: fbId });
-            return;
-        }
-        var lessonId = this._lessonId;
-        var entry = State.lessons.find(function(d) { return d.id === lessonId; });
-        var isPublished =
-            (entry && Array.isArray(entry.published_to) && entry.published_to.length > 0) ||
-            State.classrooms.some(function(c) {
-                return (c.enabled_lessons || []).indexOf(lessonId) !== -1;
-            });
-        if (isPublished) {
-            var classroomId = (State.activeClassroom && State.activeClassroom.id)
-                || (entry && entry.classroom_id);
-            navigate("classroom", { classroomId: classroomId });
-            return;
-        }
-        document.getElementById("dialog-save-back").classList.remove("hidden");
-    },
-
-    _confirmBack: function(save) {
-        document.getElementById("dialog-save-back").classList.add("hidden");
-        if (save) this._saveLesson();
-        navigate("classroom", { classroomId: State.activeClassroom && State.activeClassroom.id });
+        this._saveLesson();
+        navigate("lessons", { classroomId: State.activeClassroom && State.activeClassroom.id });
     },
 
     _previewLesson: function() {

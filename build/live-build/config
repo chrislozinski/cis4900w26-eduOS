@@ -6,13 +6,10 @@ lb config noauto \
   --distribution bookworm \
   --architectures amd64 \
   --binary-images iso-hybrid \
-  --debian-installer live \
-  --debian-installer-distribution bookworm \
   --apt-recommends false \
   --archive-areas "main contrib non-free non-free-firmware" \
   --mirror-bootstrap http://deb.debian.org/debian/ \
   --mirror-binary http://deb.debian.org/debian/ \
   --mirror-chroot http://deb.debian.org/debian/ \
-  --bootappend-live "boot=live components modprobe.blacklist=amdgpu quiet loglevel=3" \
-  --bootappend-install "nomodeset amdgpu.dc=0 quiet loglevel=3" \
-  --bootappend-live-failsafe "boot=live components nomodeset modprobe.blacklist=amdgpu quiet loglevel=3"
+  --bootappend-live "boot=live components loglevel=3 ychitsa.gpu_tier=0" \
+  --bootappend-live-failsafe "boot=live components nomodeset modprobe.blacklist=amdgpu loglevel=3 ychitsa.gpu_tier=3"

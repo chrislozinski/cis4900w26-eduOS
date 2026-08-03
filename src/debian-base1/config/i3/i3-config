@@ -41,6 +41,10 @@ for_window [instance="file_viewer"] move container to mark viewer_tabs
 for_window [title="Classroom Manager"] floating disable
 for_window [title="Classroom Manager"] move container to mark viewer_tabs
 
+# join classroom, student widget for entering the teacher's code
+for_window [title="Join Classroom"] floating disable
+for_window [title="Join Classroom"] move container to mark viewer_tabs
+
 # lesson config, teacher widget for configuring lesson resources
 for_window [title="Lesson Config"] floating disable
 for_window [title="Lesson Config"] move container to mark viewer_tabs
@@ -80,9 +84,6 @@ bindsym --border button3 nop
 # Ensure borders are invisible to the mouse interaction model
 default_border pixel 0
 default_floating_border pixel 0
-
-exec --no-startup-id sh -c 'until [ -S "${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/pipewire-0" ]; do sleep 0.2; done; exec polybar statusbar'
-exec --no-startup-id python3  ~/.config/polybar/polybar-hover.py
 
 bindsym $mod+shift+n exec xterm -e nmtui
 

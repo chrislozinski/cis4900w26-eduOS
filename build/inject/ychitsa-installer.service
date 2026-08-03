@@ -1,0 +1,21 @@
+[Unit]
+Description=Ychitsa OS installer on tty1
+ConditionKernelCommandLine=ychitsa.installer=1
+Conflicts=getty@tty1.service
+After=getty@tty1.service live-config.service
+Before=getty.target
+
+[Service]
+Type=idle
+Environment=TERM=linux
+ExecStart=/usr/local/sbin/ychitsa-install
+StandardInput=tty
+StandardOutput=tty
+StandardError=tty
+TTYPath=/dev/tty1
+TTYReset=yes
+TTYVHangup=yes
+TTYVTDisallocate=yes
+
+[Install]
+WantedBy=multi-user.target

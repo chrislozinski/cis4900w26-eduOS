@@ -33,9 +33,21 @@ chown testuser:teacher /shared/submissions
 chmod 1775 /shared/submissions
 
 # teacher-authored lesson packages (published tutorials)
+# world-writable so student-agent can unpack synced lesson bodies
 mkdir -p /shared/teacher-lessons
 chown root:teacher /shared/teacher-lessons
-chmod 775 /shared/teacher-lessons
+chmod 1777 /shared/teacher-lessons
+
+# classroom networking control / work / delivery / secrets
+mkdir -p /shared/cis4900-control /shared/classroom-work /shared/classroom-delivery /shared/cis4900-secrets
+chown root:teacher /shared/cis4900-control /shared/classroom-work /shared/classroom-delivery /shared/cis4900-secrets
+chmod 775 /shared/cis4900-control /shared/classroom-work /shared/classroom-delivery
+chmod 770 /shared/cis4900-secrets
+
+# student state cache — agent (runs as the student) writes student-state.json here
+mkdir -p /var/lib/cis4900
+chown root:student /var/lib/cis4900
+chmod 775 /var/lib/cis4900
 
 echo "Creating convenient symlinks to shared folders..."
 

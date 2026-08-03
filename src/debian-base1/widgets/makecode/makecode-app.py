@@ -468,12 +468,34 @@ def get_user_role():
     return "student"
 
 
+def _classroom_from_shared(username):
+    """Return (name, enabled_lesson_ids, class_id) if username is enrolled, else None."""
+    try:
+        with open(CLASSROOMS_FILE, "r") as f:
+            data = json.load(f)
+        for cls in data.get("classrooms", []):
+            if username not in cls.get("students", []):
+                continue
+            name = cls.get("name", "Your Class")
+            lessons = cls.get("enabled_lessons")
+            if not isinstance(lessons, list):
+                lessons = []
+            cid = cls.get("id") or "_unassigned"
+            return name, lessons, cid
+    except Exception:
+        pass
+    return None
+
+
 def get_student_classroom():
     """
     Return (classroom_name, enabled_lesson_ids, class_id) for the current student.
-    class_id comes from classrooms.json \"id\" (e.g. class001) for the profile path.
+    Prefer student-state when it mirrors shared enrollment; otherwise use shared.
+    (Do not change MakeCode Loading UX — fix inputs here.)
     """
     username = getpass.getuser()
+    shared = _classroom_from_shared(username)
+
     try:
         with open(LOCAL_STUDENT_STATE_FILE, "r") as f:
             state = json.load(f)
@@ -482,23 +504,22 @@ def get_student_classroom():
         name = session.get("classroom_name", "Your Class")
         cid = session.get("classroom_id", "_unassigned")
         lessons = env.get("enabled_lessons", [])
-        if isinstance(lessons, list):
-            return name, lessons, cid
+        if not isinstance(lessons, list):
+            lessons = []
+        # Stale/shadowing student-state: enrolled in shared but local id missing/mismatch
+        if shared is not None:
+            s_name, s_lessons, s_cid = shared
+            if not cid or cid == "_unassigned" or cid != s_cid:
+                return s_name, s_lessons, s_cid
+            # Same classroom: lessons come from the network-applied student-state;
+            # the local shared copy is not updated by teacher edits over the network
+            return s_name, lessons, s_cid
+        return name, lessons, cid
     except Exception:
         pass
-    try:
-        with open(CLASSROOMS_FILE, "r") as f:
-            data = json.load(f)
-        for cls in data.get("classrooms", []):
-            if username in cls.get("students", []):
-                name = cls.get("name", "Your Class")
-                lessons = cls.get("enabled_lessons")
-                if lessons is None:
-                    lessons = cls.get("enabled_apps", [])
-                cid = cls.get("id") or "_unassigned"
-                return name, lessons, cid
-    except Exception:
-        pass
+
+    if shared is not None:
+        return shared
     return None, [], "_unassigned"
 
 
@@ -528,12 +549,18 @@ def update_student_makecode_profile(makecode_profile_dir):
 
     if changed:
         try:
-            with open(CLASSROOMS_FILE, "w") as f:
+            tmp = CLASSROOMS_FILE + ".tmp"
+            with open(tmp, "w") as f:
                 json.dump(data, f, indent=2)
                 f.flush()
                 os.fsync(f.fileno())
+            os.replace(tmp, CLASSROOMS_FILE)
         except Exception:
-            pass
+            try:
+                if os.path.exists(CLASSROOMS_FILE + ".tmp"):
+                    os.remove(CLASSROOMS_FILE + ".tmp")
+            except Exception:
+                pass
 
 
 def build_landing_html(base_url, classroom_name, enabled_ids):

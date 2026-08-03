@@ -1,0 +1,14 @@
+[Unit]
+Description=Stage GPU fallback tier before risky graphical boot
+DefaultDependencies=no
+Before=graphical.target
+After=local-fs.target
+ConditionKernelCommandLine=!boot=live
+ConditionPathExists=!/etc/ychitsa/gpu-tier-pinned
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/ychitsa-gpu-tier stage
+
+[Install]
+WantedBy=graphical.target

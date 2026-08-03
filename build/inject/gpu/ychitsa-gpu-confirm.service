@@ -1,0 +1,12 @@
+[Unit]
+Description=Confirm GPU tier after successful graphical boot
+After=graphical.target lightdm.service
+ConditionKernelCommandLine=!boot=live
+ConditionPathExists=!/etc/ychitsa/gpu-tier-pinned
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/ychitsa-gpu-tier confirm
+
+[Install]
+WantedBy=graphical.target

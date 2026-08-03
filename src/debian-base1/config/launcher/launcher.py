@@ -10,9 +10,11 @@ import os
 import subprocess
 import sys
 import getpass
+from datetime import datetime
 
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk, GdkPixbuf, GLib, Pango
+from tray_indicators import TRAY_INDICATORS, GLYPH_TRAY_MORE, tray_css, show_flyout
 
 CLASSROOMS_FILE     = '/shared/classrooms.json'
 VIEWER_DIR          = os.path.expanduser('~/.cache/launcher_viewers')
@@ -89,9 +91,28 @@ def load_config(config_dir, role):
     return json.loads(raw)
 
 
+def _default_apps():
+    """Catalog entries marked "default": true. Always on every student sidebar,
+    even when unenrolled or the teacher's enabled_apps list is empty."""
+    try:
+        with open(AVAILABLE_APPS_FILE, 'r') as f:
+            catalog = json.load(f).get('available_apps', [])
+        return [a for a in catalog if a.get('default')]
+    except Exception:
+        return []
+
+
+def _with_default_apps(items):
+    labels = {i.get('label') for i in items if isinstance(i, dict)}
+    return list(items) + [a for a in _default_apps() if a['label'] not in labels]
+
+
 def _set_classroom_apps(config):
     """Replace the student item list entirely with classroom enabled_apps
-    The teacher fully controls what appears, checking or unchecking add/ removesan app"""
+    The teacher fully controls what appears, checking or unchecking add/ removesan app
+    Default apps (available-apps.json "default": true) are always appended
+    Also records which classroom the app list came from (config['classroom_id']/
+    ['classroom_name']) so the sidebar can show the student which class is active."""
     username = getpass.getuser()
     # Prefer local state cache applied by student-state
     try:
@@ -99,19 +120,26 @@ def _set_classroom_apps(config):
             state = json.load(f)
         items = state.get('environment', {}).get('enabled_apps', [])
         if isinstance(items, list):
-            config['items'] = list(items)
+            config['items'] = _with_default_apps(items)
+            session = state.get('session', {})
+            config['classroom_id'] = session.get('classroom_id')
+            config['classroom_name'] = session.get('classroom_name')
             return config
     except Exception:
         pass
+    items = []
     try:
         with open(CLASSROOMS_FILE, 'r') as f:
             data = json.load(f)
         for classroom in data.get('classrooms', []):
             if username in classroom.get('students', []):
-                config['items'] = list(classroom.get('enabled_apps', []))
+                items = list(classroom.get('enabled_apps', []))
+                config['classroom_id'] = classroom.get('id')
+                config['classroom_name'] = classroom.get('name')
                 break
     except Exception:
-        pass  # no classrooms file or not enrolled, which means theres an empty sidebar
+        pass  # no classrooms file or not enrolled; only default apps show
+    config['items'] = _with_default_apps(items)
     return config
 
 
@@ -150,6 +178,8 @@ class LauncherWindow(Gtk.Window):
             #sidebar_item_label {{ font-size: {self.font_px}px; }}
             #icon_fallback      {{ font-size: {self.font_px}px; }}
             #toggle_label       {{ font-size: {self.font_px}px; }}
+            #classroom_label    {{ font-size: {self.font_px*0.85}px; color: #cccccc; }}
+            #clock_label        {{ font-size: {self.font_px*0.9}px; }}
         """.encode('utf-8'))  # font_px is a float, GTK3 CSS parses as double
         Gtk.StyleContext.add_provider_for_screen(
             Gdk.Screen.get_default(), _css,
@@ -257,10 +287,113 @@ class LauncherWindow(Gtk.Window):
         self.toggle_button.add(self.toggle_hbox)
         self.toggle_button.connect('clicked', self.on_toggle_sidebar)
         main_box.pack_end(self.toggle_button, False, False, 0)
-        
+
+        # Status row: network, volume, and battery icons, plus the clock
+        # Added after toggle_button so it renders above "Minimize"
+        # TRAY_INDICATORS in tray_indicators.py decides what shows up here
+        self.indicators = [cls() for cls in TRAY_INDICATORS]
+
+        status_section = self._build_status_section()
+        main_box.pack_end(status_section, False, False, 0)
+
+        GLib.timeout_add(1000, self._update_clock)
+        GLib.timeout_add(5000, self._refresh_indicators)
+
         # Connect window close event
         self.connect('delete-event', self.on_delete_event)
         self.connect('destroy', Gtk.main_quit)
+
+    def _build_status_section(self):
+        """Horizontal row of indicator icons, wifi vol battery, then from top to bottom, classroom id, time, date
+        Collapsing hides everything here except the "..."."""
+        section = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
+
+        status_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=self.hbox_margin)
+        status_row.set_margin_start(self.hbox_margin)
+        status_row.set_margin_end(self.hbox_margin)
+        status_row.set_homogeneous(True)
+
+        # Tracked separately so on_toggle_sidebar can hide these when the sidebar collapses to icon-only 
+        # (but not "..." below) 
+        self.indicator_widgets = []
+        for indicator in self.indicators:
+            widget = indicator.create_icon_widget()
+            widget.set_halign(Gtk.Align.CENTER)
+            self.indicator_widgets.append(widget)
+            status_row.pack_start(widget, True, False, 0)
+
+        more_label = Gtk.Label(label=GLYPH_TRAY_MORE)
+        more_label.set_name('tray_icon_label')
+        more_event = Gtk.EventBox()
+        more_event.add(more_label)
+        more_event.set_tooltip_text('Quick settings')
+        more_event.set_halign(Gtk.Align.CENTER)
+        more_event.connect('button-release-event', self.on_status_row_clicked)
+        status_row.pack_start(more_event, True, False, 0)
+
+        section.pack_start(status_row, False, False, 0)
+
+        # Only set for students with a classroom, see _set_classroom_apps
+        # max_width_chars(1) plus ellipsize keeps this from widening the sidebar
+        self.classroom_label = None
+        classroom_id = self.config.get('classroom_id')
+        if classroom_id:
+            self.classroom_label = Gtk.Label(label=f'Classroom: {classroom_id}')
+            self.classroom_label.set_name('classroom_label')
+            self.classroom_label.set_halign(Gtk.Align.START)
+            self.classroom_label.set_margin_start(self.hbox_margin)  # match status_row's indent
+            self.classroom_label.set_ellipsize(Pango.EllipsizeMode.END)
+            self.classroom_label.set_max_width_chars(1)
+            self.classroom_label.set_tooltip_text(self.config.get('classroom_name') or classroom_id)
+            section.pack_start(self.classroom_label, True, True, 0)
+
+        # for time and date i have a homogeneous 2-cell row with the same margins / mechanism as status_row above
+        # this ensures that the edges are pinned to the same x-positions as the icon row's
+        #time_date_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=self.hbox_margin)
+        time_date_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=max(1, self.hbox_margin * 6))
+        time_date_row.set_margin_start(self.hbox_margin)
+        time_date_row.set_margin_end(self.hbox_margin)
+
+        #time_date_row.set_homogeneous(True)
+        time_date_row.set_halign(Gtk.Align.CENTER)
+        # No max_width_chars, diff than classroom_label
+        # cap the layout width down to basically nothing
+        self.time_label = Gtk.Label()
+        self.time_label.set_name('clock_label')
+        self.time_label.set_halign(Gtk.Align.START)
+        self.time_label.set_ellipsize(Pango.EllipsizeMode.END)
+        time_date_row.pack_start(self.time_label, True, True, 0)
+
+        self.date_label = Gtk.Label()
+        self.date_label.set_name('clock_label')
+        self.date_label.set_halign(Gtk.Align.END)
+        self.date_label.set_ellipsize(Pango.EllipsizeMode.END)
+        time_date_row.pack_start(self.date_label, True, True, 0)
+
+        section.pack_start(time_date_row, False, False, 0)
+
+        self._update_clock()
+        return section
+
+    def on_status_row_clicked(self, widget, event):
+        """Combined 'Windows Quick Settings'-style flyout: all 3 tiles at once."""
+        content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+        for i, indicator in enumerate(self.indicators):
+            if i > 0:
+                content.pack_start(Gtk.Separator(), False, False, 4)
+            indicator.build_tile(content)
+        show_flyout(widget, content)
+
+    def _refresh_indicators(self):
+        for indicator in self.indicators:
+            indicator.refresh()
+        return True  # keep polling, matches refresh_viewer_widgets' convention
+
+    def _update_clock(self):
+        now = datetime.now()
+        self.time_label.set_text(now.strftime('%-I:%M%p').lower())   # e.g. "2:55pm"
+        self.date_label.set_text(now.strftime('%d/%m/%Y'))            # e.g. "03/08/2026"
+        return True
 
     # i3 tab checker helper functions
     def get_open_tabs(self):
@@ -590,6 +723,11 @@ class LauncherWindow(Gtk.Window):
             
             for lbl in self.item_labels:
                 lbl.hide()
+            for w in self.indicator_widgets:
+                w.hide()
+            if self.classroom_label:
+                self.classroom_label.hide()
+            self.date_label.hide()
             target = self.collapsed_width
             
             self.set_size_request(target, -1)
@@ -605,6 +743,11 @@ class LauncherWindow(Gtk.Window):
             self.toggle_arrow.set_text("<")
             for lbl in self.item_labels:
                 lbl.show()
+            for w in self.indicator_widgets:
+                w.show()
+            if self.classroom_label:
+                self.classroom_label.show()
+            self.date_label.show()
             target = self.expanded_width
             self.set_size_request(target, -1)
             self.resize(target, self.get_size()[1])
@@ -653,7 +796,9 @@ def main():
         css_provider,
         Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
     )
-    
+    # Call the css for the tile widgets like wifi etc
+    tray_css()
+
     win = LauncherWindow(config_path)
     win.show_all()
     Gtk.main()

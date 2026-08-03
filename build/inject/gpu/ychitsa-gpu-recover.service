@@ -1,0 +1,11 @@
+[Unit]
+Description=Opportunistic GPU driver recovery, never blocks boot
+After=graphical.target network.target
+ConditionKernelCommandLine=!boot=live
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/ychitsa-gpu-recover
+
+[Install]
+WantedBy=graphical.target

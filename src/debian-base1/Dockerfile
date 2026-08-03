@@ -42,8 +42,6 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y \
     i3-wm \
-    i3status \
-    py3status \
     suckless-tools \
     xrdp \
     xorg \
@@ -63,6 +61,7 @@ RUN apt-get update && apt-get install -y \
     python3 \
     python3-gi \
     python3-gi-cairo \
+    python3-zeroconf \
     gir1.2-gtk-3.0 \
     gir1.2-webkit2-4.1 \
     vifm \
@@ -125,19 +124,15 @@ RUN mkdir -p /etc/skel/.config/zathura \
 
 # Set up default configuration directories in /etc/skel
 RUN mkdir -p /etc/skel/.config/i3 \
-             /etc/skel/.config/i3status \
              /etc/skel/.config/vifm \
-             /etc/skel/.config/polybar \
              /etc/skel/.config/launcher \
              /etc/skel/.config/launcher/icons \
              /etc/skel/.config/launcher/network \
              /etc/skel/.config/dunst
 
-# Copy i3 and i3status configs
+# Copy i3 config
 COPY config/i3/i3-config /etc/skel/.config/i3/config
-COPY config/i3/i3status-config /etc/skel/.config/i3status/config
-COPY config/i3/polybar-config /etc/skel/.config/polybar/config.ini
-COPY config/i3/layout.json /etc/skel/.config/i3/layout.json  
+COPY config/i3/layout.json /etc/skel/.config/i3/layout.json
 
 # Copy vifm config (kept for potential backend use)
 COPY config/interface/vifmrc /etc/skel/.config/vifm/vifmrc
@@ -149,12 +144,15 @@ COPY config/launcher/launcher.py            /etc/skel/.config/launcher/launcher.
 COPY config/launcher/folder_viewer.py       /etc/skel/.config/launcher/folder_viewer.py
 COPY config/launcher/app-window.py          /etc/skel/.config/launcher/app-window.py
 COPY config/launcher/classroom_manager.py   /etc/skel/.config/launcher/classroom_manager.py
+COPY widgets/joinClassroom/join-classroom.py /etc/skel/.config/launcher/join-classroom.py
 COPY widgets/makecode/makecode-app.py       /etc/skel/.config/launcher/makecode-app.py
 COPY widgets/fileNav/fileViewer.py          /etc/skel/.config/launcher/fileViewer.py
 COPY widgets/library/library.py             /etc/skel/.config/launcher/library.py
+COPY widgets/statusTray/tray_indicators.py  /etc/skel/.config/launcher/tray_indicators.py
 COPY config/launcher/lesson-config.py       /etc/skel/.config/launcher/lesson-config.py
 COPY config/launcher/waterfox-launcher.sh   /etc/skel/.config/launcher/waterfox-launcher.sh
 COPY config/launcher/start-audio.sh        /etc/skel/.config/launcher/start-audio.sh
+COPY config/launcher/wifi-connect.sh        /etc/skel/.config/launcher/wifi-connect.sh
 
 # Copy sidebar configs as fallback and role specific
 COPY config/launcher/appbar-config.json          /etc/skel/.config/launcher/appbar-config.json
@@ -171,9 +169,16 @@ COPY network/ /etc/skel/.config/launcher/network/
 # /opt/cis4900 copy: python3 -m network.publisher runs from here (via network.sh)
 RUN mkdir -p /opt/cis4900
 COPY network/ /opt/cis4900/network/
-COPY config/launcher/classrooms.json /opt/cis4900/classrooms.json
 COPY network/network.sh /opt/cis4900/network.sh
-RUN chmod +x /opt/cis4900/network.sh /etc/skel/.config/launcher/network/*.py
+# Durable seed (survives ./shared volume overlay). Live DB is /shared/classrooms.json.
+COPY config/launcher/classrooms.json /opt/cis4900/classrooms.json
+RUN mkdir -p /shared /shared/teacher-lessons \
+    && chmod +x /opt/cis4900/network.sh /etc/skel/.config/launcher/network/*.py \
+    && chmod +x /etc/skel/.config/launcher/join-classroom.py \
+    && cp /opt/cis4900/classrooms.json /shared/classrooms.json
+# Session agent wrapper: launched by i3 autostart (students) and Join Classroom
+COPY network/student-agent-session.sh /usr/local/bin/student-agent-session.sh
+RUN chmod +x /usr/local/bin/student-agent-session.sh
 
 # Lesson Builder app (teacher-only)
 RUN mkdir -p /opt/cis4900/widgets/lessonBuilder
@@ -190,12 +195,14 @@ RUN chmod +x /etc/skel/.config/launcher/launcher.py \
              /etc/skel/.config/launcher/folder_viewer.py \
              /etc/skel/.config/launcher/app-window.py \
              /etc/skel/.config/launcher/classroom_manager.py \
+             /etc/skel/.config/launcher/join-classroom.py \
              /etc/skel/.config/launcher/makecode-app.py \
              /etc/skel/.config/launcher/fileViewer.py \
              /etc/skel/.config/launcher/library.py \
              /etc/skel/.config/launcher/lesson-config.py \
              /etc/skel/.config/launcher/waterfox-launcher.sh \
-             /etc/skel/.config/launcher/start-audio.sh
+             /etc/skel/.config/launcher/start-audio.sh \
+             /etc/skel/.config/launcher/wifi-connect.sh
 
 # Copy setup scripts
 COPY config/users/create-users.sh /usr/local/bin/create-users.sh
@@ -204,10 +211,8 @@ COPY config/users/config-user-i3.sh /usr/local/bin/config-user-i3.sh
 COPY config/interface/notifications.conf /etc/skel/.config/dunst/dunstrc
 COPY config/interface/config-vifm.sh /usr/local/bin/config-vifm.sh
 COPY config/interface/config-gtk.sh /usr/local/bin/config-gtk.sh
-COPY config/interface/polybar-hover.py  /etc/skel/.config/polybar/polybar-hover.py
 COPY config/launcher/config-launcher.sh /usr/local/bin/config-launcher.sh
 COPY config/launcher/webapp-viewer.py /etc/skel/.config/launcher/webapp-viewer.py
-COPY config/launcher/wifi-connect.sh /usr/local/bin/wifi-connect.sh
 
 RUN chmod +x /usr/local/bin/create-users.sh \
              /usr/local/bin/user-roles.sh \
@@ -215,7 +220,6 @@ RUN chmod +x /usr/local/bin/create-users.sh \
              /usr/local/bin/config-vifm.sh \
              /usr/local/bin/config-gtk.sh \
              /etc/skel/.config/launcher/webapp-viewer.py \
-             /etc/skel/.config/polybar/polybar-hover.py \
              /usr/local/bin/config-launcher.sh
 
 # Create role groups 
@@ -260,4 +264,6 @@ EXPOSE 3389
 ENTRYPOINT ["/usr/bin/tini", "--"]
 
 #CMD dbus-daemon --system --fork && /usr/sbin/xrdp-sesman && /usr/sbin/xrdp -n
-CMD dbus-daemon --system --fork && /usr/sbin/xrdp-sesman && (cd /opt/cis4900 && python3 -m network.publisher &) && /usr/sbin/xrdp -n
+# /etc/cis4900-env bridges container env into RDP sessions (.xsession sources it);
+# xrdp-sesman strips daemon env vars, so GUI apps would otherwise never see TEACHER_IP
+CMD printf 'export TEACHER_IP=%s\nexport TEACHER_TCP_PORT=%s\n' "${TEACHER_IP:-}" "${TEACHER_TCP_PORT:-49002}" > /etc/cis4900-env && dbus-daemon --system --fork && /usr/sbin/xrdp-sesman && (cd /opt/cis4900 && python3 -m network.publisher &) && /usr/sbin/xrdp -n
