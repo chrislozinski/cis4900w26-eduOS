@@ -111,7 +111,8 @@ check "waterfox"  "Waterfox browser"                            \
 check "updater"   "Updater (ychitsa-update itself)"             \
     "src/debian-base1/config/updateManager/"
 
-if [ ${#UPDATES[@]} -eq 0 ]; then
+UPDATE_KEYS=("${!UPDATES[@]}")
+if [ ${#UPDATE_KEYS[@]} -eq 0 ]; then
     echo "Already up to date."
     exit 0
 fi
@@ -144,7 +145,8 @@ else
     done
 fi
 
-if [ ${#SELECTED[@]} -eq 0 ]; then
+SELECTED_KEYS=("${!SELECTED[@]}")
+if [ ${#SELECTED_KEYS[@]} -eq 0 ]; then
     echo "Nothing selected."
     exit 0
 fi
