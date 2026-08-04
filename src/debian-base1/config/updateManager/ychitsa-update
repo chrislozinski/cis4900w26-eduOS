@@ -31,7 +31,6 @@ USERS=(testuser studentuser)
 # still pending (a category can be left unselected, or apply() can die
 # partway through another category, without HEAD ever reflecting that).
 STATE_FILE=/var/lib/ychitsa-update/applied.state
-EMPTY_TREE=4b825dc642cb6eb9a060e54bf8d69288fbee4904
 
 state_get() {
     [ -f "$STATE_FILE" ] || return 0
@@ -68,21 +67,21 @@ declare -A UPDATE_LABELS
 
 check() {
     local key="$1"; local label="$2"; shift 2
-    local base changed
     if [ "$FORCE" -eq 1 ]; then
-        base="$EMPTY_TREE"
-    else
-        base="$(state_get "$key")"; base="${base:-$OLD_HEAD}"
-    fi
-    if ! changed=$(git -C "$REPO" diff --name-only "$base..origin/$BRANCH" 2>/dev/null); then
-        # base commit no longer resolvable (can happen with the --depth 1 shallow
-        # clone once it ages out) - assume changed rather than silently skipping it
         UPDATES[$key]=1
         UPDATE_LABELS[$key]="$label"
         return
     fi
+    local base
+    base="$(state_get "$key")"; base="${base:-$OLD_HEAD}"
+    local pattern out
     for pattern in "$@"; do
-        if echo "$changed" | grep -q "^$pattern"; then
+        if ! out=$(git -C "$REPO" diff --name-only "$base..origin/$BRANCH" -- "$pattern" 2>/dev/null); then
+            # base commit no longer resolvable (can happen with the --depth 1 shallow
+            # clone once it ages out) - assume changed rather than silently skipping it
+            out="unresolvable"
+        fi
+        if [ -n "$out" ]; then
             UPDATES[$key]=1
             UPDATE_LABELS[$key]="$label"
             return
