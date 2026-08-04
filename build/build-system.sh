@@ -96,6 +96,10 @@ mkdir -p "${LB_WORKDIR}/config/includes.chroot/etc/apt/preferences.d"
 cp "${BUILD_DIR}/inject/99-bookworm-backports.pref" \
    "${LB_WORKDIR}/config/includes.chroot/etc/apt/preferences.d/99-bookworm-backports.pref"
 
+# block raspi-firmware, see build/inject/99-no-raspi-firmware.pref
+cp "${BUILD_DIR}/inject/99-no-raspi-firmware.pref" \
+   "${LB_WORKDIR}/config/includes.chroot/etc/apt/preferences.d/99-no-raspi-firmware.pref"
+
 # custom GRUB live boot menu entry, overlaid on live-build's default bootloader templates
 rm -rf "${LB_WORKDIR}/config/bootloaders"
 cp -r /usr/share/live/build/bootloaders "${LB_WORKDIR}/config/bootloaders"

@@ -1,0 +1,4 @@
+# raspi-firmware wedges dpkg on this amd64/UEFI image, see ychitsa-gpu-recover
+Package: raspi-firmware
+Pin: release *
+Pin-Priority: -1
