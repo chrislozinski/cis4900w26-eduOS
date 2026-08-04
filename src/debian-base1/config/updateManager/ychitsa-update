@@ -1,5 +1,7 @@
 #!/bin/bash
-# Usage: ychitsa-update [branch]   (default: main)
+# Usage: ychitsa-update [--force] [branch]   (default branch: main)
+# --force: ignore recorded per-category state and treat everything as pending
+# (recovery switch for when a prior run died partway or skipped a category).
 #
 # Pulls the requested branch into /opt/cis4900-repo and applies the parts that
 # changed. Two code roots matter on an installed system:
@@ -8,12 +10,38 @@
 # Both must be synced or restarts keep running stale code.
 set -euo pipefail
 
-BRANCH="${1:-main}"
+FORCE=0
+BRANCH="main"
+for arg in "$@"; do
+    case "$arg" in
+        --force) FORCE=1 ;;
+        *) BRANCH="$arg" ;;
+    esac
+done
+
 REPO=/opt/cis4900-repo
 REPO_URL=https://github.com/chrislozinski/cis4900w26-eduOS.git
 SRC=$REPO/src/debian-base1
 SYS_NET=/usr/local/share/cis4900-src/src/debian-base1/network
 USERS=(testuser studentuser)
+
+# Per-category "last commit actually applied". Kept separately from the repo's
+# checked-out HEAD: HEAD gets fast-forwarded to origin unconditionally below
+# regardless of what apply() finishes, so it can't be used to detect what's
+# still pending (a category can be left unselected, or apply() can die
+# partway through another category, without HEAD ever reflecting that).
+STATE_FILE=/var/lib/ychitsa-update/applied.state
+EMPTY_TREE=4b825dc642cb6eb9a060e54bf8d69288fbee4904
+
+state_get() {
+    [ -f "$STATE_FILE" ] || return 0
+    awk -F= -v k="$1" '$1==k{print $2}' "$STATE_FILE"
+}
+state_set() {
+    mkdir -p "$(dirname "$STATE_FILE")"; touch "$STATE_FILE"
+    { grep -v "^$1=" "$STATE_FILE" || true; echo "$1=$2"; } > "$STATE_FILE.tmp"
+    mv "$STATE_FILE.tmp" "$STATE_FILE"
+}
 
 # Users in the student role (any number of accounts, not just studentuser)
 student_users() { getent group student | cut -d: -f4 | tr ',' ' '; }
@@ -30,23 +58,31 @@ if [ ! -d "$REPO/.git" ]; then
     git clone --depth 1 --branch "$BRANCH" "$REPO_URL" "$REPO"
 fi
 
+OLD_HEAD=$(git -C "$REPO" rev-parse HEAD)
+
 echo "Checking for updates on branch: $BRANCH"
 git -C "$REPO" fetch --depth 1 origin "+refs/heads/$BRANCH:refs/remotes/origin/$BRANCH" --quiet
-
-CHANGED=$(git -C "$REPO" diff --name-only "HEAD..origin/$BRANCH" 2>/dev/null)
-
-if [ -z "$CHANGED" ]; then
-    echo "Already up to date."
-    exit 0
-fi
 
 declare -A UPDATES
 declare -A UPDATE_LABELS
 
 check() {
     local key="$1"; local label="$2"; shift 2
+    local base changed
+    if [ "$FORCE" -eq 1 ]; then
+        base="$EMPTY_TREE"
+    else
+        base="$(state_get "$key")"; base="${base:-$OLD_HEAD}"
+    fi
+    if ! changed=$(git -C "$REPO" diff --name-only "$base..origin/$BRANCH" 2>/dev/null); then
+        # base commit no longer resolvable (can happen with the --depth 1 shallow
+        # clone once it ages out) - assume changed rather than silently skipping it
+        UPDATES[$key]=1
+        UPDATE_LABELS[$key]="$label"
+        return
+    fi
     for pattern in "$@"; do
-        if echo "$CHANGED" | grep -q "^$pattern"; then
+        if echo "$changed" | grep -q "^$pattern"; then
             UPDATES[$key]=1
             UPDATE_LABELS[$key]="$label"
             return
@@ -76,9 +112,7 @@ check "updater"   "Updater (ychitsa-update itself)"             \
     "src/debian-base1/config/updateManager/"
 
 if [ ${#UPDATES[@]} -eq 0 ]; then
-    echo "Changes detected but none map to known update categories."
-    echo "Files changed:"
-    echo "$CHANGED" | sed 's/^/  /'
+    echo "Already up to date."
     exit 0
 fi
 
@@ -258,6 +292,8 @@ apply() {
         # Handled unconditionally after the apply loop (see self-update below)
         ;;
     esac
+
+    state_set "$key" "$(git -C "$REPO" rev-parse origin/"$BRANCH")"
 }
 
 for key in launcher i3 network makecode services syscfg packages users waterfox updater; do
