@@ -63,10 +63,16 @@ nmcli dev wifi connect "$SSID" ifname "$WIFI_DEV" 2>/dev/null && exit 0
 
 # Width adapts to SSID length, 40 chars, if you want non-obscured input, remove -password 
 PASS_WIDTH=$(( ${#SSID} + 40 ))
-PASSWORD=$(rofi -dmenu -password -lines 0 -p "Password for $SSID:" \
-    -theme "$ROFI_THEME" -theme-str "window {width: ${PASS_WIDTH}ch;}")
-[ -z "$PASSWORD" ] && exit 0
+PROMPT="Password for $SSID:"
+while true; do
+    PASSWORD=$(rofi -dmenu -password -lines 0 -p "$PROMPT" \
+        -mesg "Enter to connect · Esc to cancel" \
+        -theme "$ROFI_THEME" -theme-str "window {width: ${PASS_WIDTH}ch;} listview {enabled: false;}")
+    [ -z "$PASSWORD" ] && exit 0
 
-nmcli dev wifi connect "$SSID" ifname "$WIFI_DEV" password "$PASSWORD" && \
-    notify-send "WiFi" "Connected to $SSID" || \
-    notify-send "WiFi" "Failed to connect to $SSID"
+    if nmcli dev wifi connect "$SSID" ifname "$WIFI_DEV" password "$PASSWORD"; then
+        notify-send "WiFi" "Connected to $SSID"
+        exit 0
+    fi
+    PROMPT="Wrong password for $SSID:"
+done

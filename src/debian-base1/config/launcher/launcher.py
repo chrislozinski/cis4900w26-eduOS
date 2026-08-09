@@ -319,8 +319,14 @@ class LauncherWindow(Gtk.Window):
         # Tracked separately so on_toggle_sidebar can hide these when the sidebar collapses to icon-only 
         # (but not "..." below) 
         self.indicator_widgets = []
+        built_widgets = []
         for indicator in self.indicators:
             widget = indicator.create_icon_widget()
+            built_widgets.append(widget)
+
+        max_w = max(w.get_preferred_width()[1] for w in built_widgets)
+        for widget in built_widgets:
+            widget.set_size_request(max_w, -1)
             widget.set_halign(Gtk.Align.CENTER)
             self.indicator_widgets.append(widget)
             status_row.pack_start(widget, True, False, 0)

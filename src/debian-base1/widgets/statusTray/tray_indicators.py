@@ -14,6 +14,7 @@ this file. Nothing else needs to change.
 import os
 import re
 import subprocess
+import time
 from dataclasses import dataclass
 from typing import Optional
 
@@ -51,6 +52,7 @@ def tray_css():
             border-radius: 8px;
             border: 1px solid #545454;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+            padding: 10px;
         }}
         .tray-popover-content label {{
             color: #ffffff;
@@ -121,29 +123,26 @@ def show_flyout(anchor_widget, content_widget, on_close=None):
 
     popup = Gtk.Window(type=Gtk.WindowType.POPUP)
     popup.set_decorated(False)
-
-    box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-    box.set_margin_top(10)
-    box.set_margin_bottom(10)
-    box.set_margin_start(10)
-    box.set_margin_end(10)
-    box.get_style_context().add_class('tray-popover-content')
-    box.pack_start(content_widget, True, True, 0)
-    popup.add(box)
+    screen = Gdk.Screen.get_default()
+    visual = screen.get_rgba_visual()
+    if visual is not None:
+        popup.set_visual(visual)
+    popup.get_style_context().add_class('tray-popover-content')
+    popup.add(content_widget)
 
     # The sidebar is always at screen (0, 0), so its right edge is always exactly its current width
     sidebar = anchor_widget.get_toplevel()
     sidebar_width = sidebar.collapsed_width if sidebar.is_collapsed else sidebar.expanded_width
 
-    # realize() makes size queries accurate without mapping the window to the screen.
-    # So we can position it correctly before it's ever shown.
-    popup.realize()
-    screen_height = Gdk.Screen.get_default().get_height()
-    _, real_height = popup.get_preferred_height()
+    # Show off-screen first so the size measurement below is accurate
+    # (a unrealized/unshown window under-measures)
+    popup.move(-10000, -10000)
+    popup.show_all()
+    screen_height = screen.get_height()
+    _, real_height = popup.get_size()
     y = max(0, screen_height - real_height - FLYOUT_BOTTOM_PADDING)
 
     popup.move(sidebar_width + 8, y)
-    popup.show_all()
 
     def on_button_press(widget, event):
         alloc = popup.get_allocation()
@@ -357,6 +356,7 @@ class VolumeIndicator(IndicatorTile):
         self._scale_handler_id = None
         self._debounce_id = None
         self._fast_poll_id = None
+        self._last_local_change = 0.0
 
     def refresh(self):
         self.state = query_volume_status()
@@ -369,7 +369,7 @@ class VolumeIndicator(IndicatorTile):
             glyph = GLYPH_VOLUME_UP
         self._set_icon(glyph, f'Volume: {pct}%' + (' (muted)' if muted else ''))
         # sync an open popover's slider without re-triggering write-back
-        if self._scale is not None:
+        if self._scale is not None and (time.monotonic() - self._last_local_change) > 1.0:
             self._scale.handler_block(self._scale_handler_id)
             self._scale.set_value(pct)
             self._scale.handler_unblock(self._scale_handler_id)
@@ -380,7 +380,7 @@ class VolumeIndicator(IndicatorTile):
 
         scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, 100, 1)
         scale.set_value(status.volume_pct)
-        scale.set_draw_value(True)
+        scale.set_draw_value(False)
         scale.set_size_request(160, -1)
         self._scale_handler_id = scale.connect('value-changed', self._on_scale_changed)
         self._scale = scale
@@ -403,6 +403,7 @@ class VolumeIndicator(IndicatorTile):
         return True
 
     def _on_scale_changed(self, scale):
+        self._last_local_change = time.monotonic()
         # Debounce so a slider drag doesn't spawn a pactl process per pixel
         if self._debounce_id is not None:
             GLib.source_remove(self._debounce_id)
@@ -457,14 +458,8 @@ class BatteryIndicator(IndicatorTile):
 
     def create_icon_widget(self):
         # Plain Box, not an EventBox, no click handler, so no popover
-        icon_size = int(Gdk.Screen.get_default().get_height() * 0.0223)
-        icon_slot = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        icon_slot.set_size_request(int(icon_size * 1.6), -1)  # matches wifi/volume's effective cell width
-        icon_slot.set_halign(Gtk.Align.CENTER)
-        icon_slot.pack_start(self.icon_label, False, False, 0)
-
         box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=2)
-        box.pack_start(icon_slot, False, False, 0)
+        box.pack_start(self.icon_label, False, False, 0)
         box.pack_start(self.percent_label, False, False, 0)
         self.refresh()
         return box
