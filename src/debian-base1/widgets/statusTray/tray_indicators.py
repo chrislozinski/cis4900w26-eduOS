@@ -52,7 +52,6 @@ def tray_css():
             border-radius: 9px;
             border: 1px solid #545454;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
-            padding: 16px;
         }}
         .tray-popover-content label {{
             color: #ffffff;
@@ -128,6 +127,11 @@ def show_flyout(anchor_widget, content_widget, on_close=None):
     if visual is not None:
         popup.set_visual(visual)
     popup.get_style_context().add_class('tray-popover-content')
+    # CSS padding has no effect on a raw Gtk.Window's own node, so use margins instead
+    content_widget.set_margin_start(16)
+    content_widget.set_margin_end(16)
+    content_widget.set_margin_top(16)
+    content_widget.set_margin_bottom(16)
     popup.add(content_widget)
 
     # The sidebar is always at screen (0, 0), so its right edge is always exactly its current width
@@ -459,10 +463,14 @@ class BatteryIndicator(IndicatorTile):
         self.percent_label.set_name('tray_percent_label')
 
     def create_icon_widget(self):
-        # Plain Box, not an EventBox, no click handler, so no popover
-        box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=2)
-        box.pack_start(self.icon_label, False, False, 0)
-        box.pack_start(self.percent_label, False, False, 0)
+        # icon+percent as one group inside an EventBox, no click handler, so no popover.
+        # Wrapping lets launcher.py's sizing loop center it as a unit.
+        inner = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=2)
+        inner.pack_start(self.icon_label, False, False, 0)
+        inner.pack_start(self.percent_label, False, False, 0)
+        inner.set_halign(Gtk.Align.CENTER)
+        box = Gtk.EventBox()
+        box.add(inner)
         self.refresh()
         return box
 
@@ -487,7 +495,7 @@ class BatteryIndicator(IndicatorTile):
         else:
             text = f'Battery: {status.percent}%'
             if status.charging:
-                text += ' : Charging'
+                text += ' Charging'
         self._status_label(container, text)
 
 
