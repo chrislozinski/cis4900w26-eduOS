@@ -1,8 +1,9 @@
 #!/bin/bash
 export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
 mkdir -p "$XDG_RUNTIME_DIR" && chmod 700 "$XDG_RUNTIME_DIR" 2>/dev/null || true
-pkill -u "$(id -u)" -x pipewire    2>/dev/null || true
-pkill -u "$(id -u)" -x wireplumber 2>/dev/null || true
+pkill -u "$(id -u)" -x pipewire       2>/dev/null || true
+pkill -u "$(id -u)" -x wireplumber    2>/dev/null || true
+pkill -u "$(id -u)" -x pipewire-pulse 2>/dev/null || true
 
 /usr/bin/pipewire &
 until [ -S "$XDG_RUNTIME_DIR/pipewire-0" ] || ! kill -0 $! 2>/dev/null; do sleep 0.1; done

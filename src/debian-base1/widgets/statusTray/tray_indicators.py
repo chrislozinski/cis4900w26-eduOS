@@ -49,19 +49,49 @@ def tray_css():
         .tray-popover-content {{
             background-color: #3c3c3c;
             border-radius: 8px;
+            border: 1px solid #545454;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
         }}
         .tray-popover-content label {{
             color: #ffffff;
+        }}
+        .tray-popover-content .tile-header {{
+            font-weight: bold;
+            font-size: {icon_size * 0.55}px;
+            color: #cccccc;
+            margin-bottom: 2px;
         }}
         .tray-popover-content button {{
             background-color: #505050;
             color: #ffffff;
             border: none;
-            border-radius: 4px;
-            padding: 6px 12px;
+            border-radius: 6px;
+            padding: 6px 14px;
+            min-width: 72px;
         }}
         .tray-popover-content button:hover {{
             background-color: #606060;
+        }}
+        .tray-popover-content button:active {{
+            background-color: #454545;
+        }}
+        .tray-popover-content button:checked {{
+            background-color: #b23b3b;
+        }}
+        .tray-popover-content scale trough {{
+            background-color: #2a2a2a;
+            border-radius: 4px;
+            min-height: 6px;
+        }}
+        .tray-popover-content scale highlight {{
+            background-color: #6c9ef8;
+            border-radius: 4px;
+        }}
+        .tray-popover-content scale slider {{
+            background-color: #ffffff;
+            border-radius: 50%;
+            min-width: 14px;
+            min-height: 14px;
         }}
     """.encode('utf-8'))
     Gtk.StyleContext.add_provider_for_screen(
@@ -105,16 +135,15 @@ def show_flyout(anchor_widget, content_widget, on_close=None):
     sidebar = anchor_widget.get_toplevel()
     sidebar_width = sidebar.collapsed_width if sidebar.is_collapsed else sidebar.expanded_width
 
-    # Measure real size after show_all(), not get_preferred_height() before it
-    # on an unrealized POPUP window that causes under measurement, which clips it as its too low
-    # This runs before the main loop repaints anything to avoid flicker
-    popup.show_all()
-
+    # realize() makes size queries accurate without mapping the window to the screen.
+    # So we can position it correctly before it's ever shown.
+    popup.realize()
     screen_height = Gdk.Screen.get_default().get_height()
-    _, real_height = popup.get_size()
+    _, real_height = popup.get_preferred_height()
     y = max(0, screen_height - real_height - FLYOUT_BOTTOM_PADDING)
 
     popup.move(sidebar_width + 8, y)
+    popup.show_all()
 
     def on_button_press(widget, event):
         alloc = popup.get_allocation()
@@ -275,6 +304,14 @@ class IndicatorTile:
         container.pack_start(label, False, False, 0)
         return label
 
+    def _tile_header(self, container, text):
+        """Bold title line at the top of a flyout tile, e.g. 'Volume'."""
+        label = Gtk.Label(label=text)
+        label.set_halign(Gtk.Align.START)
+        label.get_style_context().add_class('tile-header')
+        container.pack_start(label, False, False, 0)
+        return label
+
     def refresh(self):
         raise NotImplementedError
 
@@ -298,6 +335,7 @@ class NetworkIndicator(IndicatorTile):
         subprocess.Popen(['bash', script])
 
     def build_tile(self, container):
+        self._tile_header(container, 'Wi-Fi')
         status = query_network_status()
         if not status.has_adapter:
             text = 'No WiFi adapter'
@@ -318,6 +356,7 @@ class VolumeIndicator(IndicatorTile):
         self._scale = None
         self._scale_handler_id = None
         self._debounce_id = None
+        self._fast_poll_id = None
 
     def refresh(self):
         self.state = query_volume_status()
@@ -336,6 +375,7 @@ class VolumeIndicator(IndicatorTile):
             self._scale.handler_unblock(self._scale_handler_id)
 
     def build_tile(self, container):
+        self._tile_header(container, 'Volume')
         status = query_volume_status()  # fresh, not the 5s-stale poll cache
 
         scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, 100, 1)
@@ -351,6 +391,17 @@ class VolumeIndicator(IndicatorTile):
         mute_btn.connect('toggled', self._on_mute_toggled)
         container.pack_start(mute_btn, False, False, 0)
 
+        # Poll every 300ms only while this flyout is open, so an external change
+        # (hardware volume keys) shows up in the open slider immediately instead
+        # of waiting for the shared 5s row-icon refresh timer (launcher.py L300).
+        self._fast_poll_id = GLib.timeout_add(300, self._fast_poll)
+
+    def _fast_poll(self):
+        if self._scale is None:
+            return False
+        self.refresh()
+        return True
+
     def _on_scale_changed(self, scale):
         # Debounce so a slider drag doesn't spawn a pactl process per pixel
         if self._debounce_id is not None:
@@ -360,11 +411,16 @@ class VolumeIndicator(IndicatorTile):
 
     def _commit_volume(self, value):
         self._debounce_id = None
-        subprocess.run(['pactl', 'set-sink-volume', DEFAULT_SINK, f'{value}%'])
+        result = subprocess.run(['pactl', 'set-sink-volume', DEFAULT_SINK, f'{value}%'])
+        if result.returncode == 0:
+            subprocess.run(['notify-send', '-t', '800', '-h', f'int:value:{value}', 'Volume', ''])
         return False
 
     def _on_mute_toggled(self, button):
-        subprocess.run(['pactl', 'set-sink-mute', DEFAULT_SINK, 'toggle'])
+        result = subprocess.run(['pactl', 'set-sink-mute', DEFAULT_SINK, 'toggle'])
+        if result.returncode == 0:
+            subprocess.run(['notify-send', '-t', '800', 'Volume',
+                             'Muted' if button.get_active() else 'Unmuted'])
         GLib.timeout_add(120, self._resync_after_mute)
 
     def _resync_after_mute(self):
@@ -372,6 +428,12 @@ class VolumeIndicator(IndicatorTile):
         return False
 
     def _on_flyout_closed(self):
+        if self._debounce_id is not None:
+            GLib.source_remove(self._debounce_id)
+            self._debounce_id = None
+        if self._fast_poll_id is not None:
+            GLib.source_remove(self._fast_poll_id)
+            self._fast_poll_id = None
         self._scale = None
         self._scale_handler_id = None
 
@@ -394,9 +456,15 @@ class BatteryIndicator(IndicatorTile):
         self.percent_label.set_name('tray_percent_label')
 
     def create_icon_widget(self):
-        # Plain Box, not an EventBox - no click handler, so no popover
+        # Plain Box, not an EventBox, no click handler, so no popover
+        icon_size = int(Gdk.Screen.get_default().get_height() * 0.0223)
+        icon_slot = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        icon_slot.set_size_request(int(icon_size * 1.6), -1)  # matches wifi/volume's effective cell width
+        icon_slot.set_halign(Gtk.Align.CENTER)
+        icon_slot.pack_start(self.icon_label, False, False, 0)
+
         box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=2)
-        box.pack_start(self.icon_label, False, False, 0)
+        box.pack_start(icon_slot, False, False, 0)
         box.pack_start(self.percent_label, False, False, 0)
         self.refresh()
         return box
@@ -414,6 +482,7 @@ class BatteryIndicator(IndicatorTile):
         self.percent_label.set_text(f'{pct}%')
 
     def build_tile(self, container):
+        self._tile_header(container, 'Battery')
         # Still used inside the combined "..." quick-settings flyout
         status = query_battery_status()
         if not status.present:

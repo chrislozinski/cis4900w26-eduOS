@@ -11,10 +11,13 @@ import subprocess
 import sys
 import getpass
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk, GdkPixbuf, GLib, Pango
 from tray_indicators import TRAY_INDICATORS, GLYPH_TRAY_MORE, tray_css, show_flyout
+
+EASTERN = ZoneInfo('America/New_York')
 
 CLASSROOMS_FILE     = '/shared/classrooms.json'
 VIEWER_DIR          = os.path.expanduser('~/.cache/launcher_viewers')
@@ -341,7 +344,8 @@ class LauncherWindow(Gtk.Window):
             self.classroom_label = Gtk.Label(label=f'Classroom: {classroom_id}')
             self.classroom_label.set_name('classroom_label')
             self.classroom_label.set_halign(Gtk.Align.START)
-            self.classroom_label.set_margin_start(self.hbox_margin)  # match status_row's indent
+            self.classroom_label.set_margin_start(self.hbox_margin * 6)
+            self.classroom_label.set_margin_end(self.hbox_margin * 6)
             self.classroom_label.set_ellipsize(Pango.EllipsizeMode.END)
             self.classroom_label.set_max_width_chars(1)
             self.classroom_label.set_tooltip_text(self.config.get('classroom_name') or classroom_id)
@@ -390,7 +394,7 @@ class LauncherWindow(Gtk.Window):
         return True  # keep polling, matches refresh_viewer_widgets' convention
 
     def _update_clock(self):
-        now = datetime.now()
+        now = datetime.now(EASTERN)
         self.time_label.set_text(now.strftime('%-I:%M%p').lower())   # e.g. "2:55pm"
         self.date_label.set_text(now.strftime('%d/%m/%Y'))            # e.g. "03/08/2026"
         return True
