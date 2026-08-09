@@ -49,10 +49,10 @@ def tray_css():
         #tray_percent_label {{ font-size: {icon_size * 0.5}px; color: #ffffff; }}
         .tray-popover-content {{
             background-color: #3c3c3c;
-            border-radius: 8px;
+            border-radius: 9px;
             border: 1px solid #545454;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
-            padding: 10px;
+            padding: 16px;
         }}
         .tray-popover-content label {{
             color: #ffffff;
@@ -135,7 +135,8 @@ def show_flyout(anchor_widget, content_widget, on_close=None):
     sidebar_width = sidebar.collapsed_width if sidebar.is_collapsed else sidebar.expanded_width
 
     # Show off-screen first so the size measurement below is accurate
-    # (a unrealized/unshown window under-measures)
+    # (a unrealized/unshown window under 
+    # measures)
     popup.move(-10000, -10000)
     popup.show_all()
     screen_height = screen.get_height()
@@ -263,6 +264,7 @@ class IndicatorTile:
         self.state = None  # set by the first refresh(); a query_*() dataclass instance
         self.icon_label = Gtk.Label(label='?')
         self.icon_label.set_name('tray_icon_label')
+        self.icon_label.set_halign(Gtk.Align.CENTER)
 
     def create_icon_widget(self):
         event = Gtk.EventBox()
@@ -485,7 +487,7 @@ class BatteryIndicator(IndicatorTile):
         else:
             text = f'Battery: {status.percent}%'
             if status.charging:
-                text += ' — Charging'
+                text += ' : Charging'
         self._status_label(container, text)
 
 

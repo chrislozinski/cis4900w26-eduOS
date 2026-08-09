@@ -1,12 +1,18 @@
-# i3 config file 
+# i3 config file
 set $mod Mod1
 font pango:monospace 8
+
+# Bridge the dbus-launch session bus into systemd --user 
+# this way wireplumber.service can connect instead of failing, then restart it
+exec --no-startup-id dbus-update-activation-environment --systemd DBUS_SESSION_BUS_ADDRESS DISPLAY XDG_RUNTIME_DIR
+exec --no-startup-id systemctl --user reset-failed wireplumber.service
+exec --no-startup-id systemctl --user restart wireplumber.service
 
 # desktop background
 exec --no-startup-id xsetroot -solid "#292D3E"
 exec --no-startup-id picom --config ~/.config/picom.conf --backend xrender -b
 
-# PipeWire audio stack — sets XDG_RUNTIME_DIR, starts pipewire/wireplumber, loads xrdp sink
+# PipeWire audio stack, sets XDG_RUNTIME_DIR, starts pipewire/pipewire-pulse, loads xrdp sink
 exec --no-startup-id ~/.config/launcher/start-audio.sh
 exec --no-startup-id dunst
 
