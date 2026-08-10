@@ -360,6 +360,8 @@ class VolumeIndicator(IndicatorTile):
         super().__init__()
         self._scale = None
         self._scale_handler_id = None
+        self._mute_btn = None
+        self._mute_handler_id = None
         self._debounce_id = None
         self._fast_poll_id = None
         self._last_local_change = 0.0
@@ -379,6 +381,10 @@ class VolumeIndicator(IndicatorTile):
             self._scale.handler_block(self._scale_handler_id)
             self._scale.set_value(pct)
             self._scale.handler_unblock(self._scale_handler_id)
+        if self._mute_btn is not None:
+            self._mute_btn.handler_block(self._mute_handler_id)
+            self._mute_btn.set_active(muted)
+            self._mute_btn.handler_unblock(self._mute_handler_id)
 
     def build_tile(self, container):
         self._tile_header(container, 'Volume')
@@ -394,7 +400,8 @@ class VolumeIndicator(IndicatorTile):
 
         mute_btn = Gtk.ToggleButton(label='Mute')
         mute_btn.set_active(status.muted)
-        mute_btn.connect('toggled', self._on_mute_toggled)
+        self._mute_handler_id = mute_btn.connect('toggled', self._on_mute_toggled)
+        self._mute_btn = mute_btn
         container.pack_start(mute_btn, False, False, 0)
 
         # Poll every 300ms only while this flyout is open, so an external change
@@ -419,6 +426,8 @@ class VolumeIndicator(IndicatorTile):
     def _commit_volume(self, value):
         self._debounce_id = None
         result = subprocess.run(['pactl', 'set-sink-volume', DEFAULT_SINK, f'{value}%'])
+        if self.state and self.state.muted:
+            subprocess.run(['pactl', 'set-sink-mute', DEFAULT_SINK, '0'])
         if result.returncode == 0:
             subprocess.run(['notify-send', '-t', '800', '-h', f'int:value:{value}', 'Volume', ''])
         return False
@@ -443,6 +452,8 @@ class VolumeIndicator(IndicatorTile):
             self._fast_poll_id = None
         self._scale = None
         self._scale_handler_id = None
+        self._mute_btn = None
+        self._mute_handler_id = None
 
 
 class BatteryIndicator(IndicatorTile):

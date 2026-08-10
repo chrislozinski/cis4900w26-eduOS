@@ -2,15 +2,11 @@
 set $mod Mod1
 font pango:monospace 8
 
-# Bridge the dbus-launch session bus into systemd --user, then restart wireplumber.
-# Chained in one shell so each step waits for the previous one to finish.
-exec --no-startup-id sh -c 'dbus-update-activation-environment --systemd DBUS_SESSION_BUS_ADDRESS DISPLAY XDG_RUNTIME_DIR; systemctl --user reset-failed wireplumber.service; systemctl --user restart wireplumber.service'
-
 # desktop background
 exec --no-startup-id xsetroot -solid "#292D3E"
 exec --no-startup-id picom --config ~/.config/picom.conf --backend xrender -b
 
-# PipeWire audio stack, sets XDG_RUNTIME_DIR, starts pipewire/pipewire-pulse, loads xrdp sink
+# PipeWire audio stack, sets XDG_RUNTIME_DIR, starts pipewire/wireplumber, loads xrdp sink
 exec --no-startup-id ~/.config/launcher/start-audio.sh
 exec --no-startup-id dunst
 
@@ -91,6 +87,6 @@ default_floating_border pixel 0
 
 bindsym $mod+shift+n exec xterm -e nmtui
 
-bindsym XF86AudioRaiseVolume exec --no-startup-id sh -c "pactl set-sink-volume @DEFAULT_SINK@ +5% && notify-send -t 800 -h int:value:\$(pactl get-sink-volume @DEFAULT_SINK@ | grep -oP '\\d+(?=%)' | head -1) 'Volume' ''"
-bindsym XF86AudioLowerVolume exec --no-startup-id sh -c "pactl set-sink-volume @DEFAULT_SINK@ -5% && notify-send -t 800 -h int:value:\$(pactl get-sink-volume @DEFAULT_SINK@ | grep -oP '\\d+(?=%)' | head -1) 'Volume' ''"
+bindsym XF86AudioRaiseVolume exec --no-startup-id sh -c "pactl set-sink-volume @DEFAULT_SINK@ +5% && V=\$(pactl get-sink-volume @DEFAULT_SINK@ | grep -oP '\\d+(?=%)' | head -1) && notify-send -t 800 -h int:value:\$V 'Volume' \"\${V}%\""
+bindsym XF86AudioLowerVolume exec --no-startup-id sh -c "pactl set-sink-volume @DEFAULT_SINK@ -5% && V=\$(pactl get-sink-volume @DEFAULT_SINK@ | grep -oP '\\d+(?=%)' | head -1) && notify-send -t 800 -h int:value:\$V 'Volume' \"\${V}%\""
 bindsym XF86AudioMute        exec --no-startup-id sh -c "pactl set-sink-mute @DEFAULT_SINK@ toggle && notify-send -t 800 'Volume' 'Muted'"

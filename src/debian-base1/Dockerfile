@@ -88,6 +88,9 @@ RUN apt-get update && apt-get install -y \
     libnotify-bin \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# wireplumber.service can't reach the session bus here; start-audio.sh launches it directly instead.
+RUN systemctl --global mask wireplumber.service
+
 # pipewire-module-xrdp is in bookworm-backports, bridges PipeWire audio to xrdp
 RUN echo "deb http://deb.debian.org/debian bookworm-backports main" >> /etc/apt/sources.list \
     && apt-get update \
