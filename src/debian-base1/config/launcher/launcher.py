@@ -314,17 +314,16 @@ class LauncherWindow(Gtk.Window):
         status_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=self.hbox_margin)
         status_row.set_margin_start(self.hbox_margin)
         status_row.set_margin_end(self.hbox_margin)
-        size_group = Gtk.SizeGroup(mode=Gtk.SizeGroupMode.HORIZONTAL)
+        status_row.set_halign(Gtk.Align.CENTER)
 
         # Tracked separately so on_toggle_sidebar can hide these when the sidebar collapses to icon-only
         # (but not "..." below)
         self.indicator_widgets = []
         for indicator in self.indicators:
             widget = indicator.create_icon_widget()
-            size_group.add_widget(widget)
             widget.set_halign(Gtk.Align.CENTER)
             self.indicator_widgets.append(widget)
-            status_row.pack_start(widget, True, False, 0)
+            status_row.pack_start(widget, False, False, 0)
 
         more_label = Gtk.Label(label=GLYPH_TRAY_MORE)
         more_label.set_name('tray_icon_label')
@@ -332,9 +331,8 @@ class LauncherWindow(Gtk.Window):
         more_event.add(more_label)
         more_event.set_tooltip_text('Status Menu')
         more_event.set_halign(Gtk.Align.CENTER)
-        size_group.add_widget(more_event)
         more_event.connect('button-release-event', self.on_status_row_clicked)
-        status_row.pack_start(more_event, True, False, 0)
+        status_row.pack_start(more_event, False, False, 0)
 
         section.pack_start(status_row, False, False, 0)
 

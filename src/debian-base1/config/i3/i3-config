@@ -87,6 +87,6 @@ default_floating_border pixel 0
 
 bindsym $mod+shift+n exec xterm -e nmtui
 
-bindsym XF86AudioRaiseVolume exec --no-startup-id sh -c "pactl set-sink-volume @DEFAULT_SINK@ +5% && V=\$(pactl get-sink-volume @DEFAULT_SINK@ | grep -oP '\\d+(?=%)' | head -1) && notify-send -t 800 -h int:value:\$V 'Volume' \"\${V}%\""
-bindsym XF86AudioLowerVolume exec --no-startup-id sh -c "pactl set-sink-volume @DEFAULT_SINK@ -5% && V=\$(pactl get-sink-volume @DEFAULT_SINK@ | grep -oP '\\d+(?=%)' | head -1) && notify-send -t 800 -h int:value:\$V 'Volume' \"\${V}%\""
+bindsym XF86AudioRaiseVolume exec --no-startup-id sh -c "pactl set-sink-volume @DEFAULT_SINK@ +5% && notify-send -r 91190 -t 800 -h int:value:\$(pactl get-sink-volume @DEFAULT_SINK@ | grep -oP '\\d+(?=%)' | head -1) 'Volume' ''"
+bindsym XF86AudioLowerVolume exec --no-startup-id sh -c "pactl set-sink-volume @DEFAULT_SINK@ -5% && notify-send -r 91190 -t 800 -h int:value:\$(pactl get-sink-volume @DEFAULT_SINK@ | grep -oP '\\d+(?=%)' | head -1) 'Volume' ''"
 bindsym XF86AudioMute        exec --no-startup-id sh -c "pactl set-sink-mute @DEFAULT_SINK@ toggle && notify-send -t 800 'Volume' 'Muted'"

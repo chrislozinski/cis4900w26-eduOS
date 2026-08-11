@@ -5,13 +5,13 @@ pkill -u "$(id -u)" -x pipewire       2>/dev/null || true
 pkill -u "$(id -u)" -x wireplumber    2>/dev/null || true
 pkill -u "$(id -u)" -x pipewire-pulse 2>/dev/null || true
 
-/usr/bin/pipewire &
+setsid /usr/bin/pipewire &
 until [ -S "$XDG_RUNTIME_DIR/pipewire-0" ] || ! kill -0 $! 2>/dev/null; do sleep 0.1; done
 
-/usr/bin/pipewire-pulse &
+setsid /usr/bin/pipewire-pulse &
 until [ -S "$XDG_RUNTIME_DIR/pulse/native" ] || ! kill -0 $! 2>/dev/null; do sleep 0.1; done
 
-/usr/bin/wireplumber &
+setsid /usr/bin/wireplumber &
 
 # Wait until wireplumber is actually responsive (has registered routing), not just started
 for i in $(seq 1 50); do wpctl status >/dev/null 2>&1 && break; sleep 0.1; done
