@@ -169,6 +169,8 @@ apply() {
             rsync -a --delete \
                 --exclude='icons/' --exclude='network/' \
                 "$SRC/config/launcher/" "/home/$u/.config/launcher/"
+            # rsync -a mirrors git's tracked file mode, so a script committed without +x silently loses its executable bit on every deploy; force it back here instead of relying on git to have it right.
+            chmod +x "/home/$u/.config/launcher/"*.sh
             # Widget files that the build hook places directly in the launcher dir
             rsync -a "$SRC/widgets/makecode/makecode-app.py"          "/home/$u/.config/launcher/"
             rsync -a "$SRC/widgets/fileNav/fileViewer.py"             "/home/$u/.config/launcher/"
