@@ -1,6 +1,10 @@
 #!/bin/bash
+exec > /tmp/start-audio-debug.log 2>&1
+set -x
 export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
 mkdir -p "$XDG_RUNTIME_DIR" && chmod 700 "$XDG_RUNTIME_DIR" 2>/dev/null || true
+systemctl --user mask wireplumber.service pipewire.service pipewire.socket \
+    pipewire-pulse.service pipewire-pulse.socket 2>/dev/null || true
 pkill -u "$(id -u)" -x pipewire       2>/dev/null || true
 pkill -u "$(id -u)" -x wireplumber    2>/dev/null || true
 pkill -u "$(id -u)" -x pipewire-pulse 2>/dev/null || true
@@ -11,7 +15,7 @@ until [ -S "$XDG_RUNTIME_DIR/pipewire-0" ] || ! kill -0 $! 2>/dev/null; do sleep
 setsid /usr/bin/pipewire-pulse &
 until [ -S "$XDG_RUNTIME_DIR/pulse/native" ] || ! kill -0 $! 2>/dev/null; do sleep 0.1; done
 
-setsid /usr/bin/wireplumber > /tmp/wireplumber-output.log 2>&1 &
+setsid /usr/bin/wireplumber &
 
 # Wait until wireplumber is actually responsive (has registered routing), not just started
 for i in $(seq 1 50); do wpctl status >/dev/null 2>&1 && break; sleep 0.1; done
