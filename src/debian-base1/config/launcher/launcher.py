@@ -311,7 +311,7 @@ class LauncherWindow(Gtk.Window):
         Collapsing hides everything here except the "..."."""
         section = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
 
-        status_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=self.hbox_margin)
+        status_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=self.hbox_margin * 3)
         status_row.set_margin_start(self.hbox_margin)
         status_row.set_margin_end(self.hbox_margin)
         status_row.set_halign(Gtk.Align.CENTER)

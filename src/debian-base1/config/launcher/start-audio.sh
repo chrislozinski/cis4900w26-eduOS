@@ -11,7 +11,7 @@ until [ -S "$XDG_RUNTIME_DIR/pipewire-0" ] || ! kill -0 $! 2>/dev/null; do sleep
 setsid /usr/bin/pipewire-pulse &
 until [ -S "$XDG_RUNTIME_DIR/pulse/native" ] || ! kill -0 $! 2>/dev/null; do sleep 0.1; done
 
-setsid /usr/bin/wireplumber &
+setsid /usr/bin/wireplumber > /tmp/wireplumber-output.log 2>&1 &
 
 # Wait until wireplumber is actually responsive (has registered routing), not just started
 for i in $(seq 1 50); do wpctl status >/dev/null 2>&1 && break; sleep 0.1; done
